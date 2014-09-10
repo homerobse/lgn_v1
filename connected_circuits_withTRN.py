@@ -209,11 +209,14 @@ GlutGlutneurons_W21 = np.random.exponential(1,Nneurons*Nneurons2)*4/1000000.
 #GlutGlutneurons_W21 = np.random.exponential(1,Nneurons*Nneurons2)*4/10000000000.#turn off connection
 GlutGlutneurons_W21 = GlutGlutneurons_W21.reshape((Nneurons,Nneurons2))
 
+distribution = (np.random.exponential(1,len(Glutneurons2)*len(Glutneurons))*4)+4
+k=0
 Glutnt2nt1_sin = list()
 for neuron_i in range(len(Glutneurons2)):
     Glutneurons2[neuron_i].soma.push()
     for neuron_j in range(len(Glutneurons)):
-        Glutnt2nt1_sin.append(h.NetCon(Glutneurons2[neuron_i].soma(0.5)._ref_v,Glutneurons[neuron_j].synE,0,8,GlutGlutneurons_W21[neuron_i,neuron_j]))
+        Glutnt2nt1_sin.append(h.NetCon(Glutneurons2[neuron_i].soma(0.5)._ref_v,Glutneurons[neuron_j].synE,0,distribution[k],GlutGlutneurons_W21[neuron_i,neuron_j]))
+        k = k + 1
     h.pop_section()
     
 #connections from Glutamatergic neurons of network 2 (V1) to TRN
