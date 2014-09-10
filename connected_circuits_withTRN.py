@@ -259,8 +259,9 @@ for neuron_i in range(len(GABAneurons_trn)):
 
 #generate inputs to network 1        
 nstims = 5
-stimrate = 5
+stimrate = 7.5
                #100 = 10 Hz, 10 = 100 Hz, 1 = 1000Hz,5 = 200 Hz
+               #7.5 = 150 Hz??? ---> Check this
 netStim = list()
 for stim_i in range(0,nstims):
     #netStim.append(h.NetStimPois(.5));
