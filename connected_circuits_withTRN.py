@@ -197,7 +197,7 @@ for neuron_i in range(len(Glutneurons)):
     Glutneurons[neuron_i].soma.push()
     for neuron_j in range(len(Glutneurons2)):
 		if with_TRN:
-			delay = 3
+			delay = 4
 		else:         
 			delay = 4
 		Glutnt1nt2_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v,Glutneurons2[neuron_j].synE,0,delay,GlutGlutneurons_W12[neuron_i,neuron_j]))
