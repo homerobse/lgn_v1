@@ -30,6 +30,9 @@ h.v_init = -67
 print "nsamples"
 print nsamples
 
+with_V1_L4 = True
+with_TRN = False
+
 class Pyrcell:
     "Pyramidal cell"
 
@@ -40,8 +43,8 @@ class Pyrcell:
         self.soma.nseg=1
         self.soma.diam=1
 
-        self.soma.Ra=100
-        self.soma.cm=1
+        self.soma.Ra = 100
+        self.soma.cm = 1
 
         #self.soma.insert("hh")
         self.soma.insert("hhvitor2")
@@ -53,14 +56,12 @@ class Pyrcell:
         self.soma.gt_hhvitor2=0
         self.soma.gleak_hhvitor2 = 0.0000273
    
-        self.synE = h.Exp2Syn(0.5,sec=self.soma)
-        self.synE.tau1=1
-        self.synE.tau2=3
+        self.synE = h.Exp2Syn(0.5, sec = self.soma)
+        self.synE.tau1 = 1
+        self.synE.tau2 = 3
 
         self.synI = h.Exp2Syn(0.5,sec=self.soma)
         self.synI.e=-100
-        #self.synI.tau1=4
-        #self.synI.tau2=2
         
         self.synI.tau1=1
         self.synI.tau2=2        
@@ -96,7 +97,7 @@ Glutneurons_W = np.random.exponential(1,Nneurons*Nneurons)*4/100000.
 Glutneurons_W = Glutneurons_W.reshape((Nneurons,Nneurons))
 Glutneurons_W = Glutneurons_W - np.diag(np.diag(Glutneurons_W))
 
-#create connections in network 1
+#create connections in network 1 (LGN)
 GlutGlut_sin = list()
 for neuron_i in range(len(Glutneurons)):
     Glutneurons[neuron_i].soma.push()
@@ -124,7 +125,7 @@ for Gneuron_i in range(len(GABAneurons)):
         GlutGABA_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v,GABAneurons[Gneuron_i].synE,0,5,1./100000000)) #this is to turn off the connection (E to I)
         h.pop_section()
 
-#create connections in network 2        
+#create connections in network 2  (V1 superficial)      
         
 NGABAn2 = 6
 GABAneurons2,GABAneurons_rec2 = createnetwork(NGABAn2)
@@ -166,7 +167,7 @@ for Gneuron_i2 in range(len(GABAneurons2)):
         h.pop_section()
 #####
 #extrinsic connections
-#connections from Glutamatergic nuerons of network 1 to network 2
+#connections from Glutamatergic neurons of network 1 (LGN) to network 2 (V1)
 
 GlutGlutneurons_W12 = np.random.exponential(1,Nneurons*Nneurons2)*4/100000.
 GlutGlutneurons_W12 = GlutGlutneurons_W12.reshape((Nneurons,Nneurons2))
@@ -179,7 +180,7 @@ for neuron_i in range(len(Glutneurons)):
         Glutnt1nt2_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v,Glutneurons2[neuron_j].synE,0,10,GlutGlutneurons_W12[neuron_i,neuron_j]))
     h.pop_section()
 
-#connections from Glutamatergic nuerons of network 2 to network 1
+#connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
 
 GlutGlutneurons_W21 = np.random.exponential(1,Nneurons*Nneurons2)*4/1000000.
 #GlutGlutneurons_W21 = np.random.exponential(1,Nneurons*Nneurons2)*4/10000000000.             #turn off the connection
@@ -222,7 +223,7 @@ stim3 = h.NetCon(netStim[0],GABAneurons[0].synE,0.5,0,1./(100000))
 #stim5 = h.NetCon(netStim[0],GABAneurons[2].synE,0.5,0,1./(100000))
 #stim6 = h.NetCon(netStim[0],GABAneurons[3].synE,0.5,0,1./(100000))
 #stim7 = h.NetCon(netStim[0],GABAneurons[4].synE,0.5,0,1./(100000))
-
+    
 
 timeaxis = h.Vector()
 timeaxis.record(h._ref_t)
@@ -319,7 +320,7 @@ plt.subplot(414,sharex=a)
 for neuron_i in range(len(GABAneurons2)):
     plt.plot(timeaxis,GABAneurons_rec2[neuron_i])
 plt.ylim([-100,50])
-plt.title('GABAergic cells in V1')
+plt.title('GABAergic net in V1')
 
 plt.xlim([0,h.tstop])
 

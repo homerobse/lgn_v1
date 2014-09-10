@@ -30,6 +30,8 @@ h.v_init = -67
 print "nsamples"
 print nsamples
 
+with_TRN = True
+
 class Pyrcell:
     "Pyramidal cell"
 
@@ -40,8 +42,8 @@ class Pyrcell:
         self.soma.nseg=1
         self.soma.diam=1
 
-        self.soma.Ra=100
-        self.soma.cm=1
+        self.soma.Ra = 100
+        self.soma.cm = 1
 
         #self.soma.insert("hh")
         self.soma.insert("hhvitor2")
@@ -53,18 +55,18 @@ class Pyrcell:
         self.soma.gt_hhvitor2=0
         self.soma.gleak_hhvitor2 = 0.0000273
    
-        self.synE = h.Exp2Syn(0.5,sec=self.soma)
-        self.synE.tau1=1
-        self.synE.tau2=3
+        self.synE = h.Exp2Syn(0.5, sec = self.soma)
+        self.synE.tau1 = 1
+        self.synE.tau2 = 3
 
         self.synI = h.Exp2Syn(0.5,sec=self.soma)
         self.synI.e=-100
-        self.synI.tau1=4
-        self.synI.tau2=2
-        
-        #self.synI.tau1=1
-        #self.synI.tau2=2        
-        
+
+		self.synI.tau2 = 2 
+        if with_TRN:
+	        self.synI.tau1 = 4        
+		else:
+	        self.synI.tau1 = 1
         self.stm = h.IClamp(0.5,sec=self.soma)
         self.stm.amp=0
         self.stm.dur=1000
@@ -174,7 +176,11 @@ for Gneuron_i in range(len(GABAneurons)):
         
         Glutneurons[neuron_i].soma.push()
         #GlutGABA_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v,GABAneurons[Gneuron_i].synE,0,1,1./100000))
-        GlutGABA_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v,GABAneurons[Gneuron_i].synE,0,1,1./100000000)) #this is to turn off the connection (E to I)
+        if with_TRN:
+            delay = 1
+        else:
+            delay = 5
+        GlutGABA_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v,GABAneurons[Gneuron_i].synE,0,delay,1./100000000)) #this is to turn off the connection (E to I)
         h.pop_section()
 
 #create connections in network 2  (V1 superficial)      
@@ -288,7 +294,7 @@ for neuron_i in range(len(Glutneurons2)):
         
 #####
 #extrinsic connections
-#connections from Glutamatergic nuerons of network 1 (LGN) to network 2 (V1)
+#connections from Glutamatergic neurons of network 1 (LGN) to network 2 (V1)
 
 GlutGlutneurons_W12 = np.random.exponential(1,Nneurons*Nneurons2)*4/100000.
 GlutGlutneurons_W12 = GlutGlutneurons_W12.reshape((Nneurons,Nneurons2))
@@ -297,10 +303,14 @@ Glutnt1nt2_sin = list()
 for neuron_i in range(len(Glutneurons)):
     Glutneurons[neuron_i].soma.push()
     for neuron_j in range(len(Glutneurons2)):
-        Glutnt1nt2_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v,Glutneurons2[neuron_j].synE,0,3,GlutGlutneurons_W12[neuron_i,neuron_j]))
+		if with_TRN:
+			delay = 3
+		else:         
+			delay = 10
+		Glutnt1nt2_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v,Glutneurons2[neuron_j].synE,0,delay,GlutGlutneurons_W12[neuron_i,neuron_j]))
     h.pop_section()
 
-#connections from Glutamatergic nuerons of network 2 (V1) to network 1 (LGN)
+#connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
 
 GlutGlutneurons_WL61 = np.random.exponential(1,Nneurons*Nneurons2)*4/1000000.
 #GlutGlutneurons_WL61 = np.random.exponential(1,Nneurons*Nneurons2)*4/10000000000.#turn off connection

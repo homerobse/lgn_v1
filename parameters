@@ -1,0 +1,8 @@
+*only_LGN
+self.synI.tau1 = 4
+
+*connected_circuits
+self.synI.tau1 = 1
+
+*connected_circuits_with_TRN
+self.synI.tau1 = 4

@@ -30,6 +30,8 @@ h.v_init = -67
 print "nsamples"
 print nsamples
 
+with_TRN = True
+
 class Pyrcell:
     "Pyramidal cell"
 
@@ -59,12 +61,12 @@ class Pyrcell:
 
         self.synI = h.Exp2Syn(0.5,sec=self.soma)
         self.synI.e=-100
-        self.synI.tau1=4
-        self.synI.tau2=2
-        
-        #self.synI.tau1=1
-        #self.synI.tau2=2        
-        
+
+		self.synI.tau2 = 2 
+        if with_TRN:
+	        self.synI.tau1 = 4        
+		else:
+	        self.synI.tau1 = 1
         self.stm = h.IClamp(0.5,sec=self.soma)
         self.stm.amp=0
         self.stm.dur=1000

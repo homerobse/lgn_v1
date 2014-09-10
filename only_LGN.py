@@ -30,6 +30,9 @@ h.v_init = -67
 print "nsamples"
 print nsamples
 
+with_V1_L4 = False
+with_TRN = False
+
 class Pyrcell:
     "Pyramidal cell"
 
@@ -40,8 +43,8 @@ class Pyrcell:
         self.soma.nseg=1
         self.soma.diam=1
 
-        self.soma.Ra=100
-        self.soma.cm=1
+        self.soma.Ra = 100
+        self.soma.cm = 1
 
         #self.soma.insert("hh")
         self.soma.insert("hhvitor2")
@@ -53,17 +56,15 @@ class Pyrcell:
         self.soma.gt_hhvitor2=0
         self.soma.gleak_hhvitor2 = 0.0000273
    
-        self.synE = h.Exp2Syn(0.5,sec=self.soma)
-        self.synE.tau1=1
-        self.synE.tau2=3
+        self.synE = h.Exp2Syn(0.5, sec = self.soma)
+        self.synE.tau1 = 1
+        self.synE.tau2 = 3
 
         self.synI = h.Exp2Syn(0.5,sec=self.soma)
         self.synI.e=-100
+
         self.synI.tau1=4
-        self.synI.tau2=2
-        
-        #self.synI.tau1=1
-        #self.synI.tau2=2        
+        self.synI.tau2=2       
         
         self.stm = h.IClamp(0.5,sec=self.soma)
         self.stm.amp=0
@@ -227,8 +228,6 @@ stim3 = h.NetCon(netStim[0],GABAneurons[0].synE,0.5,0,1./(100000))
 #stim6 = h.NetCon(netStim[0],GABAneurons[3].synE,0.5,0,1./(100000))
 #stim7 = h.NetCon(netStim[0],GABAneurons[4].synE,0.5,0,1./(100000))
     
-
-
 
 timeaxis = h.Vector()
 timeaxis.record(h._ref_t)
