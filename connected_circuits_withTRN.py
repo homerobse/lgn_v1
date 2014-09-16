@@ -258,12 +258,15 @@ for nsim in range(nruns):
             #GlutGlutneurons_W21 = np.random.exponential(1,Nneurons*Nneurons2)*4/10000000000.  #turn off connection
             GlutGlutneurons_W21 = GlutGlutneurons_W21.reshape((Nneurons,Nneurons2))
 
+            distribution = (np.random.exponential(1,len(Glutneurons2)*len(Glutneurons))*4)+4
+            k = 0
             Glutnt2nt1_sin = list()
             delayGlutnt2nt1 = 8
             for neuron_i in range(len(Glutneurons2)):
                 Glutneurons2[neuron_i].soma.push()
                 for neuron_j in range(len(Glutneurons)):
-                    Glutnt2nt1_sin.append(h.NetCon(Glutneurons2[neuron_i].soma(0.5)._ref_v,Glutneurons[neuron_j].synE,0,delayGlutnt2nt1,GlutGlutneurons_W21[neuron_i,neuron_j]))
+                    Glutnt2nt1_sin.append(h.NetCon(Glutneurons2[neuron_i].soma(0.5)._ref_v,Glutneurons[neuron_j].synE,0,distribution[k],GlutGlutneurons_W21[neuron_i,neuron_j]))
+                    k += 1
                 h.pop_section()
 
 
@@ -328,12 +331,14 @@ for nsim in range(nruns):
             #GlutGlutneurons_WL61 = np.random.exponential(1,Nneurons*Nneurons2)*4/10000000000.  #turn off connection
             GlutGlutneurons_WL61 = GlutGlutneurons_WL61.reshape((Nneurons,Nneurons2))
 
+            distribution = (np.random.exponential(1,len(Glutneurons2)*len(Glutneurons))*4)+4
+            k = 0
             GlutL6nt1_sin = list()
-            delayGlutL6nt1 = 8
             for neuron_i in range(len(GlutneuronsL6)):
                 GlutneuronsL6[neuron_i].soma.push()
                 for neuron_j in range(len(Glutneurons)):
-                    GlutL6nt1_sin.append(h.NetCon(GlutneuronsL6[neuron_i].soma(0.5)._ref_v,Glutneurons[neuron_j].synE,0, delayGlutL6nt1,GlutGlutneurons_WL61[neuron_i,neuron_j]))
+                    GlutL6nt1_sin.append(h.NetCon(GlutneuronsL6[neuron_i].soma(0.5)._ref_v,Glutneurons[neuron_j].synE, 0, distribution[k], GlutGlutneurons_WL61[neuron_i,neuron_j]))
+                    k += 1
                 h.pop_section()
 
     if with_TRN:
@@ -401,8 +406,9 @@ for nsim in range(nruns):
 
     #generate inputs to network 1
     nstims = 5
-    stimrate = 5
+    stimrate = 6
                    #100 = 10 Hz, 10 = 100 Hz, 1 = 1000Hz,5 = 200 Hz
+                   #6 = 150 Hz??? ---> Check this
     netStim = list()
     for stim_i in range(0,nstims):
         input = 0.5

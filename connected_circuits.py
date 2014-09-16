@@ -273,7 +273,7 @@ for nsim in range(nruns):
         #create connections in network 2  (V1 L6)      
                 
         NGABAn2 = 6
-        GABAneuronsL6,GABAneurons_recL6 = createnetworkL6(NGABAn2)
+        GABAneuronsL6, GABAneurons_recL6 = createnetworkL6(NGABAn2)
         GABAneurons_WL6 = np.random.exponential(1,NGABAn2*NGABAn2)*4/100000.
         GABAneurons_WL6 = GABAneurons_WL6.reshape((NGABAn2,NGABAn2))
         GABAneurons_WL6 = GABAneurons_WL6 - np.diag(np.diag(GABAneurons_WL6))
