@@ -1,8 +1,29 @@
+Differences between simulations
+
 *only_LGN
-self.synI.tau1 = 4
+(PyrCell) self.synI.tau1 = 4
+(GlutGABA_sin) delayGlutGABA = 1
+(input to net 1) input = 0.5
+(input to net 1) stim2 = h.NetCon(netStim[0],Glutneurons[1].synE,0.5,0,4./(100000))
 
 *connected_circuits
-self.synI.tau1 = 1
+(PyrCell) self.synI.tau1 = 1
+(Glutnt1nt2_sin) delayGlutnt1nt2 = 10
+(Glutnt2nt1_sin) delayGlutnt2nt1 = 10
+(GlutGlutneurons_W12 and GlutGlutneurons_W21) BUG: Connection matrix between E_LGN and E_L4 is with a subtracted diagonal
+(GlutGABA_sin) delayGlutGABA = 5
+(input to net 1) input = 0.1
+(input to net 1) netStim[stim_i].start=10
+(input to net 1) stimrate = 1
+(input to net 1) stim2 = h.NetCon(netStim[1],Glutneurons[1].synE,0.5,0,4./(100000))
+
 
 *connected_circuits_with_TRN
-self.synI.tau1 = 4
+(PyrCell) self.synI.tau1 = 4
+(Glutnt1nt2_sin) delayGlutnt1nt2 = 4
+(Glutnt2nt1_sin) delayGlutnt2nt1 = 8
+(GlutGABA_sin) delayGlutGABA = 1
+(input to net 1) input = 0.5
+(input to net 1) netStim[stim_i].start=10
+(input to net 1) stimrate = 5
+(input to net 1) stim2 = h.NetCon(netStim[0],Glutneurons[1].synE,0.5,0,4./(100000))
