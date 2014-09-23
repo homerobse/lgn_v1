@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jan 23 16:53:48 2014
-
-@author: vitor
-"""
-
 try:
     import sys
     import DLFCN
@@ -32,7 +25,46 @@ class Pyrcell:
 
     def __init__(self):
        
-        self.soma = h.Section(name='soma',cell=self)
+        self.soma = h.Section(name='soma', cell=self)
+        self.soma.L = 30
+        self.soma.nseg = 1
+        self.soma.diam = 1
+
+        self.soma.Ra = 100
+        self.soma.cm = 1
+
+        #self.soma.insert("hh")
+        self.soma.insert("hhvitor2")
+        
+        self.soma.gna_hhvitor2 = 0.039
+        self.soma.gkd_hhvitor2 = 0.006
+        self.soma.gl_hhvitor2 = 0
+        self.soma.gm_hhvitor2 = 0
+        self.soma.gt_hhvitor2 = 0
+        self.soma.gleak_hhvitor2 = 0.0000273
+   
+        self.synE = h.Exp2Syn(0.5, sec=self.soma)
+        self.synE.tau1 = 1
+        self.synE.tau2 = 3
+
+        self.synI = h.Exp2Syn(0.5, sec=self.soma)
+        self.synI.e = -100
+
+        self.synI.tau1 = 4
+        self.synI.tau2 = 2
+
+        self.stm = h.IClamp(0.5, sec=self.soma)
+        self.stm.amp = 0
+        self.stm.dur = 1000
+        self.stm.delay = 100
+        
+        
+class L6cell:
+    "Layer 6 cell"
+
+    def __init__(self):
+       
+        self.soma = h.Section(name='soma', cell=self)
         self.soma.L=30
         self.soma.nseg=1
         self.soma.diam=1
@@ -43,73 +75,34 @@ class Pyrcell:
         #self.soma.insert("hh")
         self.soma.insert("hhvitor2")
         
-        self.soma.gna_hhvitor2=0.039
-        self.soma.gkd_hhvitor2=0.006
-        self.soma.gl_hhvitor2=0
-        self.soma.gm_hhvitor2=0
-        self.soma.gt_hhvitor2=0
+        self.soma.gna_hhvitor2 = 0.039
+        self.soma.gkd_hhvitor2 = 0.006
+        self.soma.gl_hhvitor2 = 0
+        self.soma.gm_hhvitor2 = 0
+        self.soma.gt_hhvitor2 = 0
         self.soma.gleak_hhvitor2 = 0.0000273
    
-        self.synE = h.Exp2Syn(0.5, sec = self.soma)
-        self.synE.tau1 = 1
-        self.synE.tau2 = 3
+        self.synE = h.Exp2Syn(0.5, sec=self.soma)
+        self.synE.tau1 = 10
+        self.synE.tau2 = 20
 
-        self.synI = h.Exp2Syn(0.5,sec=self.soma)
-        self.synI.e=-100
-
-        self.synI.tau1=4
-        self.synI.tau2=2
-
-        self.stm = h.IClamp(0.5,sec=self.soma)
-        self.stm.amp=0
-        self.stm.dur=1000
-        self.stm.delay=100
-        
-        
-class L6cell:
-    "Layer 6 cell"
-
-    def __init__(self):
-       
-        self.soma = h.Section(name='soma',cell=self)
-        self.soma.L=30
-        self.soma.nseg=1
-        self.soma.diam=1
-
-        self.soma.Ra=100
-        self.soma.cm=1
-
-        #self.soma.insert("hh")
-        self.soma.insert("hhvitor2")
-        
-        self.soma.gna_hhvitor2=0.039
-        self.soma.gkd_hhvitor2=0.006
-        self.soma.gl_hhvitor2=0
-        self.soma.gm_hhvitor2=0
-        self.soma.gt_hhvitor2=0
-        self.soma.gleak_hhvitor2 = 0.0000273
-   
-        self.synE = h.Exp2Syn(0.5,sec=self.soma)
-        self.synE.tau1=10
-        self.synE.tau2=20
-
-        self.synI = h.Exp2Syn(0.5,sec=self.soma)
-        self.synI.e=-100
-        self.synI.tau1=5
-        self.synI.tau2=40
+        self.synI = h.Exp2Syn(0.5, sec=self.soma)
+        self.synI.e = -100
+        self.synI.tau1 = 5
+        self.synI.tau2 = 40
         
         #self.synI.tau1=1
         #self.synI.tau2=2        
         
-        self.stm = h.IClamp(0.5,sec=self.soma)
-        self.stm.amp=0
-        self.stm.dur=1000
-        self.stm.delay=100
+        self.stm = h.IClamp(0.5, sec=self.soma)
+        self.stm.amp = 0
+        self.stm.dur = 1000
+        self.stm.delay = 100
 
 def createnetwork(Nneurons=4):
 
-    network=h.List()
-    network_rec=h.List()
+    network = h.List()
+    network_rec = h.List()
  
     for Nindex in range(Nneurons):
         p = Pyrcell()
@@ -117,12 +110,12 @@ def createnetwork(Nneurons=4):
         network_rec.append(h.Vector())
         network_rec[Nindex].record(network[Nindex].soma(0.5)._ref_v)
         
-    return network,network_rec     
+    return network, network_rec
     
 def createnetworkL6(Nneurons=4):
 
-    network=h.List()
-    network_rec=h.List()
+    network = h.List()
+    network_rec = h.List()
  
     for Nindex in range(Nneurons):
         p = L6cell()
@@ -130,23 +123,27 @@ def createnetworkL6(Nneurons=4):
         network_rec.append(h.Vector())
         network_rec[Nindex].record(network[Nindex].soma(0.5)._ref_v)
         
-    return network,network_rec
+    return network, network_rec
 
 
-def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN, connect_E_LGN_E_L4, connect_E_L4_E_LGN,
-             connect_E_LGN_E_L6, connect_E_L6_E_LGN, connect_E_L4_TRN, connect_E_L6_TRN):
+def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
+             input, Nneurons, NGABAn, NneuronsL6, NGABA_L6, NneuronsL4, NGABAL4,
+             glut_L6_nt1_delay_distbtn,
+             connect_E_LGN_E_L4, connect_E_L4_E_LGN, connect_E_LGN_E_L6, connect_E_L6_E_LGN, connect_E_L4_TRN, connect_E_L6_TRN):
+
+    print "Simulating %d runs" % (nruns)
+
     for nsim in range(nruns):
 
-        NGABAn = 6
+        # creating LGN network
         GABAneurons, GABAneurons_rec = createnetwork(NGABAn)
         GABAneurons_W = np.random.exponential(1, NGABAn*NGABAn)*4/100000.
         GABAneurons_W = GABAneurons_W.reshape((NGABAn, NGABAn))
         GABAneurons_W = GABAneurons_W - np.diag(np.diag(GABAneurons_W))
 
-        Nneurons = 20
         Glutneurons, Glutneurons_rec = createnetwork(Nneurons)
-        Glutneurons_W = np.random.exponential(1,Nneurons*Nneurons)*4/100000.
-        Glutneurons_W = Glutneurons_W.reshape((Nneurons,Nneurons))
+        Glutneurons_W = np.random.exponential(1, Nneurons*Nneurons)*4/100000.
+        Glutneurons_W = Glutneurons_W.reshape((Nneurons, Nneurons))
         Glutneurons_W = Glutneurons_W - np.diag(np.diag(Glutneurons_W))
 
         #create connections in network 1 (LGN)
@@ -154,7 +151,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN, connect_E_LGN_E_L4, connec
         for neuron_i in range(len(Glutneurons)):
             Glutneurons[neuron_i].soma.push()
             for neuron_j in range(len(Glutneurons)):
-                GlutGlut_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v,Glutneurons[neuron_j].synE,
+                GlutGlut_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v, Glutneurons[neuron_j].synE,
                                              0, 1, Glutneurons_W[neuron_i, neuron_j]))
             h.pop_section()
 
@@ -184,16 +181,14 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN, connect_E_LGN_E_L4, connec
         if with_V1_L4:
             #create connections in network 2  (V1 superficial)
 
-            NGABAn2 = 6
-            GABAneurons2,GABAneurons_rec2 = createnetwork(NGABAn2)
-            GABAneurons_W2 = np.random.exponential(1, NGABAn2*NGABAn2)*4/100000.
-            GABAneurons_W2 = GABAneurons_W2.reshape((NGABAn2, NGABAn2))
+            GABAneurons2, GABAneurons_rec2 = createnetwork(NGABAL4)
+            GABAneurons_W2 = np.random.exponential(1, NGABAL4*NGABAL4)*4/100000.
+            GABAneurons_W2 = GABAneurons_W2.reshape((NGABAL4, NGABAL4))
             GABAneurons_W2 = GABAneurons_W2 - np.diag(np.diag(GABAneurons_W2))
 
-            Nneurons2 = 20
-            Glutneurons2,Glutneurons_rec2 = createnetwork(Nneurons2)
-            Glutneurons_W2 = np.random.exponential(1,Nneurons2*Nneurons2)*4/100000.
-            Glutneurons_W2 = Glutneurons_W2.reshape((Nneurons2,Nneurons2))
+            Glutneurons2, Glutneurons_rec2 = createnetwork(NneuronsL4)
+            Glutneurons_W2 = np.random.exponential(1, NneuronsL4*NneuronsL4)*4/100000.
+            Glutneurons_W2 = Glutneurons_W2.reshape((NneuronsL4, NneuronsL4))
             Glutneurons_W2 = Glutneurons_W2 - np.diag(np.diag(Glutneurons_W2))
 
             GlutGlut_sin2 = list()
@@ -228,8 +223,8 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN, connect_E_LGN_E_L4, connec
                 #extrinsic connections
                 #connections from Glutamatergic neurons of network 1 (LGN) to network 2 (V1)
 
-                GlutGlutneurons_W12 = np.random.exponential(1,Nneurons*Nneurons2)*4/100000.
-                GlutGlutneurons_W12 = GlutGlutneurons_W12.reshape((Nneurons,Nneurons2))
+                GlutGlutneurons_W12 = np.random.exponential(1, Nneurons*NneuronsL4)*4/100000.
+                GlutGlutneurons_W12 = GlutGlutneurons_W12.reshape((Nneurons, NneuronsL4))
 
                 Glutnt1nt2_sin = list()
                 delayGlutnt1nt2 = 3
@@ -242,9 +237,9 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN, connect_E_LGN_E_L4, connec
             if connect_E_L4_E_LGN:
                 #connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
 
-                GlutGlutneurons_W21 = np.random.exponential(1,Nneurons*Nneurons2)*4/1000000.
-                #GlutGlutneurons_W21 = np.random.exponential(1,Nneurons*Nneurons2)*4/10000000000.  #turn off connection
-                GlutGlutneurons_W21 = GlutGlutneurons_W21.reshape((Nneurons,Nneurons2))
+                GlutGlutneurons_W21 = np.random.exponential(1, Nneurons*NneuronsL4)*4/1000000.
+                #GlutGlutneurons_W21 = np.random.exponential(1, Nneurons*NneuronsL4)*4/10000000000.  #turn off connection
+                GlutGlutneurons_W21 = GlutGlutneurons_W21.reshape((Nneurons, NneuronsL4))
 
                 Glutnt2nt1_sin = list()
                 delayGlutnt2nt1 = 8
@@ -258,13 +253,11 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN, connect_E_LGN_E_L4, connec
         if with_V1_L6:
             #create connections in network 2  (V1 L6)
 
-            NGABA_L6 = 6
             GABAneuronsL6, GABAneurons_recL6 = createnetworkL6(NGABA_L6)
             GABAneurons_WL6 = np.random.exponential(1, NGABA_L6*NGABA_L6)*4/100000.
             GABAneurons_WL6 = GABAneurons_WL6.reshape((NGABA_L6, NGABA_L6))
             GABAneurons_WL6 = GABAneurons_WL6 - np.diag(np.diag(GABAneurons_WL6))
 
-            NneuronsL6 = 20
             GlutneuronsL6, Glutneurons_recL6 = createnetworkL6(NneuronsL6)
             Glutneurons_WL6 = np.random.exponential(1, NneuronsL6*NneuronsL6)*4/100000.
             Glutneurons_WL6 = Glutneurons_W2.reshape((NneuronsL6, NneuronsL6))
@@ -298,8 +291,8 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN, connect_E_LGN_E_L4, connec
 
             #connections from V1 input layer to L6
 
-            GlutGlutneurons_WL4L6 = np.random.exponential(1, Nneurons2*NneuronsL6)*4/100000.
-            GlutGlutneurons_WL4L6 = GlutGlutneurons_WL4L6.reshape((Nneurons2, NneuronsL6))
+            GlutGlutneurons_WL4L6 = np.random.exponential(1, NneuronsL4*NneuronsL6)*4/100000.
+            GlutGlutneurons_WL4L6 = GlutGlutneurons_WL4L6.reshape((NneuronsL4, NneuronsL6))
 
             GlutGlut_L4L6_sin = list()
             for neuron_i in range(len(Glutneurons2)):
@@ -312,17 +305,16 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN, connect_E_LGN_E_L4, connec
                 #connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
 
                 GlutGlutneurons_WL61 = np.random.exponential(1, Nneurons*NneuronsL6)*4/1000000.
-                #GlutGlutneurons_WL61 = np.random.exponential(1,Nneurons*NneuronsL6)*4/10000000000.  #turn off connection
+                #GlutGlutneurons_WL61 = np.random.exponential(1, Nneurons*NneuronsL6)*4/10000000000.  #turn off connection
                 GlutGlutneurons_WL61 = GlutGlutneurons_WL61.reshape((Nneurons, NneuronsL6))
 
-                glut_L6_nt1_delay_distbtn = (np.random.exponential(1, len(Glutneurons2)*len(Glutneurons))*4)+4
                 k = 0
                 GlutL6nt1_sin = list()
                 for neuron_i in range(len(GlutneuronsL6)):
                     GlutneuronsL6[neuron_i].soma.push()
                     for neuron_j in range(len(Glutneurons)):
                         GlutL6nt1_sin.append(h.NetCon(GlutneuronsL6[neuron_i].soma(0.5)._ref_v, Glutneurons[neuron_j].synE, 0,
-                                                      glut_L6_nt1_delay_distbtn[k], GlutGlutneurons_WL61[neuron_i,neuron_j]))
+                                                      glut_L6_nt1_delay_distbtn[k], GlutGlutneurons_WL61[neuron_i, neuron_j]))
                         k += 1
                     h.pop_section()
 
@@ -346,9 +338,9 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN, connect_E_LGN_E_L4, connec
 
             if with_V1_L4 and connect_E_L4_TRN:
 
-                GlutGABAneurons_Wnet2trn = np.random.exponential(1, Nneurons2*NGABA_trn)*4/1000000.
-                #GlutGABAneurons_Wnet2trn = np.random.exponential(1,Nneurons2*NGABA_trn)*4/100000000000.  #turn off connection
-                GlutGABAneurons_Wnet2trn = GlutGABAneurons_Wnet2trn.reshape((Nneurons2, NGABA_trn))
+                GlutGABAneurons_Wnet2trn = np.random.exponential(1, NneuronsL4*NGABA_trn)*4/1000000.
+                #GlutGABAneurons_Wnet2trn = np.random.exponential(1, NneuronsL4*NGABA_trn)*4/100000000000.  #turn off connection
+                GlutGABAneurons_Wnet2trn = GlutGABAneurons_Wnet2trn.reshape((NneuronsL4, NGABA_trn))
 
                 GlutGABAtneurons_sin2 = list()
                 for neuron_i in range(len(Glutneurons2)):
@@ -400,16 +392,12 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN, connect_E_LGN_E_L4, connec
 
 
         #generate inputs to network 1
-        nstims = 5
-        stimrate = 5
-                       #100 = 10 Hz, 10 = 100 Hz, 1 = 1000Hz,5 = 200 Hz
         netStim = list()
-        for stim_i in range(0,nstims):
-            input = 0.5
-            netStim.append(h.NetStimPois(input))
-            netStim[stim_i].start=0
-            netStim[stim_i].mean = stimrate
-            netStim[stim_i].number=0
+        for stim_i in range(0, input['nstims']):
+            netStim.append(h.NetStimPois(input['input']))
+            netStim[stim_i].start = 0
+            netStim[stim_i].mean = input['stimrate']  # 100 = 10 Hz, 10 = 100 Hz, 1 = 1000Hz, 5 = 200 Hz, 6 = 150 Hz
+            netStim[stim_i].number = 0
 
         #stim = h.NetCon(netStim[0],Glutneurons[0].synE,0.5,0,4./(100000))
         #stim_rec = h.Vector()
@@ -458,7 +446,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN, connect_E_LGN_E_L4, connec
         meanLGN, meanTRN, meanV1input, meanV1output = plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
                                                                Glutneurons_rec2, GABAneurons_trn_rec, Glutneurons_recL6, Glutneurons_rec,
                                                                GABAneurons_recL6, GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
-                                                               Nneurons, NneuronsL6, Nneurons2, NGABA_trn, NGABA_L6)
+                                                               Nneurons, NneuronsL6, NneuronsL4, NGABA_trn, NGABA_L6)
 
         #nsim = 1
         #ofname = "./data_files/" "sim" + str(nsim) + ".txt"
@@ -468,7 +456,8 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN, connect_E_LGN_E_L4, connec
 
         ofname = "../data_files/" "sim" + str(nsim+96) + ".txt"
 
-        indx = np.arange(1,20001,40)
+        n = len(timeaxis)
+        indx = np.arange(1, n, 40)
 
         w = np.array(meanLGN)
         u = np.array(meanTRN)
@@ -478,7 +467,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN, connect_E_LGN_E_L4, connec
         np.savetxt(ofname, (w[indx], u[indx], x[indx], y[indx], z[indx]))
         #np.savetxt(ofname, (tmpmean_TRN, tmpmean_V1, tmpmean_LGN, timeaxis))
 
-        print nsim
+        print "Progress: %d runs simulated %d runs missing" % (nsim + 1, nruns - nsim - 1)
 
 
 def detect_spikes(voltagesignals):
@@ -490,8 +479,8 @@ def detect_spikes(voltagesignals):
         spikeidx = list()
         aux = 0
         for thrscross_i in range(len(thrscross_ind)):
-            if thrscross_ind[thrscross_i]>aux:
-                auxspan = range(thrscross_ind[thrscross_i],thrscross_ind[thrscross_i]+15)
+            if thrscross_ind[thrscross_i] > aux:
+                auxspan = range(thrscross_ind[thrscross_i],thrscross_ind[thrscross_i] + 15)
                 spikeidx.append(auxspan.index(max(auxspan))+thrscross_ind[thrscross_i])
                 aux = thrscross_ind[thrscross_i]+15
                 

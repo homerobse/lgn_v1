@@ -5,7 +5,7 @@ from neuron import h
 
 def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_rec2, GABAneurons_trn_rec,
              Glutneurons_recL6, Glutneurons_rec, GABAneurons_recL6, GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
-             Nneurons, NneuronsL6, Nneurons2, NGABA_trn, NGABA_L6):
+             Nneurons, NneuronsL6, NneuronsL4, NGABA_trn, NGABA_L6):
     #vitor
     #x = rand(1000)
     #y = sin(t*0.1*pi*2)
@@ -220,20 +220,20 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
         plt.title('average membrane potential of PY cells net in V1 (L4)')
 
         a = plt.subplot(413)
-        for neuron_i in range(2, Nneurons2):
-            plt.plot(timeaxis,Glutneurons_rec2[neuron_i])
+        for neuron_i in range(2, NneuronsL4):
+            plt.plot(timeaxis, Glutneurons_rec2[neuron_i])
             plt.title('2-rest inputs net 2')
 
-        a = plt.subplot(412,sharex=a)
-        for neuron_i in range(0,2):
-            plt.plot(timeaxis,Glutneurons_rec2[neuron_i])
+        a = plt.subplot(412, sharex=a)
+        for neuron_i in range(0, 2):
+            plt.plot(timeaxis, Glutneurons_rec2[neuron_i])
             plt.title('0-2 inputs net 2')
 
-        plt.subplot(414,sharex=a)
+        plt.subplot(414, sharex=a)
 
         for neuron_i in range(len(GABAneurons2)):
-            plt.plot(timeaxis,GABAneurons_rec2[neuron_i])
-        plt.ylim([-100,50])
+            plt.plot(timeaxis, GABAneurons_rec2[neuron_i])
+        plt.ylim([-100, 50])
         plt.title('GABAergic net in V1 (L4)')
 
         plt.xlim([0, h.tstop])
