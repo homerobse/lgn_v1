@@ -32,7 +32,6 @@ print nsamples
 
 with_V1_L4 = True
 with_V1_L6 = False
-with_output_loop = True
 with_TRN = True
 
 connect_E_LGN_E_L4 = True

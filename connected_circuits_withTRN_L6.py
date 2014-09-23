@@ -32,7 +32,6 @@ print nsamples
 
 with_V1_L4 = True
 with_V1_L6 = True
-with_output_loop = False
 with_TRN = True
 
 connect_E_LGN_E_L4 = True
@@ -723,7 +722,7 @@ for nsim in range(nruns):
     x = np.array(meanV1input)
     y = np.array(meanV1output)
     z = np.array(timeaxis)
-    np.savetxt(ofname, (w[indx], u[indx], x[indx], y[indx], z[indx] ))
+    np.savetxt(ofname, (w[indx], u[indx], x[indx], y[indx], z[indx]))
     #np.savetxt(ofname, (tmpmean_TRN, tmpmean_V1, tmpmean_LGN, timeaxis))
     
     print nsim

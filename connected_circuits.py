@@ -32,7 +32,6 @@ print nsamples
 
 with_V1_L4 = True
 with_V1_L6 = False
-with_output_loop = False
 with_TRN = False
 
 connect_E_LGN_E_L4 = True
@@ -119,7 +118,7 @@ class L6cell:
         self.stm = h.IClamp(0.5,sec=self.soma)
         self.stm.amp=0
         self.stm.dur=1000
-        self.stm.delay=100        
+        self.stm.delay=100
 
 def createnetwork(Nneurons=4):
 
@@ -242,7 +241,6 @@ for nsim in range(nruns):
 
             GlutGlutneurons_W12 = np.random.exponential(1,Nneurons*Nneurons2)*4/100000.
             GlutGlutneurons_W12 = GlutGlutneurons_W12.reshape((Nneurons,Nneurons2))
-            GlutGlutneurons_W12 = GlutGlutneurons_W12 - np.diag(np.diag(GlutGlutneurons_W12))  # BUG: the diagonal should NOT be subtracted because this is a connections between two different network, not a net with itself
 
             Glutnt1nt2_sin = list()
             delayGlutnt1nt2 = 10
@@ -273,7 +271,7 @@ for nsim in range(nruns):
         #create connections in network 2  (V1 L6)      
                 
         NGABAn2 = 6
-        GABAneuronsL6, GABAneurons_recL6 = createnetworkL6(NGABAn2)
+        GABAneuronsL6,GABAneurons_recL6 = createnetworkL6(NGABAn2)
         GABAneurons_WL6 = np.random.exponential(1,NGABAn2*NGABAn2)*4/100000.
         GABAneurons_WL6 = GABAneurons_WL6.reshape((NGABAn2,NGABAn2))
         GABAneurons_WL6 = GABAneurons_WL6 - np.diag(np.diag(GABAneurons_WL6))
@@ -382,10 +380,11 @@ for nsim in range(nruns):
         GlutGABAtneurons_Wnet1trn = GlutGABAtneurons_Wnet1trn.reshape((Nneurons,NGABA_trn))
 
         GlutGABAtneurons_sin1 = list()
+        delayGlutGABAtneurons = 1
         for neuron_i in range(len(Glutneurons)):
             Glutneurons[neuron_i].soma.push()
             for neuron_j in range(len(GABAneurons_trn)):
-                GlutGABAtneurons_sin1.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v,GABAneurons_trn[neuron_j].synE,0,1,GlutGABAtneurons_Wnet1trn[neuron_i,neuron_j]))
+                GlutGABAtneurons_sin1.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v,GABAneurons_trn[neuron_j].synE,0,delayGlutGABAtneurons,GlutGABAtneurons_Wnet1trn[neuron_i,neuron_j]))
             h.pop_section()
 
         #connectinos from GABAergic nuerons of TRN to network 1 (LGN)
@@ -477,11 +476,10 @@ for nsim in range(nruns):
     Fs =  1/2.5e-05
     if with_V1_L4:
         #try again
-        tmpmean = np.mean(Glutneurons_rec2,0)
-        tmpmean = tmpmean- np.mean(tmpmean)
-        tmpfft = np.fft.fft(tmpmean)
-
-
+        meanV1input = np.mean(Glutneurons_rec2,0)
+        meanV1input = meanV1input- np.mean(meanV1input)
+        
+        
         print "length of time axis"
         print len(timeaxis)
 
@@ -507,7 +505,7 @@ for nsim in range(nruns):
         #plt.title('PSD of V1 LFP (FFT)')
 
 
-        (Pxx, freqpsd) = psd(tmpmean, 20000/2, Fs) #args are signal, nfft, Fs
+        (Pxx, freqpsd) = psd(meanV1input, 20000/2, Fs) #args are signal, nfft, Fs
         plt.figure(6)
         plt.plot(freqpsd, Pxx)
         plt.xlim([0,150])
@@ -516,17 +514,16 @@ for nsim in range(nruns):
 
     ####################################
     #LGN LFP
-    tmpmean = np.mean(Glutneurons_rec,0)
-    tmpmean = tmpmean- np.mean(tmpmean)
-    tmpfft = np.fft.fft(tmpmean)
-
+    meanLGN = np.mean(Glutneurons_rec,0)
+    meanLGN = meanLGN- np.mean(meanLGN)
+    
     #plt.figure(7)
     #plt.plot(freq[1:lenfft/2], abs(tmpfft[1:lenfft/2]))
     #plt.xlim([0,150])
     #plt.title('PSD of LGN LFP (FFT)')
-
-
-    (Pxx, freqpsd) = psd(tmpmean, 20000/2, Fs) #args are signal, nfft, Fs
+    
+    
+    (Pxx, freqpsd) = psd(meanLGN, 20000/2, Fs) #args are signal, nfft, Fs
     plt.figure(8)
     plt.plot(freqpsd, Pxx)
     plt.xlim([0,150])
@@ -534,18 +531,17 @@ for nsim in range(nruns):
 
     if with_TRN:
         ####################################
-        #TRN LFP
-        tmpmean = np.mean(GABAneurons_trn_rec,0)
-        tmpmean = tmpmean- np.mean(tmpmean)
-        tmpfft = np.fft.fft(tmpmean)
-
+        #TRN LFP 
+        meanTRN = np.mean(GABAneurons_trn_rec,0)
+        meanTRN = meanTRN- np.mean(meanTRN)
+        
         #plt.figure(7)
         #plt.plot(freq[1:lenfft/2], abs(tmpfft[1:lenfft/2]))
         #plt.xlim([0,150])
         #plt.title('PSD of LGN LFP (FFT)')
 
 
-        (Pxx, freqpsd) = psd(tmpmean, 20000/2, Fs) #args are signal, nfft, Fs
+        (Pxx, freqpsd) = psd(meanTRN, 20000/2, Fs) #args are signal, nfft, Fs
         plt.figure(9)
         plt.plot(freqpsd, Pxx)
         plt.xlim([0,150])
@@ -555,10 +551,8 @@ for nsim in range(nruns):
 
         plt.figure(3)
         b = plt.subplot(211)
-
-        tmpmean_TRN = np.mean(GABAneurons_trn_rec,0)
-
-        plt.plot(timeaxis,tmpmean_TRN)
+        
+        plt.plot(timeaxis,meanTRN)
         plt.title('average membrane potential of TRN cells' )
 
         a = plt.subplot(212)
@@ -574,11 +568,10 @@ for nsim in range(nruns):
     if with_V1_L6:
         ####################################
         #L6 LFP 
-        tmpmean = np.mean(Glutneurons_recL6,0)
-        tmpmean = tmpmean- np.mean(tmpmean)
-        tmpfft = np.fft.fft(tmpmean)
+        meanV1output = np.mean(Glutneurons_recL6,0)
+        meanV1output = meanV1output- np.mean(meanV1output)
 
-        (Pxx, freqpsd) = psd(tmpmean, 20000/2, Fs) #args are signal, nfft, Fs
+        (Pxx, freqpsd) = psd(meanV1output, 20000/2, Fs) #args are signal, nfft, Fs
         plt.figure(10)
         plt.plot(freqpsd, Pxx)
         plt.xlim([0,150])
@@ -589,9 +582,7 @@ for nsim in range(nruns):
         plt.figure(4)
         a = plt.subplot(311)
 
-        tmpmean_L6 = np.mean(Glutneurons_recL6,0)
-
-        plt.plot(timeaxis,tmpmean_L6)
+        plt.plot(timeaxis,meanV1output)
         plt.title('average membrane potential of L6 cells' )
 
         a = plt.subplot(312)
@@ -653,10 +644,9 @@ for nsim in range(nruns):
     #get fft of pyramidal neurons
     #print "printings size"
     #print np.shape(Glutneurons_rec)
-    tmpmean_LGN = np.mean(Glutneurons_rec,0)
     #print np.shape(tmpmean)
     #print "done printing size"
-    plt.plot(timeaxis,tmpmean_LGN)
+    plt.plot(timeaxis,meanLGN)
     plt.title('average membrane potential of excitatory cells in LGN')
 
     a = plt.subplot(413)
@@ -685,12 +675,11 @@ for nsim in range(nruns):
         #get fft of pyramidal neurons
         #print "printings size"
         #print np.shape(Glutneurons_rec)
-        tmpmean_V1 = np.mean(Glutneurons_rec2,0)
         #print np.shape(tmpmean)
         #print "done printing size"
-        plt.plot(timeaxis,tmpmean_V1)
-        plt.title('average membrane potential of PY cells net in V1' )
-
+        plt.plot(timeaxis,meanV1input)
+        plt.title('average membrane potential of PY cells net in V1 (L4)' )
+        
         a = plt.subplot(413)
         for neuron_i in range(2,Nneurons2):
             plt.plot(timeaxis,Glutneurons_rec2[neuron_i])
@@ -706,8 +695,8 @@ for nsim in range(nruns):
         for neuron_i in range(len(GABAneurons2)):
             plt.plot(timeaxis,GABAneurons_rec2[neuron_i])
         plt.ylim([-100,50])
-        plt.title('GABAergic net in V1')
-
+        plt.title('GABAergic net in V1 (L4)')
+        
         plt.xlim([0,h.tstop])
 
 
@@ -723,7 +712,19 @@ for nsim in range(nruns):
 
     #np.savetxt('./data_files/output_file.txt', (tmpmean_TRN, tmpmean_V1, tmpmean_LGN, timeaxis))
     #np.savetxt(ofname, (tmpmean_TRN, tmpmean_V1, tmpmean_LGN, timeaxis))
-
+    
+    ofname = "../data_files/" "sim" + str(nsim+96) + ".txt"
+    
+    indx = np.arange(1,20001,40)
+    
+    w = np.array(meanLGN)
+    u = np.array(meanTRN)
+    x = np.array(meanV1input)
+    y = np.array(meanV1output)
+    z = np.array(timeaxis)
+    np.savetxt(ofname, (w[indx], u[indx], x[indx], y[indx], z[indx]))
+    #np.savetxt(ofname, (tmpmean_TRN, tmpmean_V1, tmpmean_LGN, timeaxis))
+    
     print nsim
 
 
