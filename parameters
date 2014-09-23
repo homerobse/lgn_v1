@@ -27,3 +27,18 @@ For sfn -> (Glutnt1nt2_sin) delayGlutnt1nt2 = 4
 (input to net 1) netStim[stim_i].start=10
 (input to net 1) stimrate = 5
 (input to net 1) stim2 = h.NetCon(netStim[0],Glutneurons[1].synE,0.5,0,4./(100000))
+
+*connected_circuits_with_TRN
+(Glutnt2nt1_sin) delayGlutL6nt1 = 8
+For sfn -> distribution = (np.random.exponential(1,len(Glutneurons2)*len(Glutneurons))*4)+4
+
+*connected_circuits_withTRN_L6_outputloop.py
+(GlutL6nt1_sin) delayGlutL6nt1=8
+For sfn -> delayGlutL6nt1 was exchanged for a distribution = (np.random.exponential(1,len(Glutneurons2)*len(Glutneurons))*4)+4
+(GlutGABAtneurons_sin1) delayGlutGABAtneurons = 1
+
+*connected_circuits_withTRN_output loop.py
+(simulation step) h.dt = 2
+(Glutnt1nt2_sin) delayGlutnt1nt2 = 10
+(Glutnt2nt1_sin) delayGlutnt2nt1 = 10
+(GlutGABAtneurons_sin1) delayGlutGABAtneurons = 5
