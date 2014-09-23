@@ -2,16 +2,16 @@ from simulation import simulate
 import matplotlib.pyplot as plt
 import numpy as np
 
-with_V1_L4 = True
-with_V1_L6 = True
+with_V1_L4 = False
+with_V1_L6 = False
 with_TRN = True
 
-connect_E_LGN_E_L4 = True
+connect_E_LGN_E_L4 = False
 connect_E_L4_E_LGN = False
 connect_E_LGN_E_L6 = False
-connect_E_L6_E_LGN = True
+connect_E_L6_E_LGN = False
 connect_E_L4_TRN = False
-connect_E_L6_TRN = True
+connect_E_L6_TRN = False
 
 nruns = 2
 

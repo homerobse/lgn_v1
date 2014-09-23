@@ -3,9 +3,17 @@ from matplotlib.mlab import psd
 import numpy as np
 from neuron import h
 
-def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_rec2, GABAneurons_trn_rec,
-             Glutneurons_recL6, Glutneurons_rec, GABAneurons_recL6, GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
-             Nneurons, NneuronsL6, NneuronsL4, NGABA_trn, NGABA_L6):
+                
+
+def plot_all(timeaxis, stim_rec,  with_V1_L4, with_V1_L6, with_TRN,
+               GABAneurons_trn_rec, Glutneurons_rec,
+               GABAneurons, GABAneurons_rec, 
+               Nneurons, NGABA_trn):
+                 
+#def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_rec2, GABAneurons_trn_rec,
+#             Glutneurons_recL6, Glutneurons_rec, GABAneurons_recL6, GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
+#             Nneurons, NneuronsL6, NneuronsL4, NGABA_trn, NGABA_L6):                 
+                 
     #vitor
     #x = rand(1000)
     #y = sin(t*0.1*pi*2)
@@ -245,4 +253,6 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
     plt.xlim([timeaxis[0], timeaxis[-1]])
     plt.ylim([0., 2.])
 
-    return meanLGN, meanTRN, meanV1input, meanV1output
+    #return meanLGN, meanTRN, meanV1input, meanV1output
+    
+    return meanLGN, meanTRN

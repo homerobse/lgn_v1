@@ -168,7 +168,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
         for Gneuron_i in range(len(GABAneurons)):
             for neuron_i in range(len(Glutneurons)):
                 GABAneurons[Gneuron_i].soma.push()
-                GABAGlut_sin.append(h.NetCon(GABAneurons[Gneuron_i].soma(0.5)._ref_v, Glutneurons[neuron_i].synI,0,1,6./10000))
+                GABAGlut_sin.append(h.NetCon(GABAneurons[Gneuron_i].soma(0.5)._ref_v, Glutneurons[neuron_i].synI,0,1,1./100000))
                 h.pop_section()
 
                 Glutneurons[neuron_i].soma.push()
@@ -366,7 +366,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
 
             #connections from Glutamatergic neurons of network 1 (LGN) to TRN
 
-            GlutGABAtneurons_Wnet1trn = np.random.exponential(1, Nneurons*NGABA_trn)*4/1000000.
+            GlutGABAtneurons_Wnet1trn = np.random.exponential(1, Nneurons*NGABA_trn)*1/10000000.
             GlutGABAtneurons_Wnet1trn = GlutGABAtneurons_Wnet1trn.reshape((Nneurons, NGABA_trn))
 
             GlutGABAtneurons_sin1 = list()
@@ -379,7 +379,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
                 h.pop_section()
 
             #connectinos from GABAergic nuerons of TRN to network 1 (LGN)
-            GABAGlutneurons_W = np.random.exponential(1, NGABA_trn*Nneurons)*8/1000000.
+            GABAGlutneurons_W = np.random.exponential(1, NGABA_trn*Nneurons)*1/1000000.
             GABAGlutneurons_W = GABAGlutneurons_W.reshape((NGABA_trn, Nneurons))
 
             GABAGlutneurons_sin = list()
@@ -421,19 +421,19 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
         stim = h.NetCon(netStim[0],Glutneurons[0].synE,0.5,0,4./(100000))
         stim_rec = h.Vector()
         stim.record(stim_rec)
-        stim2 = h.NetCon(netStim[0],Glutneurons[1].synE,0.5,0,4./(100000))
-        stim3 = h.NetCon(netStim[0],Glutneurons[1].synE,0.5,0,4./(100000))
-        stim8 = h.NetCon(netStim[0],Glutneurons[2].synE,0.5,0,4./(100000))
-        stim9 = h.NetCon(netStim[0],Glutneurons[3].synE,0.5,0,4./(100000))
+        stim2 = h.NetCon(netStim[1],Glutneurons[1].synE,0.5,0,4./(100000))
+        #stim3 = h.NetCon(netStim[0],Glutneurons[1].synE,0.5,0,4./(100000))
+        stim8 = h.NetCon(netStim[2],Glutneurons[2].synE,0.5,0,4./(100000))
+        stim9 = h.NetCon(netStim[3],Glutneurons[3].synE,0.5,0,4./(100000))
         #stim10 = h.NetCon(netStim[0],Glutneurons[4].synE,0.5,0,4./(100000))
 
 
 
-        stim3 = h.NetCon(netStim[0],GABAneurons[0].synE,0.5,0,1./(100000))
-        stim4 = h.NetCon(netStim[0],GABAneurons[1].synE,0.5,0,1./(100000))
-        stim5 = h.NetCon(netStim[0],GABAneurons[2].synE,0.5,0,1./(100000))
-        stim6 = h.NetCon(netStim[0],GABAneurons[3].synE,0.5,0,1./(100000))
-        stim7 = h.NetCon(netStim[0],GABAneurons[4].synE,0.5,0,1./(100000))
+        stim3 = h.NetCon(netStim[0],GABAneurons[0].synE,0.5,0,4./(100000))
+        stim4 = h.NetCon(netStim[1],GABAneurons[1].synE,0.5,0,4./(100000))
+        stim5 = h.NetCon(netStim[2],GABAneurons[2].synE,0.5,0,4./(100000))
+        #stim6 = h.NetCon(netStim[0],GABAneurons[3].synE,0.5,0,4./(100000))
+        #stim7 = h.NetCon(netStim[0],GABAneurons[4].synE,0.5,0,4./(100000))
 
 
 
@@ -443,11 +443,15 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
 
         h.run()
 
-        meanLGN, meanTRN, meanV1input, meanV1output = plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
-                                                               Glutneurons_rec2, GABAneurons_trn_rec, Glutneurons_recL6, Glutneurons_rec,
-                                                               GABAneurons_recL6, GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
-                                                               Nneurons, NneuronsL6, NneuronsL4, NGABA_trn, NGABA_L6)
+        #meanLGN, meanTRN, meanV1input, meanV1output = plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
+                                                               #Glutneurons_rec2, GABAneurons_trn_rec, Glutneurons_recL6, Glutneurons_rec,
+                                                               #GABAneurons_recL6, GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
+                                                               #Nneurons, NneuronsL6, NneuronsL4, NGABA_trn, NGABA_L6)
 
+        meanLGN, meanTRN = plot_all(timeaxis, stim_rec,  with_V1_L4, with_V1_L6, with_TRN,
+                                       GABAneurons_trn_rec, Glutneurons_rec,
+                                       GABAneurons, GABAneurons_rec, 
+                                       Nneurons, NGABA_trn)
         #nsim = 1
         #ofname = "./data_files/" "sim" + str(nsim) + ".txt"
 
@@ -461,10 +465,11 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
 
         w = np.array(meanLGN)
         u = np.array(meanTRN)
-        x = np.array(meanV1input)
-        y = np.array(meanV1output)
+        #x = np.array(meanV1input)
+        #y = np.array(meanV1output)
         z = np.array(timeaxis)
-        np.savetxt(ofname, (w[indx], u[indx], x[indx], y[indx], z[indx]))
+        #np.savetxt(ofname, (w[indx], u[indx], x[indx], y[indx], z[indx]))
+        np.savetxt(ofname, (w[indx], u[indx], z[indx]))
         #np.savetxt(ofname, (tmpmean_TRN, tmpmean_V1, tmpmean_LGN, timeaxis))
 
         print "Progress: %d runs simulated %d runs missing" % (nsim + 1, nruns - nsim - 1)
