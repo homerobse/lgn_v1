@@ -366,7 +366,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
 
             #connections from Glutamatergic neurons of network 1 (LGN) to TRN
 
-            GlutGABAtneurons_Wnet1trn = np.random.exponential(1, Nneurons*NGABA_trn)*1/10000000.
+            GlutGABAtneurons_Wnet1trn = np.random.exponential(1, Nneurons*NGABA_trn)*1/1000000.
             GlutGABAtneurons_Wnet1trn = GlutGABAtneurons_Wnet1trn.reshape((Nneurons, NGABA_trn))
 
             GlutGABAtneurons_sin1 = list()
