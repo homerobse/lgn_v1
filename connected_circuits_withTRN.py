@@ -724,9 +724,9 @@ for nsim in range(nruns):
     w = np.array(meanLGN)
     u = np.array(meanTRN)
     x = np.array(meanV1input)
-    y = np.array(meanV1output)
+    #y = np.array(meanV1output)
     z = np.array(timeaxis)
-    np.savetxt(ofname, (w[indx], u[indx], x[indx], y[indx], z[indx]))
+    np.savetxt(ofname, (w[indx], u[indx], x[indx], z[indx]))
     #np.savetxt(ofname, (tmpmean_TRN, tmpmean_V1, tmpmean_LGN, timeaxis))
     
     print nsim
