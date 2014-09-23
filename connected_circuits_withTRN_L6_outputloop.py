@@ -27,8 +27,8 @@ global nsamples
 nsamples = h.tstop*h.dt
 h.v_init = -67
 
-print "nsamples"
-print nsamples
+# print "nsamples"
+# print nsamples
 
 with_V1_L4 = True
 with_V1_L6 = True
@@ -455,7 +455,7 @@ for nsim in range(nruns):
     timeaxis = h.Vector()
     timeaxis.record(h._ref_t)
 
-    print np.shape(stim_rec.ref)
+    # print np.shape(stim_rec.ref)
 
     h.run()
 
@@ -480,8 +480,8 @@ for nsim in range(nruns):
         meanV1input = meanV1input- np.mean(meanV1input)
         
         
-        print "length of time axis"
-        print len(timeaxis)
+        # print "length of time axis"
+        # print len(timeaxis)
 
         #lensignal = len(tmpmean)
         #freq = np.fft.fftfreq(lensignal,2.5e-05)
