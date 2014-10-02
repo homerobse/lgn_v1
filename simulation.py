@@ -179,7 +179,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
                 delayGlutGABA = 1
                 #GlutGABA_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v,GABAneurons[Gneuron_i].synE,0,delayGlutGABA,1./100000))
                 GlutGABA_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v,GABAneurons[Gneuron_i].synE,
-                                             0, delayGlutGABA, 1./100000000)) #this is to turn off the connection (E to I)
+                                             0, delayGlutGABA, 1./100000000)) # this is to turn off the connection (E to I)
                 h.pop_section()
 
 
@@ -228,7 +228,6 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
                     h.pop_section()
 
             if connect_E_LGN_E_L4:
-                #####
                 #extrinsic connections
                 #connections from Glutamatergic neurons of network 1 (LGN) to network 2 (V1)
 
@@ -244,23 +243,29 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
             if connect_E_L4_E_LGN:
                 #connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
                 Glutnt2nt1_sin = list()
-                for neuron_i in range(len(Glutneurons2)):
+                for neuron_i in range(len(Glutneurons2)*1/4, len(Glutneurons2)):
                     Glutneurons2[neuron_i].soma.push()
-                    for neuron_j in range(len(Glutneurons)):
+                    for neuron_j in range(len(Glutneurons)*1/4, len(Glutneurons)):
                         Glutnt2nt1_sin.append(h.NetCon(Glutneurons2[neuron_i].soma(0.5)._ref_v, Glutneurons[neuron_j].synE,
                                                        0, delay_E_L4_E_LGN, W_E_L4_E_LGN[neuron_i, neuron_j]))
                     h.pop_section()
 
+            # Population 1) 15 LGN E cells connect to 15 V1 L4 E cells
+            # Population 2) 5 LGN E cells connect to 5 V1 L4 I cells
+            #
+            # Population 1 and population 2 are different
+            #
+            # Hirsch et al., 1998
             if connect_E_LGN_I_L4:
                 # connections from Glutamatergic neurons of network (LGN) to network V1 L4
                 sin_E_LGN_I_L4 = list()
-                for neuron_i in range(len(Glutneurons)):
-                    neuron_i.soma.push()
-                    for neuron_j in range(len(GABAneurons2)):
+                len_LGN = len(Glutneurons)
+                for neuron_i in range(0, len_LGN*1/4):
+                    Glutneurons[neuron_i].soma.push()
+                    for neuron_j in range(0, len(GABAneurons2)*1/4):
                         sin_E_LGN_I_L4.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v, GABAneurons2[neuron_j].synE,
                                                        0, delay_E_LGN_I_L4, W_E_LGN_I_L4[neuron_i, neuron_j]))
                     h.pop_section()
-
 
         if with_V1_L6:
             #create connections in network 2  (V1 L6)
@@ -289,6 +294,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
                 for neuron_j in range(len(GABAneurons2)):
                     GABAGABAL6_sin.append(h.NetCon(GABAneuronsL6[neuron_i].soma(0.5)._ref_v, GABAneuronsL6[neuron_j].synI,
                                                    0, 1, GABAneurons_WL6[neuron_i, neuron_j]))
+                    # TODO check if we need a pop_section here
 
             GABAGlutL6_sin = list()
             GlutGABAL6_sin = list()
@@ -296,7 +302,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
                 for neuron_i2 in range(len(GlutneuronsL6)):
 
                     GABAneuronsL6[Gneuron_i2].soma.push()
-                    GABAGlutL6_sin.append(h.NetCon(GABAneuronsL6[Gneuron_i2].soma(0.5)._ref_v,GlutneuronsL6[neuron_i2].synI,
+                    GABAGlutL6_sin.append(h.NetCon(GABAneuronsL6[Gneuron_i2].soma(0.5)._ref_v, GlutneuronsL6[neuron_i2].synI,
                                                    0, 1, 6./10000))
                     h.pop_section()
 
@@ -341,7 +347,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
                 for neuron_j in range(len(GABAneurons_trn)):
                     GABAGABA_trn_sin.append(h.NetCon(GABAneurons_trn[neuron_i].soma(0.5)._ref_v,GABAneurons_trn[neuron_j].synI,
                                                      0, 1, GABAneurons_trnW[neuron_i, neuron_j]))
-                    #h.pop_section() TODO tem que ter esse pop_section??
+                    # h.pop_section() #  TODO tem que ter esse pop_section??
 
             #connections from Glutamatergic neurons of network 2 (V1) to TRN
             if with_V1_L4 and connect_E_L4_TRN:
@@ -432,15 +438,23 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
 
         h.run()
 
+        # all
         #meanLGN, meanTRN, meanV1input, meanV1output = plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
                                                                #Glutneurons_rec2, GABAneurons_trn_rec, Glutneurons_recL6, Glutneurons_rec,
                                                                #GABAneurons_recL6, GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
                                                                #Nneurons, NneuronsL6, NneuronsL4, NGABA_trn, NGABA_L6)
+        #only LGN TRN
+        # meanLGN, meanTRN = plot_all(timeaxis, stim_rec,  with_V1_L4, with_V1_L6, with_TRN,
+        #                                GABAneurons_trn_rec, Glutneurons_rec,
+        #                                GABAneurons, GABAneurons_rec,
+        #                                Nneurons, NGABA_trn)
 
-        meanLGN, meanTRN = plot_all(timeaxis, stim_rec,  with_V1_L4, with_V1_L6, with_TRN,
-                                       GABAneurons_trn_rec, Glutneurons_rec,
-                                       GABAneurons, GABAneurons_rec, 
-                                       Nneurons, NGABA_trn)
+        # LGN, TRN, L4, no L6
+        meanLGN, meanTRN, meanV1input = plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
+                                                               Glutneurons_rec2, GABAneurons_trn_rec, Glutneurons_rec,
+                                                               GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
+                                                               Nneurons, NneuronsL4, NGABA_trn)
+
 
         ofname = "../data_files/" "sim" + str(nsim+96) + ".txt"
 

@@ -2,20 +2,21 @@ from simulation import simulate
 import matplotlib.pyplot as plt
 import numpy as np
 
-with_V1_L4 = False
+with_V1_L4 = True
 with_V1_L6 = False
 with_TRN = True
 
-connect_E_LGN_E_L4 = False
+connect_E_LGN_E_L4 = True
 connect_E_LGN_I_L4 = True
 connect_E_L4_E_LGN = False
 connect_E_LGN_E_L6 = False
 connect_E_L6_E_LGN = False
-connect_E_L4_TRN = False
+connect_E_L4_TRN = True
 connect_E_L6_TRN = False
 
 nruns = 2
 
+# number of cells should be divisible by 4, otherwise python will truncate (search simulation for "*1/4")
 Nneurons = 20
 NGABAn = 6
 NneuronsL6 = 20
@@ -26,7 +27,7 @@ NGABA_trn = 10
 
 delay_distbtn_E_L6_LGN = (np.random.exponential(1, NneuronsL4**2)*4)+4
 delay_E_L4_E_LGN = 8
-delay_E_LGN_I_L4 = 4  ## check this
+delay_E_LGN_I_L4 = 8  ## check this
 
 input = {'stimrate': 6,
          'input': 0.5,
