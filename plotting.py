@@ -3,7 +3,6 @@ from matplotlib.mlab import psd
 import numpy as np
 from neuron import h
 
-                
 
 def plot_all(timeaxis, stim_rec,  with_V1_L4, with_V1_L6, with_TRN,
                GABAneurons_trn_rec, Glutneurons_rec,
@@ -99,7 +98,7 @@ def plot_all(timeaxis, stim_rec,  with_V1_L4, with_V1_L6, with_TRN,
         plt.figure(3)
         b = plt.subplot(211)
 
-        plt.plot(timeaxis,meanTRN)
+        plt.plot(timeaxis, meanTRN)
         plt.title('average membrane potential of TRN cells' )
 
         a = plt.subplot(212)
@@ -129,7 +128,7 @@ def plot_all(timeaxis, stim_rec,  with_V1_L4, with_V1_L6, with_TRN,
         plt.figure(4)
         a = plt.subplot(311)
 
-        plt.plot(timeaxis,meanV1output)
+        plt.plot(timeaxis, meanV1output)
         plt.title('average membrane potential of L6 cells' )
 
         a = plt.subplot(312)
@@ -202,8 +201,8 @@ def plot_all(timeaxis, stim_rec,  with_V1_L4, with_V1_L6, with_TRN,
         plt.title('Not receiving inputs')
 
     a = plt.subplot(412, sharex=a)
-    for neuron_i in range(0,2):
-        plt.plot(timeaxis,Glutneurons_rec[neuron_i])
+    for neuron_i in range(0, 2):
+        plt.plot(timeaxis, Glutneurons_rec[neuron_i])
         plt.title('Receiving inputs')
 
     plt.subplot(414, sharex=a)
@@ -249,9 +248,10 @@ def plot_all(timeaxis, stim_rec,  with_V1_L4, with_V1_L6, with_TRN,
 
     #plot input
     plt.figure(5)
-    plt.plot(stim_rec, np.ones([stim_rec.size(),1]), 'ob')
+    plt.plot(stim_rec, np.ones([stim_rec.size(), 1]), 'ob')
     plt.xlim([timeaxis[0], timeaxis[-1]])
     plt.ylim([0., 2.])
+    plt.title('inputs')
 
     #return meanLGN, meanTRN, meanV1input, meanV1output
     
