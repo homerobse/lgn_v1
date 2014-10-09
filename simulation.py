@@ -66,9 +66,9 @@ class L6cell:
     def __init__(self):
        
         self.soma = h.Section(name='soma', cell=self)
-        self.soma.L=30
-        self.soma.nseg=1
-        self.soma.diam=1
+        self.soma.L = 30
+        self.soma.nseg = 1
+        self.soma.diam = 1
 
         self.soma.Ra = 100
         self.soma.cm = 1
@@ -134,7 +134,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
              W_E_LGN_TRN, W_E_L6_TRN, W_E_L4_E_L6, W_E_LGN_E_L4, W_E_L4_E_LGN, W_E_L6_E_LGN, W_E_LGN_I_L4, W_E_L4_TRN,
              connect_E_LGN_E_L4, connect_E_LGN_I_L4, connect_E_L4_E_LGN, connect_E_LGN_E_L6, connect_E_L6_E_LGN, connect_E_L4_TRN, connect_E_L6_TRN):
 
-    print "Simulating %d runs" % (nruns)
+    print "* * * Simulating %d runs * * *" % (nruns)
 
     for nsim in range(nruns):
 
@@ -294,7 +294,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
                 for neuron_j in range(len(GABAneurons2)):
                     GABAGABAL6_sin.append(h.NetCon(GABAneuronsL6[neuron_i].soma(0.5)._ref_v, GABAneuronsL6[neuron_j].synI,
                                                    0, 1, GABAneurons_WL6[neuron_i, neuron_j]))
-                    # TODO check if we need a pop_section here
+                h.pop_section()  # TODO we put this pop_secion here. There was no pop_section here before
 
             GABAGlutL6_sin = list()
             GlutGABAL6_sin = list()
@@ -347,7 +347,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
                 for neuron_j in range(len(GABAneurons_trn)):
                     GABAGABA_trn_sin.append(h.NetCon(GABAneurons_trn[neuron_i].soma(0.5)._ref_v,GABAneurons_trn[neuron_j].synI,
                                                      0, 1, GABAneurons_trnW[neuron_i, neuron_j]))
-                    # h.pop_section() #  TODO tem que ter esse pop_section??
+                h.pop_section()  # TODO This pop_section was commented and we uncommented it and put it outside the for loop
 
             #connections from Glutamatergic neurons of network 2 (V1) to TRN
             if with_V1_L4 and connect_E_L4_TRN:
@@ -387,8 +387,8 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
             for neuron_i in range(len(GABAneurons_trn)):
                 GABAneurons_trn[neuron_i].soma.push()
                 for neuron_j in range(len(Glutneurons)):
-                    GABAGlutneurons_sin.append(h.NetCon(GABAneurons_trn[neuron_i].soma(0.5)._ref_v,Glutneurons[neuron_j].synE,0,1,
-                                                        GABAGlutneurons_W_trn_l6[neuron_i, neuron_j]))
+                    GABAGlutneurons_sin.append(h.NetCon(GABAneurons_trn[neuron_i].soma(0.5)._ref_v,Glutneurons[neuron_j].synE,
+                                                        0, 1, GABAGlutneurons_W_trn_l6[neuron_i, neuron_j]))
                 h.pop_section()
 
 
