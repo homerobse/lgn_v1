@@ -131,7 +131,9 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
              input, input_glut_threshold, input_glut_delay, input_glut_weight, input_gaba_threshold, input_gaba_delay, input_gaba_weight,
              Nneurons, NGABAn, NneuronsL6, NGABA_L6, NneuronsL4, NGABAL4, NGABA_trn,
              delay_distbtn_E_L6_LGN, delay_E_L4_E_LGN, delay_E_LGN_I_L4,
-             W_E_LGN_TRN, W_E_L6_TRN, W_E_L4_E_L6, W_E_LGN_E_L4, W_E_L4_E_LGN, W_E_L6_E_LGN, W_E_LGN_I_L4, W_E_L4_TRN,
+             W_E_LGN_E_LGN, W_I_LGN_I_LGN, W_E_L4_E_L4, W_I_L4_I_L4, W_E_L6_E_L6, W_I_L6_I_L6, W_TRN_TRN,
+             W_I_L4_E_L4, W_E_L4_I_L4, W_I_L6_E_L6, W_E_L6_I_L6,
+             W_E_LGN_TRN, W_TRN_E_LGN, W_E_L6_TRN, W_E_L4_E_L6, W_E_LGN_E_L4, W_E_L4_E_LGN, W_E_L6_E_LGN, W_E_LGN_I_L4, W_E_L4_TRN,
              connect_E_LGN_E_L4, connect_E_LGN_I_L4, connect_E_L4_E_LGN, connect_E_LGN_E_L6, connect_E_L6_E_LGN, connect_E_L4_TRN, connect_E_L6_TRN):
 
     print "* * * Simulating %d runs * * *" % (nruns)
@@ -140,14 +142,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
 
         # creating LGN network
         GABAneurons, GABAneurons_rec = createnetwork(NGABAn)
-        GABAneurons_W = np.random.exponential(1, NGABAn*NGABAn)*4/100000.
-        GABAneurons_W = GABAneurons_W.reshape((NGABAn, NGABAn))
-        GABAneurons_W = GABAneurons_W - np.diag(np.diag(GABAneurons_W))
-
         Glutneurons, Glutneurons_rec = createnetwork(Nneurons)
-        Glutneurons_W = np.random.exponential(1, Nneurons*Nneurons)*4/100000.
-        Glutneurons_W = Glutneurons_W.reshape((Nneurons, Nneurons))
-        Glutneurons_W = Glutneurons_W - np.diag(np.diag(Glutneurons_W))
 
         #create connections in network 1 (LGN)
         GlutGlut_sin = list()
@@ -155,7 +150,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
             Glutneurons[neuron_i].soma.push()
             for neuron_j in range(len(Glutneurons)):
                 GlutGlut_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v, Glutneurons[neuron_j].synE,
-                                             0, 1, Glutneurons_W[neuron_i, neuron_j]))
+                                             0, 1, W_E_LGN_E_LGN[neuron_i, neuron_j]))
             h.pop_section()
 
 
@@ -164,7 +159,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
             GABAneurons[neuron_i].soma.push()
             for neuron_j in range(len(GABAneurons)):
                 GABAGABA_sin.append(h.NetCon(GABAneurons[neuron_i].soma(0.5)._ref_v,GABAneurons[neuron_j].synI,
-                                             0, 1, GABAneurons_W[neuron_i, neuron_j]))
+                                             0, 1, W_I_LGN_I_LGN[neuron_i, neuron_j]))
 
         GABAGlut_sin = list()
         GlutGABA_sin = list()
@@ -182,26 +177,18 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
                                              0, delayGlutGABA, 1./100000000)) # this is to turn off the connection (E to I)
                 h.pop_section()
 
-
         if with_V1_L4:
             #create connections in network 2  (V1 superficial)
 
             GABAneurons2, GABAneurons_rec2 = createnetwork(NGABAL4)
-            GABAneurons_W2 = np.random.exponential(1, NGABAL4*NGABAL4)*4/100000.
-            GABAneurons_W2 = GABAneurons_W2.reshape((NGABAL4, NGABAL4))
-            GABAneurons_W2 = GABAneurons_W2 - np.diag(np.diag(GABAneurons_W2))
-
             Glutneurons2, Glutneurons_rec2 = createnetwork(NneuronsL4)
-            Glutneurons_W2 = np.random.exponential(1, NneuronsL4*NneuronsL4)*4/100000.
-            Glutneurons_W2 = Glutneurons_W2.reshape((NneuronsL4, NneuronsL4))
-            Glutneurons_W2 = Glutneurons_W2 - np.diag(np.diag(Glutneurons_W2))
 
             GlutGlut_sin2 = list()
             for neuron_i in range(len(Glutneurons2)):
                 Glutneurons2[neuron_i].soma.push()
                 for neuron_j in range(len(Glutneurons2)):
                     GlutGlut_sin2.append(h.NetCon(Glutneurons2[neuron_i].soma(0.5)._ref_v,  Glutneurons2[neuron_j].synE,
-                                                  0, 1, Glutneurons_W2[neuron_i, neuron_j]))
+                                                  0, 1, W_E_L4_E_L4[neuron_i, neuron_j]))
                 h.pop_section()
 
 
@@ -210,7 +197,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
                 GABAneurons2[neuron_i].soma.push()
                 for neuron_j in range(len(GABAneurons2)):
                     GABAGABA_sin2.append(h.NetCon(GABAneurons2[neuron_i].soma(0.5)._ref_v, GABAneurons2[neuron_j].synI,
-                                                  0, 1, GABAneurons_W2[neuron_i, neuron_j]))
+                                                  0, 1, W_I_L4_I_L4[neuron_i, neuron_j]))
 
             GABAGlut_sin2 = list()
             GlutGABA_sin2 = list()
@@ -219,12 +206,12 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
 
                     GABAneurons2[Gneuron_i2].soma.push()
                     GABAGlut_sin2.append(h.NetCon(GABAneurons2[Gneuron_i2].soma(0.5)._ref_v, Glutneurons2[neuron_i2].synI,
-                                                  0, 1, 6./10000))
+                                                  0, 1, W_I_L4_E_L4))
                     h.pop_section()
 
                     Glutneurons2[neuron_i2].soma.push()
                     GlutGABA_sin2.append(h.NetCon(Glutneurons2[neuron_i2].soma(0.5)._ref_v, GABAneurons2[Gneuron_i2].synE,
-                                                  0, 1, 1./100000))
+                                                  0, 1, W_E_L4_I_L4))
                     h.pop_section()
 
             if connect_E_LGN_E_L4:
@@ -271,21 +258,14 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
             #create connections in network 2  (V1 L6)
 
             GABAneuronsL6, GABAneurons_recL6 = createnetworkL6(NGABA_L6)
-            GABAneurons_WL6 = np.random.exponential(1, NGABA_L6*NGABA_L6)*4/100000.
-            GABAneurons_WL6 = GABAneurons_WL6.reshape((NGABA_L6, NGABA_L6))
-            GABAneurons_WL6 = GABAneurons_WL6 - np.diag(np.diag(GABAneurons_WL6))
-
             GlutneuronsL6, Glutneurons_recL6 = createnetworkL6(NneuronsL6)
-            Glutneurons_WL6 = np.random.exponential(1, NneuronsL6*NneuronsL6)*4/100000.
-            Glutneurons_WL6 = Glutneurons_W2.reshape((NneuronsL6, NneuronsL6))
-            Glutneurons_WL6 = Glutneurons_W2 - np.diag(np.diag(Glutneurons_WL6))
 
             GlutGlutL6_sin = list()
             for neuron_i in range(len(GlutneuronsL6)):
                 GlutneuronsL6[neuron_i].soma.push()
                 for neuron_j in range(len(GlutneuronsL6)):
                     GlutGlutL6_sin.append(h.NetCon(GlutneuronsL6[neuron_i].soma(0.5)._ref_v, GlutneuronsL6[neuron_j].synE,
-                                                   0, 1, Glutneurons_WL6[neuron_i, neuron_j]))
+                                                   0, 1, W_E_L6_E_L6[neuron_i, neuron_j]))
                 h.pop_section()
 
             GABAGABAL6_sin = list()
@@ -293,7 +273,7 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
                 GABAneuronsL6[neuron_i].soma.push()
                 for neuron_j in range(len(GABAneurons2)):
                     GABAGABAL6_sin.append(h.NetCon(GABAneuronsL6[neuron_i].soma(0.5)._ref_v, GABAneuronsL6[neuron_j].synI,
-                                                   0, 1, GABAneurons_WL6[neuron_i, neuron_j]))
+                                                   0, 1, W_I_L6_I_L6[neuron_i, neuron_j]))
                 h.pop_section()  # TODO we put this pop_secion here. There was no pop_section here before
 
             GABAGlutL6_sin = list()
@@ -303,12 +283,12 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
 
                     GABAneuronsL6[Gneuron_i2].soma.push()
                     GABAGlutL6_sin.append(h.NetCon(GABAneuronsL6[Gneuron_i2].soma(0.5)._ref_v, GlutneuronsL6[neuron_i2].synI,
-                                                   0, 1, 6./10000))
+                                                   0, 1, W_I_L6_E_L6))
                     h.pop_section()
 
                     GlutneuronsL6[neuron_i2].soma.push()
                     GlutGABAL6_sin.append(h.NetCon(GlutneuronsL6[neuron_i2].soma(0.5)._ref_v, GABAneuronsL6[Gneuron_i2].synE,
-                                                   0, 1, 1./100000))
+                                                   0, 1, W_E_L6_I_L6))
                     h.pop_section()
 
             #connections from V1 input layer to L6
@@ -337,16 +317,13 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
         if with_TRN:
             #create TRN neurons (inhibitory only)
             GABAneurons_trn, GABAneurons_trn_rec = createnetwork(NGABA_trn)
-            GABAneurons_trnW = np.random.exponential(1, NGABA_trn*NGABA_trn)*4/100000.
-            GABAneurons_trnW = GABAneurons_trnW.reshape((NGABA_trn, NGABA_trn))
-            GABAneurons_trnW = GABAneurons_trnW - np.diag(np.diag(GABAneurons_trnW))
 
             GABAGABA_trn_sin = list()
             for neuron_i in range(len(GABAneurons_trn)):
                 GABAneurons_trn[neuron_i].soma.push()
                 for neuron_j in range(len(GABAneurons_trn)):
                     GABAGABA_trn_sin.append(h.NetCon(GABAneurons_trn[neuron_i].soma(0.5)._ref_v,GABAneurons_trn[neuron_j].synI,
-                                                     0, 1, GABAneurons_trnW[neuron_i, neuron_j]))
+                                                     0, 1, W_TRN_TRN[neuron_i, neuron_j]))
                 h.pop_section()  # TODO This pop_section was commented and we uncommented it and put it outside the for loop
 
             #connections from Glutamatergic neurons of network 2 (V1) to TRN
@@ -380,15 +357,12 @@ def simulate(nruns, with_V1_L4, with_V1_L6, with_TRN,
                 h.pop_section()
 
             #connectinos from GABAergic neurons of TRN to network 1 (LGN)
-            GABAGlutneurons_W_trn_l6 = 1/1000000.*np.random.exponential(1, NGABA_trn*Nneurons)
-            GABAGlutneurons_W_trn_l6 = GABAGlutneurons_W_trn_l6.reshape(NGABA_trn, Nneurons)
-
             GABAGlutneurons_sin = list()
             for neuron_i in range(len(GABAneurons_trn)):
                 GABAneurons_trn[neuron_i].soma.push()
                 for neuron_j in range(len(Glutneurons)):
-                    GABAGlutneurons_sin.append(h.NetCon(GABAneurons_trn[neuron_i].soma(0.5)._ref_v,Glutneurons[neuron_j].synE,
-                                                        0, 1, GABAGlutneurons_W_trn_l6[neuron_i, neuron_j]))
+                    GABAGlutneurons_sin.append(h.NetCon(GABAneurons_trn[neuron_i].soma(0.5)._ref_v, Glutneurons[neuron_j].synE,
+                                                        0, 1, W_TRN_E_LGN[neuron_i, neuron_j]))
                 h.pop_section()
 
 
