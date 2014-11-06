@@ -7,6 +7,7 @@ except:
 
 from neuron import h
 import numpy as np
+import pdb
 from plotting import plot_all
 
 
@@ -48,8 +49,8 @@ class Pyrcell:
         self.synE.tau2 = 3
 
         self.synE_CT = h.Exp2Syn(0.5, sec=self.soma)
-        self.synE_CT.tau1 = 100
-        self.synE_CT.tau2 = 300
+        self.synE_CT.tau1 = 5               #this was made to be slower than the synE - but artificial values were used because the synE time constants couldn't get smaller than 1
+        self.synE_CT.tau2 = 15              #check this with Li, Guido and Bickford 2003
 
         self.synI = h.Exp2Syn(0.5, sec=self.soma)
         self.synI.e = -100
@@ -302,7 +303,6 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
 
             if connect_E_L6_E_LGN:
                 #connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
-
                 k = 0
                 GlutL6nt1_sin = list()
                 for neuron_i in range(len(GlutneuronsL6)):
@@ -325,6 +325,8 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
                         k += 1
                     h.pop_section()
 
+        #pdb.set_trace()
+        
         if with_TRN:
             #create TRN neurons (inhibitory only)
             GABAneurons_trn, GABAneurons_trn_rec = createnetwork(NGABA_trn)
@@ -403,13 +405,13 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
         #stim6 = h.NetCon(netStim[0],GABAneurons[3].synE,0.5,0,4./(100000))
         #stim7 = h.NetCon(netStim[0],GABAneurons[4].synE,0.5,0,4./(100000))
 
-        stim = h.NetCon(netStim[0], Glutneurons[0].synE_CT, input_glut_threshold, input_glut_delay, input_glut_weight)
+        stim = h.NetCon(netStim[0], Glutneurons[0].synE, input_glut_threshold, input_glut_delay, input_glut_weight)
         stim_rec = h.Vector()
         stim.record(stim_rec)
-        stim2 = h.NetCon(netStim[1], Glutneurons[1].synE_CT, input_glut_threshold, input_glut_delay, input_glut_weight)
+        stim2 = h.NetCon(netStim[1], Glutneurons[1].synE, input_glut_threshold, input_glut_delay, input_glut_weight)
         #stim3 = h.NetCon(netStim[0], Glutneurons[1].synE_CT, input_glut_threshold, input_glut_delay, input_glut_weight)
-        stim8 = h.NetCon(netStim[2], Glutneurons[2].synE_CT, input_glut_threshold, input_glut_delay, input_glut_weight)
-        stim9 = h.NetCon(netStim[3], Glutneurons[3].synE_CT, input_glut_threshold, input_glut_delay, input_glut_weight)
+        stim8 = h.NetCon(netStim[2], Glutneurons[2].synE, input_glut_threshold, input_glut_delay, input_glut_weight)
+        stim9 = h.NetCon(netStim[3], Glutneurons[3].synE, input_glut_threshold, input_glut_delay, input_glut_weight)
         #stim10 = h.NetCon(netStim[0], Glutneurons[4].synE_CT, input_glut_threshold, input_glut_delay, input_glut_weight)
 
 
@@ -426,10 +428,12 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
         h.run()
 
         # #all
-        # meanLGN, meanTRN, meanV1input, meanV1output = plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
-        #                                                        Glutneurons_rec2, GABAneurons_trn_rec, Glutneurons_recL6, Glutneurons_rec,
-        #                                                        GABAneurons_recL6, GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
-        #                                                        Nneurons, NneuronsL6, NneuronsL4, NGABA_trn, NGABA_L6)
+        meanLGN, meanTRN, meanV1input, meanV1output = plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
+                                                                Glutneurons_rec2, GABAneurons_trn_rec, Glutneurons_recL6, Glutneurons_rec,
+                                                                GABAneurons_recL6, GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
+                                                                Nneurons, NneuronsL6, NneuronsL4, NGABA_trn, NGABA_L6)
+            
+        
         # # only LGN TRN
         # meanLGN, meanTRN = plot_all(timeaxis, stim_rec,  with_V1_L4, with_V1_L6, with_TRN,
         #                                GABAneurons_trn_rec, Glutneurons_rec,
@@ -437,11 +441,11 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
         #                                Nneurons, NGABA_trn)
 
         # LGN, TRN, L4, no L6
-        meanLGN, meanTRN, meanV1input = plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
-                                                               Glutneurons_rec2, GABAneurons_trn_rec, Glutneurons_rec,
-                                                               GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
-                                                               Nneurons, NneuronsL4, NGABA_trn)
-
+#        meanLGN, meanTRN, meanV1input = plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
+#                                                               Glutneurons_rec2, GABAneurons_trn_rec, Glutneurons_rec,
+#                                                               GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
+#                                                               Nneurons, NneuronsL4, NGABA_trn)
+#
 
         ofname = "../data_files/" "sim" + str(nsim+96) + ".txt"
 

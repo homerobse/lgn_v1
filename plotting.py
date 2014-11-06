@@ -10,15 +10,15 @@ from neuron import h
 #                Nneurons, NGABA_trn):
 
 # # all
-# def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_rec2, GABAneurons_trn_rec,
-#             Glutneurons_recL6, Glutneurons_rec, GABAneurons_recL6, GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
-#             Nneurons, NneuronsL6, NneuronsL4, NGABA_trn, NGABA_L6):
+def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_rec2, GABAneurons_trn_rec,
+             Glutneurons_recL6, Glutneurons_rec, GABAneurons_recL6, GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
+             Nneurons, NneuronsL6, NneuronsL4, NGABA_trn, NGABA_L6):
 
 # LGN, TRN, L4, no L6
-def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
-           Glutneurons_rec2, GABAneurons_trn_rec, Glutneurons_rec,
-           GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
-           Nneurons, NneuronsL4, NGABA_trn):
+#def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
+#           Glutneurons_rec2, GABAneurons_trn_rec, Glutneurons_rec,
+#           GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
+#           Nneurons, NneuronsL4, NGABA_trn):
 
 
     #vitor
@@ -204,12 +204,12 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
     plt.title('average membrane potential of excitatory cells in LGN')
 
     a = plt.subplot(413)
-    for neuron_i in range(2, Nneurons):
+    for neuron_i in range(4, Nneurons):
         plt.plot(timeaxis, Glutneurons_rec[neuron_i])
         plt.title('Not receiving inputs')
 
     a = plt.subplot(412, sharex=a)
-    for neuron_i in range(0, 2):
+    for neuron_i in range(0, 4):
         plt.plot(timeaxis, Glutneurons_rec[neuron_i])
         plt.title('Receiving inputs')
 
@@ -262,10 +262,10 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
     plt.title('inputs')
 
     # # all
-    # return meanLGN, meanTRN, meanV1input, meanV1output
+    return meanLGN, meanTRN, meanV1input, meanV1output
 
     # # only LGN, TRN
     # return meanLGN, meanTRN
 
     # LGN TRN L4, no L6
-    return meanLGN, meanTRN, meanV1input
+    #return meanLGN, meanTRN, meanV1input

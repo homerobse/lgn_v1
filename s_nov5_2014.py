@@ -1,28 +1,24 @@
 from simulation import simulate
 import matplotlib.pyplot as plt
 import numpy as np
-import pdb
 from utils import exponential_connect
 
 with_V1_L4 = True
-with_V1_L6 = True
+with_V1_L6 = False
 with_TRN = True
 
-connect_E_LGN_E_L4 = True
-connect_E_LGN_I_L4 = True
-connect_E_LGN_E_L6 = True
-connect_E_L6_E_LGN = True
-connect_E_L6_TRN = True
-connect_E_LGN_TRN = True
-connect_TRN_E_LGN = True
-#only set to true if include V1 L4 but not V1 L6
+connect_E_LGN_E_L4 = False
+connect_E_LGN_I_L4 = False
 connect_E_L4_E_LGN = False
+connect_E_LGN_E_L6 = False
+connect_E_L6_E_LGN = False
 connect_E_L4_TRN = False
+connect_E_L6_TRN = False
+connect_E_LGN_TRN = False
+connect_TRN_E_LGN = False
 
 nruns = 1
 total_time = 1000
-
-
 
 # number of cells should be divisible by 4, otherwise python will truncate (search simulation for "*1/4")
 n_E_LGN = 20
@@ -129,8 +125,6 @@ W_E_L4_TRN = np.random.exponential(1, n_E_L4*NGABA_trn)*4/1000000.
 W_E_L4_TRN = W_E_L4_TRN.reshape((n_E_L4, NGABA_trn))
 
 W_E_L6_TRN = W_E_L4_TRN
-
-#pdb.set_trace()
 
 simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
          input, input_glut_threshold, input_glut_delay, input_glut_weight, input_gaba_threshold, input_gaba_delay, input_gaba_weight,
