@@ -214,7 +214,7 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
                     GlutGABA_sin2.append(h.NetCon(Glutneurons2[neuron_i2].soma(0.5)._ref_v, GABAneurons2[Gneuron_i2].synE,
                                                   0, 1, W_E_L4_I_L4[neuron_i2, Gneuron_i2]))
                     h.pop_section()
-
+#ALL-to-ALL connectivity
             if connect_E_LGN_E_L4:
                 #extrinsic connections
                 #connections from Glutamatergic neurons of network 1 (LGN) to network 2 (V1)
@@ -226,6 +226,19 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
                         Glutnt1nt2_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v, Glutneurons2[neuron_j].synE,
                                                        0, delay_E_LGN_E_L4, W_E_LGN_E_L4[neuron_i, neuron_j]))
                     h.pop_section()
+                    
+            #topographic connectivity        
+#            if connect_E_LGN_E_L4:
+#                #extrinsic connections
+#                #connections from Glutamatergic neurons of network 1 (LGN) to network 2 (V1)
+#
+#                Glutnt1nt2_sin = list()
+#                for neuron_i in range(len(Glutneurons)):
+#                    Glutneurons[neuron_i].soma.push()
+#                    Glutnt1nt2_sin.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v, Glutneurons2[neuron_i].synE,
+#                                         0, delay_E_LGN_E_L4, W_E_LGN_E_L4[neuron_i, neuron_i]))
+#                    h.pop_section()     
+#                    
 
             if connect_E_L4_E_LGN:
                 #connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
@@ -243,6 +256,7 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
             # Population 1 and population 2 are different
             #
             # Hirsch et al., 1998
+            #All-to-ALL connectivity
             if connect_E_LGN_I_L4:
                 # connections from Glutamatergic neurons of network (LGN) to network V1 L4
                 sin_E_LGN_I_L4 = list()
@@ -253,6 +267,17 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
                         sin_E_LGN_I_L4.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v, GABAneurons2[neuron_j].synE,
                                                        0, delay_E_LGN_I_L4, W_E_LGN_I_L4[neuron_i, neuron_j]))
                     h.pop_section()
+            
+#            #topographic connectivity        
+#            if connect_E_LGN_I_L4:
+#                # connections from Glutamatergic neurons of network (LGN) to network V1 L4
+#                sin_E_LGN_I_L4 = list()
+#                len_LGN = len(Glutneurons)
+#                for neuron_i in range(0, len_LGN*1/4):
+#                    Glutneurons[neuron_i].soma.push()
+#                    sin_E_LGN_I_L4.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v, GABAneurons2[neuron_i].synE,
+#                                                       0, delay_E_LGN_I_L4, W_E_LGN_I_L4[neuron_i, neuron_i]))
+#                    h.pop_section()                 
 
         if with_V1_L6:
             #create connections in network 2  (V1 L6)
@@ -301,6 +326,7 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
                                                       0, 1, W_E_L4_E_L6[neuron_i, neuron_j]))
                 h.pop_section()
 
+#ALL-to-ALL connections of feedback
             if connect_E_L6_E_LGN:
                 #connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
                 k = 0
@@ -312,6 +338,17 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
                                                       0, delay_distbtn_E_L6_LGN[k], W_E_L6_E_LGN[neuron_i, neuron_j]))
                         k += 1
                     h.pop_section()
+                    
+#            if connect_E_L6_E_LGN:
+#                #connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
+#                k = 0
+#                GlutL6nt1_sin = list()
+#                for neuron_i in range(len(GlutneuronsL6)):
+#                    GlutneuronsL6[neuron_i].soma.push()
+#                    GlutL6nt1_sin.append(h.NetCon(GlutneuronsL6[neuron_i].soma(0.5)._ref_v, Glutneurons[neuron_i].synE_CT,
+#                                        0, delay_distbtn_E_L6_LGN[k], W_E_L6_E_LGN[neuron_i, neuron_i]))
+#                    k += 1
+#                    h.pop_section()                    
 
             if connect_E_LGN_E_L6:
                 #connections from Glutamatergic neurons of LGN network to V1 L6 network
@@ -358,7 +395,7 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
                         GlutGABAtneurons_sinL6trn.append(h.NetCon(GlutneuronsL6[neuron_i].soma(0.5)._ref_v, GABAneurons_trn[neuron_j].synE_CT, 0, 5,
                                                                   W_E_L6_TRN[neuron_i, neuron_j]))
                     h.pop_section()
-
+            #ALL-to-ALL
             if connect_E_LGN_TRN:
                 #connections from Glutamatergic neurons of network 1 (LGN) to TRN
                 GlutGABAtneurons_sin1 = list()
@@ -369,17 +406,34 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
                         GlutGABAtneurons_sin1.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v, GABAneurons_trn[neuron_j].synE, 0, delayGlutGABAtneurons,
                                                               W_E_LGN_TRN[neuron_i, neuron_j]))
                     h.pop_section()
-
+            #topographic
+#            if connect_E_LGN_TRN:
+#                #connections from Glutamatergic neurons of network 1 (LGN) to TRN
+#                GlutGABAtneurons_sin1 = list()
+#                delayGlutGABAtneurons = 1
+#                for neuron_i in range(len(Glutneurons)):
+#                    Glutneurons[neuron_i].soma.push()
+#                    GlutGABAtneurons_sin1.append(h.NetCon(Glutneurons[neuron_i].soma(0.5)._ref_v, GABAneurons_trn[neuron_i].synE, 0, delayGlutGABAtneurons,
+#                                                              W_E_LGN_TRN[neuron_i, neuron_i]))
+                    h.pop_section()                    
+            #ALL-to-ALL
             if connect_TRN_E_LGN:
                 #connectinos from GABAergic neurons of TRN to network 1 (LGN)
                 GABAGlutneurons_sin = list()
                 for neuron_i in range(len(GABAneurons_trn)):
                     GABAneurons_trn[neuron_i].soma.push()
                     for neuron_j in range(len(Glutneurons)):
-                        GABAGlutneurons_sin.append(h.NetCon(GABAneurons_trn[neuron_i].soma(0.5)._ref_v, Glutneurons[neuron_j].synE,
+                        GABAGlutneurons_sin.append(h.NetCon(GABAneurons_trn[neuron_i].soma(0.5)._ref_v, Glutneurons[neuron_j].synI,
                                                             0, 1, W_TRN_E_LGN[neuron_i, neuron_j]))
                     h.pop_section()
-
+#            if connect_TRN_E_LGN:
+#                #connectinos from GABAergic neurons of TRN to network 1 (LGN)
+#                GABAGlutneurons_sin = list()
+#                for neuron_i in range(len(GABAneurons_trn)):
+#                    GABAneurons_trn[neuron_i].soma.push()
+#                    GABAGlutneurons_sin.append(h.NetCon(GABAneurons_trn[neuron_i].soma(0.5)._ref_v, Glutneurons[neuron_i].synI,
+#                                                            0, 1, W_TRN_E_LGN[neuron_i, neuron_i]))
+#                    h.pop_section()
 
         #generate inputs to network 1
         netStim = list()
@@ -418,7 +472,7 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
         stim3 = h.NetCon(netStim[0], GABAneurons[0].synE, input_gaba_threshold, input_gaba_delay, input_gaba_weight)
         stim4 = h.NetCon(netStim[1], GABAneurons[1].synE, input_gaba_threshold, input_gaba_delay, input_gaba_weight)
         stim5 = h.NetCon(netStim[2], GABAneurons[2].synE, input_gaba_threshold, input_gaba_delay, input_gaba_weight)
-        #stim6 = h.NetCon(netStim[0], GABAneurons[3].synE, input_gaba_threshold, input_gaba_delay, input_gaba_weight)
+        stim6 = h.NetCon(netStim[3], GABAneurons[3].synE, input_gaba_threshold, input_gaba_delay, input_gaba_weight)
         #stim7 = h.NetCon(netStim[0], GABAneurons[4].synE, input_gaba_threshold, input_gaba_delay, input_gaba_weight)
 
 
@@ -447,18 +501,18 @@ def simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
 #                                                               Nneurons, NneuronsL4, NGABA_trn)
 #
 
-        ofname = "../data_files/" "sim" + str(nsim+96) + ".txt"
+        ofname = "../data_files/" "sim" + str(nsim+0) + ".txt"
 
         n = len(timeaxis)
         indx = np.arange(1, n, 40)
 
         w = np.array(meanLGN)
         u = np.array(meanTRN)
-        #x = np.array(meanV1input)
-        #y = np.array(meanV1output)
+        x = np.array(meanV1input)
+        y = np.array(meanV1output)
         z = np.array(timeaxis)
-        #np.savetxt(ofname, (w[indx], u[indx], x[indx], y[indx], z[indx]))
-        np.savetxt(ofname, (w[indx], u[indx], z[indx]))
+        np.savetxt(ofname, (w[indx], u[indx], x[indx], y[indx], z[indx]))
+        #np.savetxt(ofname, (w[indx], u[indx], z[indx]))
 
         print "Progress: %d runs simulated %d runs missing" % (nsim + 1, nruns - nsim - 1)
 
