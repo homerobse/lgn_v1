@@ -3,39 +3,14 @@ from matplotlib.mlab import psd
 import numpy as np
 from neuron import h
 
-# # only LGN TRN
-# def plot_all(timeaxis, stim_rec,  with_V1_L4, with_V1_L6, with_TRN,
-#                GABAneurons_trn_rec, Glutneurons_rec,
-#                GABAneurons, GABAneurons_rec,
-#                Nneurons, NGABA_trn):
-
 # # all
 def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_rec2, GABAneurons_trn_rec,
              Glutneurons_recL6, Glutneurons_rec, GABAneurons_recL6, GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
              Nneurons, NneuronsL6, NneuronsL4, NGABA_trn, NGABA_L6):
 
-# LGN, TRN, L4, no L6
-#def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
-#           Glutneurons_rec2, GABAneurons_trn_rec, Glutneurons_rec,
-#           GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
-#           Nneurons, NneuronsL4, NGABA_trn):
-
-
-    #vitor
-    #x = rand(1000)
-    #y = sin(t*0.1*pi*2)
-    #z = x+y
-    #a = np.fft.fft(z)
-
-    #t= range(len(x))
-
-    #t = t/ fs
-
-    #fs = 1?
-    # f = fs*(asarray(range(len(a)))-1)/len(a)
-    #plot(f,abs(a))
-
     Fs = 1/2.5e-05
+
+    meanV1input = np.zeros(np.shape(np.mean(Glutneurons_rec2, 0)))
     if with_V1_L4:
         meanV1input = np.mean(Glutneurons_rec2, 0)
         meanV1input = meanV1input - np.mean(meanV1input)
@@ -47,11 +22,6 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
 
         #fs = 1000
         #f = fs*(np.asarray(range(lenfft))-1)/lenfft
-
-        #print "len fft"
-        #print lenfft
-        #print "len freq"
-        #print len(freq)
 
         #plt.figure(5)
         #plt.plot(freq[1:lenfft/2], abs(tmpfft[1:lenfft/2]))
@@ -72,7 +42,7 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
     meanLGN = meanLGN - np.mean(meanLGN)
 
     #plt.figure(7)
-    #plt.plot(freq[1:lenfft/2], abs(tmpfft[1:lenfft/2]))
+    # plt.plot(freq[1:lenfft/2], abs(tmpfft[1:lenfft/2]))
     #plt.xlim([0,150])
     #plt.title('PSD of LGN LFP (FFT)')
 
@@ -80,13 +50,14 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
     (Pxx, freqpsd) = psd(meanLGN, 20000/2, Fs)  # args are signal, nfft, Fs
     plt.figure(8)
     plt.plot(freqpsd, Pxx)
-    plt.xlim([0,150])
+    plt.xlim([0, 150])
     plt.title('PSD of LGN LFP (PSD)')
 
+    meanTRN = np.zeros(np.shape(np.mean(GABAneurons_trn_rec, 0)))
     if with_TRN:
         ####################################
         #TRN LFP
-        meanTRN = np.mean(GABAneurons_trn_rec,0)
+        meanTRN = np.mean(GABAneurons_trn_rec, 0)
         meanTRN = meanTRN - np.mean(meanTRN)
 
         #plt.figure(7)
@@ -98,7 +69,7 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
         (Pxx, freqpsd) = psd(meanTRN, 20000/2, Fs)  # args are signal, nfft, Fs
         plt.figure(9)
         plt.plot(freqpsd, Pxx)
-        plt.xlim([0,150])
+        plt.xlim([0, 150])
         plt.title('PSD of TRN LFP (PSD)')
 
         #plot trn neurons
@@ -114,16 +85,17 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
             plt.plot(timeaxis, GABAneurons_trn_rec[neuron_i])
             plt.title('2-rest inputs net 2')
 
-        plt.ylim([-100,50])
+        plt.ylim([-100, 50])
         plt.title('GABAergic TRN neurons')
 
         plt.xlim([0, h.tstop])
 
+    meanV1output = np.zeros(np.shape(np.mean(Glutneurons_recL6, 0)))
     if with_V1_L6:
         ####################################
         #L6 LFP
-        meanV1output = np.mean(Glutneurons_recL6,0)
-        meanV1output = meanV1output- np.mean(meanV1output)
+        meanV1output = np.mean(Glutneurons_recL6, 0)
+        meanV1output = meanV1output - np.mean(meanV1output)
 
         (Pxx, freqpsd) = psd(meanV1output, 20000/2, Fs)  # args are signal, nfft, Fs
         plt.figure(10)
@@ -137,7 +109,7 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
         a = plt.subplot(311)
 
         plt.plot(timeaxis, meanV1output)
-        plt.title('average membrane potential of L6 cells' )
+        plt.title('average membrane potential of L6 cells')
 
         a = plt.subplot(312)
         for neuron_i in range(2, NneuronsL6):
@@ -148,7 +120,7 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
         for neuron_i in range(0, NGABA_L6):
             plt.plot(timeaxis, GABAneurons_recL6[neuron_i])
 
-        plt.ylim([-100,50])
+        plt.ylim([-100, 50])
         plt.title('GABAergic L6 neurons')
         plt.xlim([0, h.tstop])
 
@@ -237,12 +209,12 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
         a = plt.subplot(413)
         for neuron_i in range(2, NneuronsL4):
             plt.plot(timeaxis, Glutneurons_rec2[neuron_i])
-            plt.title('2-rest inputs net 2')
+            plt.title('2-rest inputs net L4')
 
         a = plt.subplot(412, sharex=a)
         for neuron_i in range(0, 2):
             plt.plot(timeaxis, Glutneurons_rec2[neuron_i])
-            plt.title('0-2 inputs net 2')
+            plt.title('0-2 inputs net L4')
 
         plt.subplot(414, sharex=a)
 
@@ -263,9 +235,3 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
 
     # # all
     return meanLGN, meanTRN, meanV1input, meanV1output
-
-    # # only LGN, TRN
-    # return meanLGN, meanTRN
-
-    # LGN TRN L4, no L6
-    #return meanLGN, meanTRN, meanV1input
