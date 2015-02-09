@@ -408,9 +408,9 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN,
 
         # #all
         meanLGN, meanTRN, meanV1input, meanV1output = plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
-                                                                E_L4_rec, TRN_rec, E_L6_rec, E_LGN_rec,
-                                                                I_L6_rec, I_LGN, I_L4, I_LGN_rec, I_L4_rec,
-                                                                n_E_LGN, n_E_L6, n_E_L4, n_TRN, n_I_L6)
+                                                               E_L4_rec, TRN_rec, E_L6_rec, E_LGN_rec,
+                                                               I_L6_rec, I_LGN, I_L4, I_LGN_rec, I_L4_rec,
+                                                               n_E_LGN, n_E_L6, n_E_L4, n_TRN, n_I_L6)
 
         ofname = "../data_files/" "sim" + str(nsim+0) + ".txt"
 
