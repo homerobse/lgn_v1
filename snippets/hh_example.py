@@ -7,7 +7,7 @@ soma = h.Section()
 
 soma.insert('hh')
 
-stim = h.IClamp(0.5, soma)
+stim = h.IClamp(soma(0.5))
 
 stim.delay = 1
 stim.dur = 7
