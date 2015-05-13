@@ -33,7 +33,7 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
         plt.figure(6)
         plt.plot(freqpsd, Pxx)
         plt.xlim([0, 150])
-        plt.title('PSD of V1 L4 LFP (PSD)')
+        plt.title('PSD of V1 L4 LFP')
 
 
     ####################################
@@ -51,7 +51,7 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
     plt.figure(8)
     plt.plot(freqpsd, Pxx)
     plt.xlim([0, 150])
-    plt.title('PSD of LGN LFP (PSD)')
+    plt.title('PSD of LGN LFP')
 
     meanTRN = np.zeros(np.shape(np.mean(GABAneurons_trn_rec, 0)))
     if with_TRN:
@@ -70,7 +70,7 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
         plt.figure(9)
         plt.plot(freqpsd, Pxx)
         plt.xlim([0, 150])
-        plt.title('PSD of TRN LFP (PSD)')
+        plt.title('PSD of TRN LFP')
 
         #plot trn neurons
 
@@ -101,7 +101,7 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
         plt.figure(10)
         plt.plot(freqpsd, Pxx)
         plt.xlim([0, 150])
-        plt.title('PSD of V1 L6 LFP (PSD)')
+        plt.title('PSD of V1 L6 LFP')
 
         #plot L6 neurons
 

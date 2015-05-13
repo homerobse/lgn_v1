@@ -1,7 +1,7 @@
 from simulation import simulate
 import matplotlib.pyplot as plt
 import numpy as np
-import pdb
+# import pdb
 from utils import exponential_connect, constant_connect
 
 with_V1_L4 = True
@@ -9,18 +9,19 @@ with_V1_L6 = True
 with_TRN = True
 
 #FF
-connect_E_LGN_E_L4 = True
-connect_E_LGN_I_L4 = True
-connect_E_LGN_E_L6 = True
+connect_E_LGN_E_L4 = True  # connected Hirsch connectivity
+connect_E_LGN_I_L4 = True  # connected Hirsch connectivity
+connect_E_LGN_E_L6 = True  # connected Hirsch connectivity
+connect_E_LGN_I_L6 = True  # connected Hirsch connectivity
 connect_E_L4_E_L6 = True
 
 #FB
 connect_E_L6_E_LGN = True
-connect_E_L6_TRN = False
+connect_E_L6_TRN = True
 
 #TRN loop
-connect_E_LGN_TRN = False
-connect_TRN_E_LGN = False
+connect_E_LGN_TRN = True
+connect_TRN_E_LGN = True
 
 #only set to true if include V1 L4 but not V1 L6
 connect_E_L4_E_LGN = False
@@ -140,7 +141,7 @@ simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
          W_E_LGN_E_LGN, W_I_LGN_I_LGN, W_E_L4_E_L4, W_I_L4_I_L4, W_E_L6_E_L6, W_I_L6_I_L6, W_TRN_TRN,
          W_I_LGN_E_LGN, W_I_L4_E_L4, W_E_L4_I_L4, W_I_L6_E_L6, W_E_L6_I_L6,
          W_E_LGN_TRN, W_TRN_E_LGN, W_E_L6_TRN, W_E_L4_E_L6, W_E_LGN_E_L4, W_E_L4_E_LGN, W_E_L6_E_LGN, W_E_LGN_E_L6, W_E_LGN_I_L4, W_E_L4_TRN,
-         connect_E_LGN_E_L4, connect_E_LGN_I_L4, connect_E_L4_E_LGN, connect_E_LGN_E_L6, connect_E_L6_E_LGN, connect_E_L4_TRN, connect_E_L6_TRN,
+         connect_E_LGN_E_L4, connect_E_LGN_I_L4, connect_E_L4_E_LGN, connect_E_LGN_I_L6, connect_E_LGN_E_L6, connect_E_L6_E_LGN, connect_E_L4_TRN, connect_E_L6_TRN,
          connect_E_LGN_TRN, connect_TRN_E_LGN, connect_E_L4_E_L6)
 
 plt.show()
