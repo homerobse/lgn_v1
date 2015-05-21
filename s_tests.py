@@ -26,7 +26,7 @@ connect_TRN_E_LGN = True
 connect_E_L4_E_LGN = False
 connect_E_L4_TRN = False
 
-nruns = 3
+nruns = 2
 total_time = 500
 
 # number of cells should be divisible by 4, otherwise python will truncate (search simulation for "*1/4")
@@ -69,12 +69,21 @@ input_gaba_weight = 5./100000  # PSP 5 ~ 20  (Wang & Hirsch 2010)
 
 #### INTRINSIC CONNECTIONS
 
-W_E_LGN_E_LGN = constant_connect(0., n_e_lgn, n_e_lgn, False)  # TODO: reference for this -> LGN doesn't have intrinsic connections
-W_I_LGN_I_LGN = exponential_connect(0., n_i_lgn, n_i_lgn, False)  # TODO: reference for this -> LGN doesn't have intrinsic connections
-W_I_LGN_E_LGN = exponential_connect(1.75/100000, n_i_lgn, n_e_lgn)  # PSP 5 mV  (Wang & Hirsch 2010)
-#W_I_LGN_E_LGN = exponential_connect(5/1000000, n_i_lgn, n_e_lgn)  # PSP 5 mV  (Wang & Hirsch 2010)
-#W_I_LGN_E_LGN = exponential_connect(1/100000, n_i_lgn, n_e_lgn)
-w_e_lgn_i_lgn = constant_connect(0., n_e_lgn, n_i_lgn)
+lgn_params = {
+    'w_e_lgn_e_lgn': constant_connect(0., n_e_lgn, n_e_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
+    'w_i_lgn_i_lgn': exponential_connect(0., n_i_lgn, n_i_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
+    'w_i_lgn_e_lgn': exponential_connect(1.75/100000, n_i_lgn, n_e_lgn),  # PSP 5 mV  (Wang & Hirsch 2010)
+    #'w_i_lgn_e_lgn': exponential_connect(5/1000000, n_i_lgn, n_e_lgn),  # PSP 5 mV  (Wang & Hirsch 2010)
+    #'w_i_lgn_e_lgn': exponential_connect(1/100000, n_i_lgn, n_e_lgn),
+    'w_e_lgn_i_lgn': constant_connect(0., n_e_lgn, n_i_lgn)
+}
+
+# W_E_LGN_E_LGN = constant_connect(0., n_e_lgn, n_e_lgn, False)  # TODO: reference for this -> LGN doesn't have intrinsic connections
+# W_I_LGN_I_LGN = exponential_connect(0., n_i_lgn, n_i_lgn, False)  # TODO: reference for this -> LGN doesn't have intrinsic connections
+# W_I_LGN_E_LGN = exponential_connect(1.75/100000, n_i_lgn, n_e_lgn)  # PSP 5 mV  (Wang & Hirsch 2010)
+# #W_I_LGN_E_LGN = exponential_connect(5/1000000, n_i_lgn, n_e_lgn)  # PSP 5 mV  (Wang & Hirsch 2010)
+# #W_I_LGN_E_LGN = exponential_connect(1/100000, n_i_lgn, n_e_lgn)
+# w_e_lgn_i_lgn = constant_connect(0., n_e_lgn, n_i_lgn)
 
 W_I_L4_I_L4 = exponential_connect(8/100000., n_I_L4, n_I_L4, False)
 W_E_L4_E_L4 = exponential_connect(4/100000., n_E_L4, n_E_L4, False)
@@ -99,7 +108,7 @@ W_TRN_E_LGN = exponential_connect(14/1000000., n_TRN, n_e_lgn)
 W_E_LGN_E_L4 = exponential_connect(4/100000., n_e_lgn, n_E_L4)
 W_E_LGN_I_L4 = exponential_connect(4/1000000., n_e_lgn, n_I_L4)
 W_E_L4_E_LGN = exponential_connect(4/1000000., n_E_L4, n_e_lgn)
-# TODO: check if E_L4 should be connected to I_LGN
+# TODO: E_L4 is NOT connected to I_LGN. Find reference
 
 W_E_LGN_E_L6 = exponential_connect(2/100000., n_e_lgn, n_E_L6)
 W_E_LGN_I_L6 = exponential_connect(2/1000000., n_e_lgn, n_I_L6)
@@ -116,8 +125,8 @@ simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
          n_e_lgn, n_i_lgn, n_E_L6, n_I_L6, n_E_L4, n_I_L4, n_TRN,
          delay_distbtn_E_L6_LGN, delay_E_L4_E_LGN, delay_E_LGN_I_L4, delay_E_LGN_E_L4, delay_E_LGN_E_L6,
          delay_E_LGN_TRN, delay_E_L4_TRN, delay_distbtn_E_L6_TRN, delay_E_LGN_I_LGN, delay_I_LGN_E_LGN, delay_E_LGN_I_L6,
-         W_E_LGN_E_LGN, W_I_LGN_I_LGN, W_E_L4_E_L4, W_I_L4_I_L4, W_E_L6_E_L6, W_I_L6_I_L6, W_TRN_TRN,
-         W_I_LGN_E_LGN, w_e_lgn_i_lgn, W_I_L4_E_L4, W_E_L4_I_L4, W_I_L6_E_L6, W_E_L6_I_L6,
+         lgn_params, W_E_L4_E_L4, W_I_L4_I_L4, W_E_L6_E_L6, W_I_L6_I_L6, W_TRN_TRN,
+         W_I_L4_E_L4, W_E_L4_I_L4, W_I_L6_E_L6, W_E_L6_I_L6,
          W_E_LGN_TRN, W_TRN_E_LGN, W_E_L6_TRN, W_E_L4_E_L6, W_E_LGN_E_L4, W_E_L4_E_LGN,
          W_E_L6_E_LGN, W_E_LGN_E_L6, W_E_LGN_I_L6, W_E_LGN_I_L4, W_E_L4_TRN,
          connect_E_LGN_E_L4, connect_E_LGN_I_L4, connect_E_L4_E_LGN, connect_E_LGN_I_L6, connect_E_LGN_E_L6, connect_E_L6_E_LGN, connect_E_L4_TRN, connect_E_L6_TRN,

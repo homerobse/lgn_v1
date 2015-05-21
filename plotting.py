@@ -226,12 +226,12 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
         plt.xlim([0, h.tstop])
 
 
-    #plot input
+    # plot input
     plt.figure(5)
     plt.plot(stim_rec, np.ones([stim_rec.size(), 1]), 'ob')
     plt.xlim([timeaxis[0], timeaxis[-1]])
     plt.ylim([0., 2.])
     plt.title('inputs')
 
-    # # all
+    # all
     return meanLGN, meanTRN, meanV1input, meanV1output

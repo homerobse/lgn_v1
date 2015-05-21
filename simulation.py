@@ -1,10 +1,3 @@
-# try:
-#     import sys
-#     import DLFCN
-#     sys.setdlopenflags(DLFCN.RTLD_NOW | DLFCN.RTLD_GLOBAL)
-# except:
-#     pass
-
 from neuron import h
 import numpy as np
 
@@ -12,7 +5,6 @@ from plotting import plot_all
 from utils import e_net_connect, i_net_connect, e_ct_net_connect, e_net_connect_delay_dist, e_ct_net_connect_delay_dist
 
 h.load_file("nrngui.hoc")  # load standard run system
-
 # h.dt = 1
 # global dt
 # dt = h.dt
@@ -135,8 +127,8 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN,
              n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_I_L4, n_trn,
              delay_distbtn_E_L6_LGN, delay_E_L4_E_LGN, delay_E_LGN_I_L4, delay_E_LGN_E_L4, delay_E_LGN_E_L6,
              delay_E_LGN_TRN, delay_E_L4_TRN, delay_distbtn_E_L6_TRN, delay_E_LGN_I_LGN, delay_I_LGN_E_LGN, delay_E_LGN_I_L6,
-             w_e_lgn_e_lgn, w_i_lgn_i_lgn, W_E_L4_E_L4, W_I_L4_I_L4, w_e_l6_e_l6, w_i_l6_i_l6, W_TRN_TRN,
-             w_i_lgn_e_lgn, w_e_lgn_i_lgn, W_I_L4_E_L4, W_E_L4_I_L4, w_i_l6_e_l6, w_e_l6_i_l6,
+             lgn_params, W_E_L4_E_L4, W_I_L4_I_L4, w_e_l6_e_l6, w_i_l6_i_l6, W_TRN_TRN,
+             W_I_L4_E_L4, W_E_L4_I_L4, w_i_l6_e_l6, w_e_l6_i_l6,
              W_E_LGN_TRN, W_TRN_E_LGN, w_e_l6_trn, W_E_L4_E_L6, W_E_LGN_E_L4, W_E_L4_E_LGN,
              w_e_l6_e_lgn, W_E_LGN_E_L6, W_E_LGN_I_L6, W_E_LGN_I_L4, W_E_L4_TRN,
              connect_E_LGN_E_L4, connect_E_LGN_I_L4, connect_E_L4_E_LGN, connect_E_LGN_I_L6, connect_E_LGN_E_L6, connect_E_L6_E_LGN, connect_E_L4_TRN, connect_E_L6_TRN,
@@ -151,10 +143,10 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN,
         e_lgn, E_LGN_rec = createnetwork(n_e_lgn)
 
         #create connections in network 1 (LGN)
-        e_lgn_e_lgn_syn = e_net_connect(e_lgn, e_lgn, 0, 1, w_e_lgn_e_lgn)
-        i_lgn_i_lgn_syn = i_net_connect(i_lgn, i_lgn, 0, 1, w_i_lgn_i_lgn)
-        i_lgn_e_lgn_syn = i_net_connect(i_lgn, e_lgn, 0, 1, w_i_lgn_e_lgn)
-        e_lgn_i_lgn_syn = e_net_connect(e_lgn, i_lgn, 0, 1, w_e_lgn_i_lgn)  # weight should be set to zero
+        e_lgn_e_lgn_syn = e_net_connect(e_lgn, e_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'])
+        i_lgn_i_lgn_syn = i_net_connect(i_lgn, i_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'])
+        i_lgn_e_lgn_syn = i_net_connect(i_lgn, e_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'])
+        e_lgn_i_lgn_syn = e_net_connect(e_lgn, i_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'])  # weight should be set to zero
 
         e_l4, E_L4_rec = createnetwork(n_e_l4)
         I_L4, I_L4_rec = createnetwork(n_I_L4)
