@@ -36,7 +36,7 @@ n_E_L6 = 20
 n_I_L6 = 6
 n_E_L4 = 20
 n_I_L4 = 6
-n_TRN = 10
+n_trn = 10
 
 delay_distbtn_E_L6_LGN = (np.random.exponential(1, n_E_L4**2)*4)+4  #  Briggs F, Usrey W M. 2009, Neuron TODO: check if delay should be different between two different net2 cells connected to the same net1 cell
 # delay_E_L6_TRN = 5
@@ -95,15 +95,15 @@ W_E_L6_E_L6 = exponential_connect(4/100000., n_E_L6, n_E_L6, False)
 W_I_L6_E_L6 = exponential_connect(6./10000, n_I_L6, n_E_L6)
 W_E_L6_I_L6 = exponential_connect(1./100000, n_E_L6, n_I_L6)
 
-W_TRN_TRN = exponential_connect(14/1000000., n_TRN, n_TRN, False)  # assuming linearity of psp with weights  // testing effect of connection weight
-#W_TRN_TRN = exponential_connect(4/1000000., n_TRN, n_TRN, False)  # assuming linearity of psp with weights  // testing effect of connection weight
+W_TRN_TRN = exponential_connect(14/1000000., n_trn, n_trn, False)  # assuming linearity of psp with weights  // testing effect of connection weight
+#W_TRN_TRN = exponential_connect(4/1000000., n_trn, n_trn, False)  # assuming linearity of psp with weights  // testing effect of connection weight
 
 #EXTRINSIC CONNECTIONS
 
-# W_E_LGN_TRN = exponential_connect(4/100000., n_e_lgn, n_TRN)
-# W_TRN_E_LGN = exponential_connect(4/100000., n_TRN, n_e_lgn)
-W_E_LGN_TRN = exponential_connect(14/1000000., n_e_lgn, n_TRN)
-W_TRN_E_LGN = exponential_connect(14/1000000., n_TRN, n_e_lgn)
+# W_E_LGN_TRN = exponential_connect(4/100000., n_e_lgn, n_trn)
+# W_TRN_E_LGN = exponential_connect(4/100000., n_trn, n_e_lgn)
+W_E_LGN_TRN = exponential_connect(14/1000000., n_e_lgn, n_trn)
+W_TRN_E_LGN = exponential_connect(14/1000000., n_trn, n_e_lgn)
 
 W_E_LGN_E_L4 = exponential_connect(4/100000., n_e_lgn, n_E_L4)
 W_E_LGN_I_L4 = exponential_connect(4/1000000., n_e_lgn, n_I_L4)
@@ -117,12 +117,12 @@ W_E_L6_E_LGN = exponential_connect(4.375/1000000.,  n_E_L6, n_e_lgn)  # 4 mv / 1
 
 W_E_L4_E_L6 = exponential_connect(4/100000., n_E_L4, n_E_L6)
 
-W_E_L6_TRN = exponential_connect(4/1000000., n_E_L6, n_TRN)
+W_E_L6_TRN = exponential_connect(4/1000000., n_E_L6, n_trn)
 W_E_L4_TRN = W_E_L6_TRN  # only if net include V1 L4 but not V1 L6
 
 simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN,
          input, input_glut_threshold, input_glut_delay, input_glut_weight, input_gaba_threshold, input_gaba_delay, input_gaba_weight,
-         n_e_lgn, n_i_lgn, n_E_L6, n_I_L6, n_E_L4, n_I_L4, n_TRN,
+         n_e_lgn, n_i_lgn, n_E_L6, n_I_L6, n_E_L4, n_I_L4, n_trn,
          delay_distbtn_E_L6_LGN, delay_E_L4_E_LGN, delay_E_LGN_I_L4, delay_E_LGN_E_L4, delay_E_LGN_E_L6,
          delay_E_LGN_TRN, delay_E_L4_TRN, delay_distbtn_E_L6_TRN, delay_E_LGN_I_LGN, delay_I_LGN_E_LGN, delay_E_LGN_I_L6,
          lgn_params, W_E_L4_E_L4, W_I_L4_I_L4, W_E_L6_E_L6, W_I_L6_I_L6, W_TRN_TRN,
