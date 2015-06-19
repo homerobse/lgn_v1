@@ -122,15 +122,12 @@ def createnetworkL6(n_neurons=4):
     return createnetwork(n_neurons)
 
 
-def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN,
-             input, input_glut_threshold, input_glut_delay, input_glut_weight, input_gaba_threshold, input_gaba_delay, input_gaba_weight,
+def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_input_lgn,
              n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_I_L4, n_trn,
              delay_distbtn_E_L6_LGN, delay_E_L4_E_LGN, delay_E_LGN_I_L4, delay_E_LGN_E_L4, delay_E_LGN_E_L6,
              delay_E_LGN_TRN, delay_E_L4_TRN, delay_distbtn_E_L6_TRN, delay_E_LGN_I_LGN, delay_I_LGN_E_LGN, delay_E_LGN_I_L6,
-             lgn_params, W_E_L4_E_L4, W_I_L4_I_L4, w_e_l6_e_l6, w_i_l6_i_l6, W_TRN_TRN,
-             W_I_L4_E_L4, W_E_L4_I_L4, w_i_l6_e_l6, w_e_l6_i_l6,
-             W_E_LGN_TRN, W_TRN_E_LGN, w_e_l6_trn, W_E_L4_E_L6, W_E_LGN_E_L4, W_E_L4_E_LGN,
-             w_e_l6_e_lgn, W_E_LGN_E_L6, W_E_LGN_I_L6, W_E_LGN_I_L4, W_E_L4_TRN,
+             lgn_params, l4_params, l6_params, W_TRN_TRN, W_E_LGN_TRN, W_TRN_E_LGN, w_e_l6_trn, W_E_L4_E_L6,
+             W_E_LGN_E_L4, W_E_L4_E_LGN, w_e_l6_e_lgn, W_E_LGN_E_L6, W_E_LGN_I_L6, W_E_LGN_I_L4, W_E_L4_TRN,
              connect_E_LGN_E_L4, connect_E_LGN_I_L4, connect_E_L4_E_LGN, connect_E_LGN_I_L6, connect_E_LGN_E_L6, connect_E_L6_E_LGN, connect_E_L4_TRN, connect_E_L6_TRN,
              connect_E_LGN_TRN, connect_TRN_E_LGN, connect_E_L4_E_L6):
 
@@ -149,14 +146,14 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN,
         e_lgn_i_lgn_syn = e_net_connect(e_lgn, i_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'])  # weight should be set to zero
 
         e_l4, E_L4_rec = createnetwork(n_e_l4)
-        I_L4, I_L4_rec = createnetwork(n_I_L4)
+        i_l4, I_L4_rec = createnetwork(n_I_L4)
         if with_V1_L4:
             #create connections in network 2  (V1 superficial)
 
-            e_l4_e_l4_sin = e_net_connect(e_l4, e_l4, 0, 1, W_E_L4_E_L4)
-            i_l4_i_l4_sin = i_net_connect(I_L4, I_L4, 0, 1, W_I_L4_I_L4)
-            e_l4_i_l4_sin = e_net_connect(e_l4, I_L4, 0, 1, W_E_L4_I_L4)
-            i_l4_e_l4_sin = i_net_connect(I_L4, e_l4, 0, 1, W_I_L4_E_L4)
+            e_l4_e_l4_sin = e_net_connect(e_l4, e_l4, 0, 1, l4_params['w_e_l4_e_l4'])
+            i_l4_i_l4_sin = i_net_connect(i_l4, i_l4, 0, 1, l4_params['w_i_l4_i_l4'])
+            e_l4_i_l4_sin = e_net_connect(e_l4, i_l4, 0, 1, l4_params['w_e_l4_i_l4'])
+            i_l4_e_l4_sin = i_net_connect(i_l4, e_l4, 0, 1, l4_params['w_i_l4_e_l4'])
 
             # Population 1) 15 LGN E cells connect to 15 V1 L4 E cells
             # Population 2) 5 LGN E cells connect to 5 V1 L4 I cells
@@ -216,8 +213,8 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN,
                 len_LGN = len(e_lgn)
                 for neuron_i in range(0, len_LGN*1/4):
                     e_lgn[neuron_i].soma.push()
-                    for neuron_j in range(0, len(I_L4)*1/4):
-                        sin_E_LGN_I_L4.append(h.NetCon(e_lgn[neuron_i].soma(0.5)._ref_v, I_L4[neuron_j].synE,
+                    for neuron_j in range(0, len(i_l4)*1/4):
+                        sin_E_LGN_I_L4.append(h.NetCon(e_lgn[neuron_i].soma(0.5)._ref_v, i_l4[neuron_j].synE,
                                                        0, delay_E_LGN_I_L4, W_E_LGN_I_L4[neuron_i, neuron_j]))
                     h.pop_section()
 
@@ -228,7 +225,7 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN,
                 #                len_LGN = len(e_lgn)
                 #                for neuron_i in range(0, len_LGN*1/4):
                 #                    e_lgn[neuron_i].soma.push()
-                #                    sin_E_LGN_I_L4.append(h.NetCon(e_lgn[neuron_i].soma(0.5)._ref_v, I_L4[neuron_i].synE,
+                #                    sin_E_LGN_I_L4.append(h.NetCon(e_lgn[neuron_i].soma(0.5)._ref_v, i_l4[neuron_i].synE,
                 #                                                       0, delay_E_LGN_I_L4, W_E_LGN_I_L4[neuron_i, neuron_i]))
                 #                    h.pop_section()
 
@@ -236,10 +233,10 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN,
         e_l6, E_L6_rec = createnetworkL6(n_e_l6)
         if with_V1_L6:
             # create connections in network 2  (V1 L6)
-            e_l6_e_l6_sin = e_net_connect(e_l6, e_l6, 0, 1, w_e_l6_e_l6)
-            i_l6_i_l6_sin = i_net_connect(i_l6, i_l6, 0, 1, w_i_l6_i_l6)
-            i_l6_e_l6_syn = i_net_connect(i_l6, e_l6, 0, 1, w_i_l6_e_l6)
-            e_l6_i_l6_syn = e_net_connect(e_l6, i_l6, 0, 1, w_e_l6_i_l6)
+            e_l6_e_l6_sin = e_net_connect(e_l6, e_l6, 0, 1, l6_params['w_e_l6_e_l6'])
+            i_l6_i_l6_sin = i_net_connect(i_l6, i_l6, 0, 1, l6_params['w_i_l6_i_l6'])
+            i_l6_e_l6_syn = i_net_connect(i_l6, e_l6, 0, 1, l6_params['w_i_l6_e_l6'])
+            e_l6_i_l6_syn = e_net_connect(e_l6, i_l6, 0, 1, l6_params['w_e_l6_i_l6'])
 
             # connections from V1 input (L4) layer to L6
             if connect_E_L4_E_L6:
@@ -299,46 +296,22 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN,
             if connect_TRN_E_LGN:
                 trn_e_lgn_sin = i_net_connect(trn, e_lgn, 0, 1, W_TRN_E_LGN)
 
-        #generate inputs to network 1
+        # generate inputs to LGN
         netStim = list()
+        i_stims = list()
+        e_stims = list()
+        stim_rec = h.Vector()
+
         for stim_i in range(0, input['nstims']):
             netStim.append(h.NetStimPois(input['input']))
             netStim[stim_i].start = 0
             netStim[stim_i].mean = input['stimrate']  # 100 = 10 Hz, 10 = 100 Hz, 1 = 1000Hz, 5 = 200 Hz, 6 = 150 Hz
             netStim[stim_i].number = 0
 
-        #stim = h.NetCon(netStim[0],e_lgn[0].synE,0.5,0,4./(100000))
-        #stim_rec = h.Vector()
-        #stim.record(stim_rec)
-        #stim8 = h.NetCon(netStim[0],e_lgn[1].synE,0.5,0,4./(100000))
-        #stim9 = h.NetCon(netStim[0],e_lgn[2].synE,0.5,0,4./(100000))
-        #stim10 = h.NetCon(netStim[0],e_lgn[3].synE,0.5,0,4./(100000))
-        #stim11 = h.NetCon(netStim[0],e_lgn[4].synE,0.5,0,4./(100000))
-        #
-        #
-        #
-        #stim3 = h.NetCon(netStim[0],i_lgn[0].synE,0.5,0,4./(100000))
-        #stim4 = h.NetCon(netStim[0],i_lgn[1].synE,0.5,0,4./(100000))
-        #stim5 = h.NetCon(netStim[0],i_lgn[2].synE,0.5,0,4./(100000))
-        #stim6 = h.NetCon(netStim[0],i_lgn[3].synE,0.5,0,4./(100000))
-        #stim7 = h.NetCon(netStim[0],i_lgn[4].synE,0.5,0,4./(100000))
+            i_stims.append(h.NetCon(netStim[stim_i], i_lgn[stim_i].synE,  input_lgn_con['gaba_threshold'],  input_lgn_con['gaba_delay'],  input_lgn_con['gaba_weight']))
+            e_stims.append(h.NetCon(netStim[stim_i], e_lgn[stim_i].synE,  input_lgn_con['glut_threshold'],  input_lgn_con['glut_delay'],  input_lgn_con['glut_weight']))
 
-        stim = h.NetCon(netStim[0], e_lgn[0].synE, input_glut_threshold, input_glut_delay, input_glut_weight)
-        stim_rec = h.Vector()
-        stim.record(stim_rec)
-        stim2 = h.NetCon(netStim[1], e_lgn[1].synE, input_glut_threshold, input_glut_delay, input_glut_weight)
-        #stim3 = h.NetCon(netStim[0], e_lgn[1].synE_CT, input_glut_threshold, input_glut_delay, input_glut_weight)
-        stim8 = h.NetCon(netStim[2], e_lgn[2].synE, input_glut_threshold, input_glut_delay, input_glut_weight)
-        stim9 = h.NetCon(netStim[3], e_lgn[3].synE, input_glut_threshold, input_glut_delay, input_glut_weight)
-        #stim10 = h.NetCon(netStim[0], e_lgn[4].synE_CT, input_glut_threshold, input_glut_delay, input_glut_weight)
-
-
-        stim3 = h.NetCon(netStim[0], i_lgn[0].synE, input_gaba_threshold, input_gaba_delay, input_gaba_weight)
-        stim4 = h.NetCon(netStim[1], i_lgn[1].synE, input_gaba_threshold, input_gaba_delay, input_gaba_weight)
-        stim5 = h.NetCon(netStim[2], i_lgn[2].synE, input_gaba_threshold, input_gaba_delay, input_gaba_weight)
-        stim6 = h.NetCon(netStim[3], i_lgn[3].synE, input_gaba_threshold, input_gaba_delay, input_gaba_weight)
-        #stim7 = h.NetCon(netStim[0], i_lgn[4].synE, input_gaba_threshold, input_gaba_delay, input_gaba_weight)
-
+        e_stims[0].record(stim_rec)  # measure poisson input #0 to LGN Cell #0
 
         timeaxis = h.Vector()
         timeaxis.record(h._ref_t)
@@ -348,7 +321,7 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN,
         #all
         meanLGN, meanTRN, meanV1input, meanV1output = plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
                                                                E_L4_rec, TRN_rec, E_L6_rec, E_LGN_rec,
-                                                               I_L6_rec, i_lgn, I_L4, I_LGN_rec, I_L4_rec,
+                                                               I_L6_rec, i_lgn, i_l4, I_LGN_rec, I_L4_rec,
                                                                n_e_lgn, n_e_l6, n_e_l4, n_trn, n_i_l6)
 
         ofname = "../data_files/" "sim" + str(nsim+0) + ".txt"
