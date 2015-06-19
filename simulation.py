@@ -3,6 +3,7 @@ import numpy as np
 
 from plotting import plot_all
 from utils import e_net_connect, i_net_connect, e_ct_net_connect, e_net_connect_delay_dist, e_ct_net_connect_delay_dist
+from utils import createNetwork, createNetworkL6
 
 h.load_file("nrngui.hoc")  # load standard run system
 # h.dt = 1
@@ -11,115 +12,6 @@ h.load_file("nrngui.hoc")  # load standard run system
 # global nsamples
 # nsamples = h.tstop*h.dt
 # h.v_init = -67
-
-
-class Pyrcell:
-    "Pyramidal cell"
-
-    def __init__(self):
-       
-        self.soma = h.Section(name='soma', cell=self)
-        self.soma.L = 30
-        self.soma.nseg = 1
-        self.soma.diam = 1
-
-        self.soma.Ra = 100
-        self.soma.cm = 1
-
-        #self.soma.insert("hh")
-        self.soma.insert("hhvitor2")
-        
-        self.soma.gna_hhvitor2 = 0.039
-        self.soma.gkd_hhvitor2 = 0.006
-        self.soma.gl_hhvitor2 = 0
-        self.soma.gm_hhvitor2 = 0
-        self.soma.gt_hhvitor2 = 0
-        self.soma.gleak_hhvitor2 = 0.0000273
-   
-        self.synE = h.Exp2Syn(0.5, sec=self.soma)
-        self.synE.tau1 = 1
-        self.synE.tau2 = 3
-
-        self.synE_CT = h.Exp2Syn(0.5, sec=self.soma)
-        self.synE_CT.tau1 = 5               #  this was made to be slower than the synE - but artificial values were used because the synE time constants couldn't get smaller than 1
-        self.synE_CT.tau2 = 15              #  TODO check this with Li, Guido and Bickford 2003
-
-        self.synI = h.Exp2Syn(0.5, sec=self.soma)
-        self.synI.e = -100
-
-        self.synI.tau1 = 4
-        self.synI.tau2 = 2
-
-        self.stm = h.IClamp(0.5, sec=self.soma)
-        self.stm.amp = 0
-        self.stm.dur = 1000
-        self.stm.delay = 100
-        
-        
-# class L6cell:
-#     "Layer 6 cell"
-#
-#     def __init__(self):
-#
-#         self.soma = h.Section(name='soma', cell=self)
-#         self.soma.L = 30
-#         self.soma.nseg = 1
-#         self.soma.diam = 1
-#
-#         self.soma.Ra = 100
-#         self.soma.cm = 1
-#
-#         #self.soma.insert("hh")
-#         self.soma.insert("hhvitor2")
-#
-#         self.soma.gna_hhvitor2 = 0.039
-#         self.soma.gkd_hhvitor2 = 0.006
-#         self.soma.gl_hhvitor2 = 0
-#         self.soma.gm_hhvitor2 = 0
-#         self.soma.gt_hhvitor2 = 0
-#         self.soma.gleak_hhvitor2 = 0.0000273
-#
-#         self.synE = h.Exp2Syn(0.5, sec=self.soma)
-#         self.synE.tau1 = 10
-#         self.synE.tau2 = 20
-#
-#         self.synI = h.Exp2Syn(0.5, sec=self.soma)
-#         self.synI.e = -100
-#
-#         self.synI.tau1 = 5
-#         self.synI.tau2 = 40
-#
-#         self.stm = h.IClamp(0.5, sec=self.soma)
-#         self.stm.amp = 0
-#         self.stm.dur = 1000
-#         self.stm.delay = 100
-
-
-def createnetwork(n_neurons=4):
-
-    network = h.List()
-    network_rec = h.List()
- 
-    for i in range(n_neurons):
-        p = Pyrcell()
-        network.append(p)
-        network_rec.append(h.Vector())
-        network_rec[i].record(network[i].soma(0.5)._ref_v)
-        
-    return network, network_rec
-
-
-def createnetworkL6(n_neurons=4):
-
-    # network = h.List()
-    # network_rec = h.List()
-    #
-    # for i in range(n_neurons):
-    #     p = L6cell()
-    #     network.append(p)
-    #     network_rec.append(h.Vector())
-    #     network_rec[i].record(network[i].soma(0.5)._ref_v)
-    return createnetwork(n_neurons)
 
 
 def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_input_lgn,
@@ -136,8 +28,8 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
     for nsim in range(n_runs):
 
         # creating LGN network
-        i_lgn, I_LGN_rec = createnetwork(n_i_lgn)
-        e_lgn, E_LGN_rec = createnetwork(n_e_lgn)
+        i_lgn, I_LGN_rec = createNetwork(n_i_lgn)
+        e_lgn, E_LGN_rec = createNetwork(n_e_lgn)
 
         #create connections in network 1 (LGN)
         e_lgn_e_lgn_syn = e_net_connect(e_lgn, e_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'])
@@ -145,8 +37,8 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
         i_lgn_e_lgn_syn = i_net_connect(i_lgn, e_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'])
         e_lgn_i_lgn_syn = e_net_connect(e_lgn, i_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'])  # weight should be set to zero
 
-        e_l4, E_L4_rec = createnetwork(n_e_l4)
-        i_l4, I_L4_rec = createnetwork(n_I_L4)
+        e_l4, E_L4_rec = createNetwork(n_e_l4)
+        i_l4, I_L4_rec = createNetwork(n_I_L4)
         if with_V1_L4:
             #create connections in network 2  (V1 superficial)
 
@@ -229,8 +121,8 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
                 #                                                       0, delay_E_LGN_I_L4, W_E_LGN_I_L4[neuron_i, neuron_i]))
                 #                    h.pop_section()
 
-        i_l6, I_L6_rec = createnetworkL6(n_i_l6)
-        e_l6, E_L6_rec = createnetworkL6(n_e_l6)
+        i_l6, I_L6_rec = createNetworkL6(n_i_l6)
+        e_l6, E_L6_rec = createNetworkL6(n_e_l6)
         if with_V1_L6:
             # create connections in network 2  (V1 L6)
             e_l6_e_l6_sin = e_net_connect(e_l6, e_l6, 0, 1, l6_params['w_e_l6_e_l6'])
@@ -266,7 +158,7 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
                 e_lgn_i_l6_syn = e_net_connect(e_lgn, i_l6, 0, delay_E_LGN_I_L6, W_E_LGN_I_L6)
 
         #create trn neurons (inhibitory only)
-        trn, TRN_rec = createnetwork(n_trn)
+        trn, TRN_rec = createNetwork(n_trn)
         if with_TRN:
             trn_trn_syn = i_net_connect(trn, trn, 0, 1, W_TRN_TRN)
 
@@ -308,8 +200,10 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
             netStim[stim_i].mean = input['stimrate']  # 100 = 10 Hz, 10 = 100 Hz, 1 = 1000Hz, 5 = 200 Hz, 6 = 150 Hz
             netStim[stim_i].number = 0
 
-            i_stims.append(h.NetCon(netStim[stim_i], i_lgn[stim_i].synE,  input_lgn_con['gaba_threshold'],  input_lgn_con['gaba_delay'],  input_lgn_con['gaba_weight']))
-            e_stims.append(h.NetCon(netStim[stim_i], e_lgn[stim_i].synE,  input_lgn_con['glut_threshold'],  input_lgn_con['glut_delay'],  input_lgn_con['glut_weight']))
+            i_stims.append(h.NetCon(netStim[stim_i], i_lgn[stim_i].synE, con_input_lgn['gaba_threshold'],
+                                    con_input_lgn['gaba_delay'], con_input_lgn['gaba_weight']))
+            e_stims.append(h.NetCon(netStim[stim_i], e_lgn[stim_i].synE, con_input_lgn['glut_threshold'],
+                                    con_input_lgn['glut_delay'], con_input_lgn['glut_weight']))
 
         e_stims[0].record(stim_rec)  # measure poisson input #0 to LGN Cell #0
 

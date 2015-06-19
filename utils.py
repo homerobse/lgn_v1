@@ -1,5 +1,33 @@
 import numpy as np
 from neuron import h
+from cells import Pyrcell
+
+
+def createNetwork(n_neurons=4):
+
+    network = h.List()
+    network_rec = h.List()
+
+    for i in range(n_neurons):
+        p = Pyrcell()
+        network.append(p)
+        network_rec.append(h.Vector())
+        network_rec[i].record(network[i].soma(0.5)._ref_v)
+
+    return network, network_rec
+
+
+def createNetworkL6(n_neurons=4):
+
+    # network = h.List()
+    # network_rec = h.List()
+    #
+    # for i in range(n_neurons):
+    #     p = L6cell()
+    #     network.append(p)
+    #     network_rec.append(h.Vector())
+    #     network_rec[i].record(network[i].soma(0.5)._ref_v)
+    return createNetwork(n_neurons)
 
 
 def exponential_connect(weight, n1, n2, selfconnect=True):
@@ -33,6 +61,15 @@ def constant_connect(weight, n1, n2, selfconnect=True):
 
 
 def e_net_connect(net1, net2, threshold, delay, weights):
+    """
+    Connects two networks with an excitatory synapse
+    :param net1: First network list (h.List()) of neurons
+    :param net2: Second network list (h.List()) of neurons
+    :param threshold: voltage threshold that generates spike in neuron in net1
+    :param delay: time between spike in net1 and PSP in net2 (ms)
+    :param weights: matrix of connection weights (strength of connection)
+    :return:
+    """
     net1_net2_syn = list()
     for net1_neuron_i, net1_neuron in enumerate(net1):
         net1_neuron.soma.push()
