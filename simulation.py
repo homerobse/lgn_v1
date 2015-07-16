@@ -25,7 +25,7 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
 
     print "* * * Simulating %d runs * * *" % n_runs
     h.tstop = total_time
-    for nsim in range(n_runs):
+    for n_sim in range(n_runs):
 
         # creating LGN network
         i_lgn, I_LGN_rec = createNetwork(n_i_lgn)
@@ -199,9 +199,9 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
             netStim[stim_i].start = 0
             netStim[stim_i].mean = input['stimrate']  # 100 = 10 Hz, 10 = 100 Hz, 1 = 1000Hz, 5 = 200 Hz, 6 = 150 Hz
             netStim[stim_i].number = 0
-
-            i_stims.append(h.NetCon(netStim[stim_i], i_lgn[stim_i].synE, con_input_lgn['gaba_threshold'],
-                                    con_input_lgn['gaba_delay'], con_input_lgn['gaba_weight']))
+            if stim_i < n_i_lgn:
+                i_stims.append(h.NetCon(netStim[stim_i], i_lgn[stim_i].synE, con_input_lgn['gaba_threshold'],
+                                        con_input_lgn['gaba_delay'], con_input_lgn['gaba_weight']))
             e_stims.append(h.NetCon(netStim[stim_i], e_lgn[stim_i].synE, con_input_lgn['glut_threshold'],
                                     con_input_lgn['glut_delay'], con_input_lgn['glut_weight']))
 
@@ -212,13 +212,12 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
 
         h.run()
 
-        #all
         meanLGN, meanTRN, meanV1input, meanV1output = plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
                                                                E_L4_rec, TRN_rec, E_L6_rec, E_LGN_rec,
                                                                I_L6_rec, i_lgn, i_l4, I_LGN_rec, I_L4_rec,
                                                                n_e_lgn, n_e_l6, n_e_l4, n_trn, n_i_l6)
 
-        ofname = "../data_files/" "sim" + str(nsim+0) + ".txt"
+        ofname = "../data_files/" "sim" + str(n_sim+0) + ".txt"
 
         n = len(timeaxis)
         indx = np.arange(1, n, 40)
@@ -230,7 +229,7 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
         z = np.array(timeaxis)
         np.savetxt(ofname, (w[indx], u[indx], x[indx], y[indx], z[indx]))
 
-        print "Progress: %d runs simulated %d runs missing" % (nsim + 1, n_runs - nsim - 1)
+        print "Progress: %d runs simulated %d runs missing" % (n_sim + 1, n_runs - n_sim - 1)
 
 
 def detect_spikes(voltagesignals):

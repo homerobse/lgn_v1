@@ -26,7 +26,7 @@ connect_TRN_E_LGN = True
 connect_E_L4_E_LGN = False
 connect_E_L4_TRN = False
 
-nruns = 3
+nruns = 100
 total_time = 500
 
 # number of cells should be divisible by 4, otherwise python will truncate (search simulation for "*1/4")
@@ -52,7 +52,9 @@ delay_E_LGN_I_LGN = 1
 delay_I_LGN_E_LGN = 1
 
 # stimrate 100 = 10 Hz, 10 = 100 Hz, 1 = 1000Hz, 5 = 200 Hz, 6 = 150 Hz
-input = {
+input = {          # TODO: find reference saying that the input goes both to excitatory and inhibitory
+    # 'stimrate': 4,
+    #Backup
     'stimrate': 6,
     'input': 0.5,  # TODO: what does this parameter mean?
     'nstims': 4
@@ -81,7 +83,7 @@ lgn_params = {
 # w_i_l4_e_l4 = 0.3/100000.  # PSP = 0.85 mV Haeusler and Maass 2006
 # w_e_l4_i_l4 = 1.3/100000.  # PSP = 3.7 mV Haeusler and Maass 2006
 
-# # Backup
+# Backup
 w_i_l4_i_l4 = 8/100000.
 w_e_l4_e_l4 = 4/100000.
 w_i_l4_e_l4 = 6./10000.
@@ -96,7 +98,7 @@ l4_params = {
 
 # w_i_l6_i_l6 = 0.5/100000  # PSP = 1.2 mV Haeusler and Maass 2006 (heuristic from L5)
 # w_e_l6_e_l6 = 0.5/100000  # PSP = 1.7 mV Haeusler and Maass 2006 (heuristic from L5)
-# w_e_l6_i_l6 = 0.3/100000  # PSP = 1.7 mV Haeusler and Maass 2006 (heuristic from L5)
+# w_e_l6_i_l6 = 0.3/100000  # PSP = 0.9 mV Haeusler and Maass 2006 (heuristic from L5)
 # w_i_l6_e_l6 = 0.5/100000  # PSP = 1.2 mV Haeusler and Maass 2006 (heuristic from L5)
 
 # Backup
@@ -117,8 +119,15 @@ W_TRN_TRN = exponential_connect(14/1000000., n_trn, n_trn, False)  # assuming li
 
 #EXTRINSIC CONNECTIONS
 
-# W_E_LGN_TRN = exponential_connect(4/100000., n_e_lgn, n_trn)
-# W_TRN_E_LGN = exponential_connect(4/100000., n_trn, n_e_lgn)
+# W_E_LGN_TRN = exponential_connect(1.4/1000000., n_e_lgn, n_trn)
+# W_TRN_E_LGN = exponential_connect(1.4/1000000., n_trn, n_e_lgn)
+#
+# W_E_LGN_E_L4 = exponential_connect(.4/100000., n_e_lgn, n_e_l4)
+# W_E_LGN_I_L4 = exponential_connect(.4/1000000., n_e_lgn, n_i_l4)
+# W_E_L4_E_LGN = exponential_connect(.4/1000000., n_e_l4, n_e_lgn)
+# # TODO: E_L4 is NOT connected to I_LGN. Find reference
+
+# Backup
 W_E_LGN_TRN = exponential_connect(14/1000000., n_e_lgn, n_trn)
 W_TRN_E_LGN = exponential_connect(14/1000000., n_trn, n_e_lgn)
 
@@ -127,13 +136,22 @@ W_E_LGN_I_L4 = exponential_connect(4/1000000., n_e_lgn, n_i_l4)
 W_E_L4_E_LGN = exponential_connect(4/1000000., n_e_l4, n_e_lgn)
 # TODO: E_L4 is NOT connected to I_LGN. Find reference
 
+# W_E_LGN_E_L6 = exponential_connect(0.2/100000., n_e_lgn, n_e_l6)
+# W_E_LGN_I_L6 = exponential_connect(0.2/1000000., n_e_lgn, n_i_l6)
+#Backup
 W_E_LGN_E_L6 = exponential_connect(2/100000., n_e_lgn, n_e_l6)
 W_E_LGN_I_L6 = exponential_connect(2/1000000., n_e_lgn, n_i_l6)
-W_E_L6_E_LGN = exponential_connect(4.375/1000000.,  n_e_l6, n_e_lgn)  # 4 mv / 10 (Wang & Hirsch 2010) 300 pA (Granseth & Lindstrom 2002)
+W_E_L6_E_LGN = exponential_connect(0.4375/100000.,  n_e_l6, n_e_lgn)  # 4 mv / 10 (Wang & Hirsch 2010) 300 pA (Granseth & Lindstrom 2002)  # TODO: isn't it Wnag & Hirsch 2011?
 # TODO: E_L6 is NOT connected to I_LGN. Find reference
 
+# Backup
 W_E_L4_E_L6 = exponential_connect(4/100000., n_e_l4, n_e_l6)
 
+# PSP = 1.4 mV Haeusler and Maass 2006 (heuristic from E L2/3 to E L5)
+# W_E_L4_E_L6 = exponential_connect(0.5/100000., n_e_l4, n_e_l6)
+
+# W_E_L6_TRN = exponential_connect(0.4/1000000., n_e_l6, n_trn)
+#Backup
 W_E_L6_TRN = exponential_connect(4/1000000., n_e_l6, n_trn)
 W_E_L4_TRN = W_E_L6_TRN  # only if net include V1 L4 but not V1 L6
 
