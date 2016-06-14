@@ -3,6 +3,7 @@ from matplotlib.mlab import psd
 import numpy as np
 from neuron import h
 
+
 def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_rec2, GABAneurons_trn_rec,
              Glutneurons_recL6, Glutneurons_rec, GABAneurons_recL6, GABAneurons, GABAneurons2, GABAneurons_rec, GABAneurons_rec2,
              Nneurons, NneuronsL6, NneuronsL4, NGABA_trn, NGABA_L6):
@@ -27,7 +28,7 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
     (Pxx, freqpsd) = psd(meanLGN, 20000/2, Fs)  # args are signal, nfft, Fs
     plt.figure(8)
     plt.plot(freqpsd, Pxx)
-  # plt.xlim([0, 150])
+    plt.xlim([0, 150])
     plt.title('PSD of LGN LFP')
 
     meanTRN = np.zeros(np.shape(np.mean(GABAneurons_trn_rec, 0)))
