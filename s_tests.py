@@ -141,7 +141,7 @@ W_E_L4_E_LGN = exponential_connect(4/1000000., n_e_l4, n_e_lgn)
 #Backup
 W_E_LGN_E_L6 = exponential_connect(2/100000., n_e_lgn, n_e_l6)
 W_E_LGN_I_L6 = exponential_connect(2/1000000., n_e_lgn, n_i_l6)
-W_E_L6_E_LGN = exponential_connect(0.4375/100000.,  n_e_l6, n_e_lgn)  # 4 mv / 10 (Wang & Hirsch 2010) 300 pA (Granseth & Lindstrom 2002)  # TODO: isn't it Wnag & Hirsch 2011?
+W_E_L6_E_LGN = exponential_connect(0.4375/100000.,  n_e_l6, n_e_lgn)  # 4 mv / 10 (Wang & Hirsch 2010) 300 pA (Granseth & Lindstrom 2002)  # TODO: isn't it Wang & Hirsch 2011?
 # TODO: E_L6 is NOT connected to I_LGN. Find reference
 
 # Backup
