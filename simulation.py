@@ -32,20 +32,20 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
         e_lgn, E_LGN_rec = createNetwork(n_e_lgn)
 
         #create connections in network 1 (LGN)
-        e_lgn_e_lgn_syn = e_net_connect(e_lgn, e_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'])
-        i_lgn_i_lgn_syn = i_net_connect(i_lgn, i_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'])
-        i_lgn_e_lgn_syn = i_net_connect(i_lgn, e_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'])
-        e_lgn_i_lgn_syn = e_net_connect(e_lgn, i_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'])  # weight should be set to zero
+        e_lgn_e_lgn_syn = e_net_connect(e_lgn, e_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'], 1)
+        i_lgn_i_lgn_syn = i_net_connect(i_lgn, i_lgn, 0, 1, lgn_params['w_i_lgn_i_lgn'], 1)
+        i_lgn_e_lgn_syn = i_net_connect(i_lgn, e_lgn, 0, 1, lgn_params['w_i_lgn_e_lgn'], 1)
+        e_lgn_i_lgn_syn = e_net_connect(e_lgn, i_lgn, 0, 1, lgn_params['w_e_lgn_i_lgn'], 1)  # weight should be set to zero
 
         e_l4, E_L4_rec = createNetwork(n_e_l4)
         i_l4, I_L4_rec = createNetwork(n_I_L4)
         if with_V1_L4:
             #create connections in network 2  (V1 superficial)
 
-            e_l4_e_l4_sin = e_net_connect(e_l4, e_l4, 0, 1, l4_params['w_e_l4_e_l4'])
-            i_l4_i_l4_sin = i_net_connect(i_l4, i_l4, 0, 1, l4_params['w_i_l4_i_l4'])
-            e_l4_i_l4_sin = e_net_connect(e_l4, i_l4, 0, 1, l4_params['w_e_l4_i_l4'])
-            i_l4_e_l4_sin = i_net_connect(i_l4, e_l4, 0, 1, l4_params['w_i_l4_e_l4'])
+            e_l4_e_l4_sin = e_net_connect(e_l4, e_l4, 0, 1, l4_params['w_e_l4_e_l4'], 0.17)
+            i_l4_i_l4_sin = i_net_connect(i_l4, i_l4, 0, 1, l4_params['w_i_l4_i_l4'], 0.5)
+            e_l4_i_l4_sin = e_net_connect(e_l4, i_l4, 0, 1, l4_params['w_e_l4_i_l4'], 0.19)
+            i_l4_e_l4_sin = i_net_connect(i_l4, e_l4, 0, 1, l4_params['w_i_l4_e_l4'], 0.1)
 
             # Population 1) 15 LGN E cells connect to 15 V1 L4 E cells
             # Population 2) 5 LGN E cells connect to 5 V1 L4 I cells
@@ -125,14 +125,14 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
         e_l6, E_L6_rec = createNetworkL6(n_e_l6)
         if with_V1_L6:
             # create connections in network 2  (V1 L6)
-            e_l6_e_l6_sin = e_net_connect(e_l6, e_l6, 0, 1, l6_params['w_e_l6_e_l6'])
-            i_l6_i_l6_sin = i_net_connect(i_l6, i_l6, 0, 1, l6_params['w_i_l6_i_l6'])
-            i_l6_e_l6_syn = i_net_connect(i_l6, e_l6, 0, 1, l6_params['w_i_l6_e_l6'])
-            e_l6_i_l6_syn = e_net_connect(e_l6, i_l6, 0, 1, l6_params['w_e_l6_i_l6'])
+            e_l6_e_l6_sin = e_net_connect(e_l6, e_l6, 0, 1, l6_params['w_e_l6_e_l6'], 0.17)
+            i_l6_i_l6_sin = i_net_connect(i_l6, i_l6, 0, 1, l6_params['w_i_l6_i_l6'], 0.5)
+            i_l6_e_l6_syn = i_net_connect(i_l6, e_l6, 0, 1, l6_params['w_i_l6_e_l6'], 0.19)
+            e_l6_i_l6_syn = e_net_connect(e_l6, i_l6, 0, 1, l6_params['w_e_l6_i_l6'], 0.1)
 
             # connections from V1 input (L4) layer to L6
             if connect_E_L4_E_L6:
-                e_l4_e_l6_sin = e_net_connect(e_l4, e_l6, 0, 1, W_E_L4_E_L6)
+                e_l4_e_l6_sin = e_net_connect(e_l4, e_l6, 0, 1, W_E_L4_E_L6,1)
 
 #ALL-to-ALL connections of feedback
             if connect_E_L6_E_LGN:
@@ -151,28 +151,28 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
 
             # TODO: Connectivity as Hirsch
             if connect_E_LGN_E_L6:
-                e_lgn_e_l6_syn = e_net_connect(e_lgn, e_l6, 0, delay_E_LGN_E_L6, W_E_LGN_E_L6)
+                e_lgn_e_l6_syn = e_net_connect(e_lgn, e_l6, 0, delay_E_LGN_E_L6, W_E_LGN_E_L6,1)
 
             # TODO: Connectivity as Hirsch
             if connect_E_LGN_I_L6:
-                e_lgn_i_l6_syn = e_net_connect(e_lgn, i_l6, 0, delay_E_LGN_I_L6, W_E_LGN_I_L6)
+                e_lgn_i_l6_syn = e_net_connect(e_lgn, i_l6, 0, delay_E_LGN_I_L6, W_E_LGN_I_L6,1)
 
         #create trn neurons (inhibitory only)
         trn, TRN_rec = createNetwork(n_trn)
         if with_TRN:
-            trn_trn_syn = i_net_connect(trn, trn, 0, 1, W_TRN_TRN)
+            trn_trn_syn = i_net_connect(trn, trn, 0, 1, W_TRN_TRN,1)
 
             #connections from Glutamatergic neurons of network V1 L4 to trn
             if with_V1_L4 and connect_E_L4_TRN:
-                e_l4_trn_syn = e_net_connect(e_l4, trn, 0, delay_E_L4_TRN, W_E_L4_TRN)
+                e_l4_trn_syn = e_net_connect(e_l4, trn, 0, delay_E_L4_TRN, W_E_L4_TRN,1)
 
             if with_V1_L6 and connect_E_L6_TRN:
-                e_l6_trn_syn = e_net_connect_delay_dist(e_l6, trn, 0, delay_distbtn_E_L6_TRN, w_e_l6_trn)
+                e_l6_trn_syn = e_net_connect_delay_dist(e_l6, trn, 0, delay_distbtn_E_L6_TRN, w_e_l6_trn,1)
 
             #ALL-to-ALL
             if connect_E_LGN_TRN:
                 #connections from Glutamatergic neurons of network 1 (LGN) to trn
-                e_lgn_trn_syn = e_net_connect(e_lgn, trn, 0, delay_E_LGN_TRN, W_E_LGN_TRN)
+                e_lgn_trn_syn = e_net_connect(e_lgn, trn, 0, delay_E_LGN_TRN, W_E_LGN_TRN,1)
 
             #topographic
 #            if connect_E_LGN_TRN:
@@ -186,7 +186,7 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
 #                     h.pop_section()
             #ALL-to-ALL
             if connect_TRN_E_LGN:
-                trn_e_lgn_sin = i_net_connect(trn, e_lgn, 0, 1, W_TRN_E_LGN)
+                trn_e_lgn_sin = i_net_connect(trn, e_lgn, 0, 1, W_TRN_E_LGN,1)
 
         # generate inputs to LGN
         netStim = list()

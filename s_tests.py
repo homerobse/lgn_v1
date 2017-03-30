@@ -26,7 +26,7 @@ connect_TRN_E_LGN = True
 connect_E_L4_E_LGN = False
 connect_E_L4_TRN = False
 
-nruns = 100
+nruns = 2
 total_time = 500
 
 # number of cells should be divisible by 4, otherwise python will truncate (search simulation for "*1/4")

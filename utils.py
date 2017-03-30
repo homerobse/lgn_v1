@@ -1,6 +1,7 @@
 import numpy as np
 from neuron import h
 from cells import Pyrcell
+from random import random
 
 
 def createNetwork(n_neurons=4):
@@ -60,7 +61,7 @@ def constant_connect(weight, n1, n2, selfconnect=True):
     return weights
 
 
-def e_net_connect(net1, net2, threshold, delay, weights):
+def e_net_connect(net1, net2, threshold, delay, weights, prob):
     """
     Connects two networks with an excitatory synapse
     :param net1: First network list (h.List()) of neurons
@@ -68,25 +69,28 @@ def e_net_connect(net1, net2, threshold, delay, weights):
     :param threshold: voltage threshold that generates spike in neuron in net1
     :param delay: time between spike in net1 and PSP in net2 (ms)
     :param weights: matrix of connection weights (strength of connection)
-    :return:
+    :param prob: connection probability
+    :return: list of synapses
     """
     net1_net2_syn = list()
     for net1_neuron_i, net1_neuron in enumerate(net1):
         net1_neuron.soma.push()
         for net2_neuron_i, net2_neuron in enumerate(net2):
-            net1_net2_syn.append(h.NetCon(net1_neuron.soma(0.5)._ref_v, net2_neuron.synE, threshold, delay,
-                                          weights[net1_neuron_i, net2_neuron_i]))
+            if random() < prob:
+                net1_net2_syn.append(h.NetCon(net1_neuron.soma(0.5)._ref_v, net2_neuron.synE, threshold, delay,
+                                              weights[net1_neuron_i, net2_neuron_i]))
         h.pop_section()
     return net1_net2_syn
 
 
-def e_net_connect_delay_dist(net1, net2, threshold, delay_distbtn, weights):
+def e_net_connect_delay_dist(net1, net2, threshold, delay_distbtn, weights, prob):
     net1_net2_syn = list()
     for net1_neuron_i, net1_neuron in enumerate(net1):
         net1_neuron.soma.push()
         for net2_neuron_i, net2_neuron in enumerate(net2):
-            net1_net2_syn.append(h.NetCon(net1_neuron.soma(0.5)._ref_v, net2_neuron.synE, threshold,
-                                          delay_distbtn[net1_neuron_i], weights[net1_neuron_i, net2_neuron_i]))
+            if random() < prob:
+                net1_net2_syn.append(h.NetCon(net1_neuron.soma(0.5)._ref_v, net2_neuron.synE, threshold,
+                                              delay_distbtn[net1_neuron_i], weights[net1_neuron_i, net2_neuron_i]))
         h.pop_section()
     return net1_net2_syn
 
@@ -113,12 +117,13 @@ def e_ct_net_connect(net1, net2, threshold, delay, weights):
     return net1_net2_syn
 
 
-def i_net_connect(net1, net2, threshold, delay, weights):
+def i_net_connect(net1, net2, threshold, delay, weights, prob):
     net1_net2_syn = list()
     for net1_neuron_i, net1_neuron in enumerate(net1):
         net1_neuron.soma.push()
         for net2_neuron_i, net2_neuron in enumerate(net2):
-            net1_net2_syn.append(h.NetCon(net1_neuron.soma(0.5)._ref_v, net2_neuron.synI, threshold, delay,
-                                          weights[net1_neuron_i, net2_neuron_i]))
+            if random() < prob:
+                net1_net2_syn.append(h.NetCon(net1_neuron.soma(0.5)._ref_v, net2_neuron.synI, threshold, delay,
+                                              weights[net1_neuron_i, net2_neuron_i]))
         h.pop_section()
     return net1_net2_syn
