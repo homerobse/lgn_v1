@@ -15,7 +15,7 @@ h.load_file("nrngui.hoc")  # load standard run system
 
 
 def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_input_lgn,
-             n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_I_L4, n_trn,
+             n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_i_l4, n_trn,
              delay_distbtn_E_L6_LGN, delay_E_L4_E_LGN, delay_E_LGN_I_L4, delay_E_LGN_E_L4, delay_E_LGN_E_L6,
              delay_E_LGN_TRN, delay_E_L4_TRN, delay_distbtn_E_L6_TRN, delay_E_LGN_I_LGN, delay_I_LGN_E_LGN, delay_E_LGN_I_L6,
              lgn_params, l4_params, l6_params, W_TRN_TRN, W_E_LGN_TRN, W_TRN_E_LGN, w_e_l6_trn, W_E_L4_E_L6,
@@ -26,6 +26,7 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
     print "* * * Simulating %d runs * * *" % n_runs
     h.tstop = total_time
     for n_sim in range(n_runs):
+        print "#%d: Constructing circuits..." % (n_sim + 1)
 
         # creating LGN network
         i_lgn, I_LGN_rec = createNetwork(n_i_lgn)
@@ -34,18 +35,18 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
         #create connections in network 1 (LGN)
         e_lgn_e_lgn_syn = e_net_connect(e_lgn, e_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'], 1)
         i_lgn_i_lgn_syn = i_net_connect(i_lgn, i_lgn, 0, 1, lgn_params['w_i_lgn_i_lgn'], 1)
-        i_lgn_e_lgn_syn = i_net_connect(i_lgn, e_lgn, 0, 1, lgn_params['w_i_lgn_e_lgn'], 1)
-        e_lgn_i_lgn_syn = e_net_connect(e_lgn, i_lgn, 0, 1, lgn_params['w_e_lgn_i_lgn'], 1)  # weight should be set to zero
+        i_lgn_e_lgn_syn = i_net_connect(i_lgn, e_lgn, 0, delay_I_LGN_E_LGN, lgn_params['w_i_lgn_e_lgn'], 1)
+        e_lgn_i_lgn_syn = e_net_connect(e_lgn, i_lgn, 0, delay_E_LGN_I_LGN, lgn_params['w_e_lgn_i_lgn'], 1)  # weight should be set to zero
 
         e_l4, E_L4_rec = createNetwork(n_e_l4)
-        i_l4, I_L4_rec = createNetwork(n_I_L4)
+        i_l4, I_L4_rec = createNetwork(n_i_l4)
         if with_V1_L4:
             #create connections in network 2  (V1 superficial)
-
-            e_l4_e_l4_sin = e_net_connect(e_l4, e_l4, 0, 1, l4_params['w_e_l4_e_l4'], 0.17)
-            i_l4_i_l4_sin = i_net_connect(i_l4, i_l4, 0, 1, l4_params['w_i_l4_i_l4'], 0.5)
-            e_l4_i_l4_sin = e_net_connect(e_l4, i_l4, 0, 1, l4_params['w_e_l4_i_l4'], 0.19)
-            i_l4_e_l4_sin = i_net_connect(i_l4, e_l4, 0, 1, l4_params['w_i_l4_e_l4'], 0.1)
+            # using values different from Hauesler and Maass yet, in order to be able to generate gamma
+            e_l4_e_l4_sin = e_net_connect(e_l4, e_l4, 0, 1, l4_params['w_e_l4_e_l4'], 0.3)  # 17% connectivity Hauesler and Maass 2007
+            i_l4_i_l4_sin = i_net_connect(i_l4, i_l4, 0, 1, l4_params['w_i_l4_i_l4'], 0.7)  # 50% connectivity Hauesler and Maass 2007
+            e_l4_i_l4_sin = e_net_connect(e_l4, i_l4, 0, 1, l4_params['w_e_l4_i_l4'], 0.3)  # 19% connectivity Hauesler and Maass 2007
+            i_l4_e_l4_sin = i_net_connect(i_l4, e_l4, 0, 1, l4_params['w_i_l4_e_l4'], 0.7)  # 10% connectivity Hauesler and Maass 2007
 
             # Population 1) 15 LGN E cells connect to 15 V1 L4 E cells
             # Population 2) 5 LGN E cells connect to 5 V1 L4 I cells
@@ -125,10 +126,11 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
         e_l6, E_L6_rec = createNetworkL6(n_e_l6)
         if with_V1_L6:
             # create connections in network 2  (V1 L6)
-            e_l6_e_l6_sin = e_net_connect(e_l6, e_l6, 0, 1, l6_params['w_e_l6_e_l6'], 0.17)
-            i_l6_i_l6_sin = i_net_connect(i_l6, i_l6, 0, 1, l6_params['w_i_l6_i_l6'], 0.5)
-            i_l6_e_l6_syn = i_net_connect(i_l6, e_l6, 0, 1, l6_params['w_i_l6_e_l6'], 0.19)
-            e_l6_i_l6_syn = e_net_connect(e_l6, i_l6, 0, 1, l6_params['w_e_l6_i_l6'], 0.1)
+            # using values different from Hauesler and Maass yet, in order to be able to generate gamma
+            e_l6_e_l6_sin = e_net_connect(e_l6, e_l6, 0, 1, l6_params['w_e_l6_e_l6'], 0.3)  # 9% connectivity Hauesler and Maass 2007 (heuristic from L5)
+            i_l6_i_l6_sin = i_net_connect(i_l6, i_l6, 0, 1, l6_params['w_i_l6_i_l6'], 0.7)  # 60% connectivity Hauesler and Maass 2007 (heuristic from L5)
+            e_l6_i_l6_syn = e_net_connect(e_l6, i_l6, 0, 1, l6_params['w_e_l6_i_l6'], 0.3)  # 10% connectivity Hauesler and Maass 2007 (heuristic from L5)
+            i_l6_e_l6_syn = i_net_connect(i_l6, e_l6, 0, 1, l6_params['w_i_l6_e_l6'], 0.7)  # 12% connectivity Hauesler and Maass 2007 (heuristic from L5)
 
             # connections from V1 input (L4) layer to L6
             if connect_E_L4_E_L6:
@@ -209,7 +211,7 @@ def simulate(n_runs, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_in
 
         timeaxis = h.Vector()
         timeaxis.record(h._ref_t)
-
+        print "#%d: Running simulation..." % (n_sim + 1)
         h.run()
 
         meanLGN, meanTRN, meanV1input, meanV1output = plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
