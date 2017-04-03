@@ -29,8 +29,8 @@ def simulate(n_runs, total_time, with_v1_l4, with_v1_l6, with_trn, input, con_in
         print "#%d: Constructing circuits..." % (n_sim + 1)
 
         # creating LGN network
-        i_lgn, I_lgn_rec = createNetwork(n_i_lgn)
-        e_lgn, E_lgn_rec = createNetwork(n_e_lgn)
+        i_lgn, i_lgn_rec = createNetwork(n_i_lgn)
+        e_lgn, e_lgn_rec = createNetwork(n_e_lgn)
 
         #create connections in network 1 (LGN)
         e_lgn_e_lgn_syn = e_net_connect(e_lgn, e_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'], 1)
@@ -38,8 +38,8 @@ def simulate(n_runs, total_time, with_v1_l4, with_v1_l6, with_trn, input, con_in
         i_lgn_e_lgn_syn = i_net_connect(i_lgn, e_lgn, 0, delay_i_lgn_e_lgn, lgn_params['w_i_lgn_e_lgn'], 1)
         e_lgn_i_lgn_syn = e_net_connect(e_lgn, i_lgn, 0, delay_e_lgn_i_lgn, lgn_params['w_e_lgn_i_lgn'], 1)  # weight should be set to zero
 
-        e_l4, E_l4_rec = createNetwork(n_e_l4)
-        i_l4, I_l4_rec = createNetwork(n_i_l4)
+        e_l4, e_l4_rec = createNetwork(n_e_l4)
+        i_l4, i_l4_rec = createNetwork(n_i_l4)
         if with_v1_l4:
             #create connections in network 2  (V1 superficial)
             # using values different from Hauesler and Maass yet, in order to be able to generate gamma
@@ -122,8 +122,8 @@ def simulate(n_runs, total_time, with_v1_l4, with_v1_l6, with_trn, input, con_in
                 #                                                       0, delay_e_lgn_i_l4, w_e_lgn_i_l4[neuron_i, neuron_i]))
                 #                    h.pop_section()
 
-        i_l6, I_l6_rec = createNetworkL6(n_i_l6)
-        e_l6, E_l6_rec = createNetworkL6(n_e_l6)
+        i_l6, i_l6_rec = createNetworkL6(n_i_l6)
+        e_l6, e_l6_rec = createNetworkL6(n_e_l6)
         if with_v1_l6:
             # create connections in network 2  (V1 L6)
             # using values different from Hauesler and Maass yet, in order to be able to generate gamma
@@ -153,14 +153,14 @@ def simulate(n_runs, total_time, with_v1_l4, with_v1_l6, with_trn, input, con_in
 
             # TODO: Connectivity as Hirsch
             if connect_e_lgn_e_l6:
-                e_lgn_e_l6_syn = e_net_connect(e_lgn, e_l6, 0, delay_e_lgn_e_l6, w_e_lgn_e_l6,1)
+                e_lgn_e_l6_syn = e_net_connect(e_lgn, e_l6, 0, delay_e_lgn_e_l6, w_e_lgn_e_l6, 1)
 
             # TODO: Connectivity as Hirsch
             if connect_e_lgn_i_l6:
-                e_lgn_i_l6_syn = e_net_connect(e_lgn, i_l6, 0, delay_e_lgn_i_l6, w_e_lgn_i_l6,1)
+                e_lgn_i_l6_syn = e_net_connect(e_lgn, i_l6, 0, delay_e_lgn_i_l6, w_e_lgn_i_l6, 1)
 
         #create trn neurons (inhibitory only)
-        trn, TRN_rec = createNetwork(n_trn)
+        trn, trn_rec = createNetwork(n_trn)
         if with_trn:
             trn_trn_syn = i_net_connect(trn, trn, 0, 1, w_trn_trn,1)
 
@@ -169,12 +169,12 @@ def simulate(n_runs, total_time, with_v1_l4, with_v1_l6, with_trn, input, con_in
                 e_l4_trn_syn = e_net_connect(e_l4, trn, 0, delay_e_l4_trn, w_e_l4_trn,1)
 
             if with_v1_l6 and connect_e_l6_trn:
-                e_l6_trn_syn = e_net_connect_delay_dist(e_l6, trn, 0, delay_distbtn_e_l6_trn, w_e_l6_trn,1)
+                e_l6_trn_syn = e_net_connect_delay_dist(e_l6, trn, 0, delay_distbtn_e_l6_trn, w_e_l6_trn, 1)
 
             #ALL-to-ALL
             if connect_e_lgn_trn:
                 #connections from Glutamatergic neurons of network 1 (LGN) to trn
-                e_lgn_trn_syn = e_net_connect(e_lgn, trn, 0, delay_e_lgn_trn, w_e_lgn_trn,1)
+                e_lgn_trn_syn = e_net_connect(e_lgn, trn, 0, delay_e_lgn_trn, w_e_lgn_trn, 1)
 
             #topographic
 #            if connect_e_lgn_trn:
@@ -188,7 +188,7 @@ def simulate(n_runs, total_time, with_v1_l4, with_v1_l6, with_trn, input, con_in
 #                     h.pop_section()
             #ALL-to-ALL
             if connect_trn_e_lgn:
-                trn_e_lgn_sin = i_net_connect(trn, e_lgn, 0, 1, w_trn_e_lgn,1)
+                trn_e_lgn_sin = i_net_connect(trn, e_lgn, 0, 1, w_trn_e_lgn, 1)
 
         # generate inputs to LGN
         netStim = list()
@@ -215,8 +215,8 @@ def simulate(n_runs, total_time, with_v1_l4, with_v1_l6, with_trn, input, con_in
         h.run()
 
         meanLGN, meanTRN, meanV1input, meanV1output = plot_all(timeaxis, stim_rec, with_v1_l4, with_v1_l6, with_trn,
-                                                               E_l4_rec, TRN_rec, E_l6_rec, E_lgn_rec,
-                                                               I_l6_rec, i_lgn, i_l4, I_lgn_rec, I_l4_rec,
+                                                               e_l4_rec, trn_rec, e_l6_rec, e_lgn_rec,
+                                                               i_l6_rec, i_lgn, i_l4, i_lgn_rec, i_l4_rec,
                                                                n_e_lgn, n_e_l6, n_e_l4, n_trn, n_i_l6)
 
         ofname = "../data_files/" "sim" + str(n_sim+0) + ".txt"
