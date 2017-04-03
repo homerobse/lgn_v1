@@ -30,14 +30,15 @@ nruns = 2
 total_time = 500
 
 # number of cells should be divisible by 4, otherwise python will truncate (search simulation for "*1/4")
-n_e_lgn = 20
-n_i_lgn = 6
-n_e_l6 = 20
-n_i_l6 = 6
-n_e_l4 = 20
-n_i_l4 = 6
-n_trn = 10
+n_e_lgn = 40
+n_i_lgn = 12
+n_e_l6 = 40
+n_i_l6 = 12
+n_e_l4 = 40
+n_i_l4 = 12
+n_trn = 20
 
+# delays of connection
 delay_distbtn_E_L6_LGN = (np.random.exponential(1, n_e_l4**2)*4)+4  #  Briggs F, Usrey W M. 2009, Neuron TODO: check if delay should be different between two different net2 cells connected to the same net1 cell
 # delay_E_L6_TRN = 5
 delay_distbtn_E_L6_TRN = (np.random.exponential(1, n_e_l4**2)*4)+4  #  Briggs F, Usrey W M. 2009, Neuron
