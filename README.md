@@ -1,3 +1,5 @@
+Models for oscillations in visual thalamocortical pathway
+
 # Parameters in this model
 
 Size of the network, input, connectivity and simulation parameters included in s_tests.py
