@@ -55,7 +55,7 @@ delay_distbtn_E_L6_TRN = (np.random.exponential(1, n_e_l4**2)*4)+4  #  Briggs F,
 input = {          # TODO: find reference saying that the input goes both to excitatory and inhibitory
     # 'stimrate': 4,
     #Backup
-    'stimrate': 6,
+    'stimrate': 6,  # number of milliseconds of interval between stimuli
     'input': 0.5,  # TODO: what does this parameter mean?
     'nstims': 4  # number of stimuli
 }
@@ -93,7 +93,11 @@ l4_params = {
     'w_i_l4_i_l4': exponential_connect(w_i_l4_i_l4, n_i_l4, n_i_l4, False),
     'w_e_l4_e_l4': exponential_connect(w_e_l4_e_l4, n_e_l4, n_e_l4, False),
     'w_i_l4_e_l4': exponential_connect(w_i_l4_e_l4, n_i_l4, n_e_l4),
-    'w_e_l4_i_l4': exponential_connect(w_e_l4_i_l4, n_e_l4, n_i_l4)
+    'w_e_l4_i_l4': exponential_connect(w_e_l4_i_l4, n_e_l4, n_i_l4),
+    'p_i_i': 0.7,  # 50% connectivity Hauesler and Maass 2007
+    'p_e_e': 0.3,  # 17% connectivity Hauesler and Maass 2007
+    'p_i_e': 0.7,  # 10% connectivity Hauesler and Maass 2007
+    'p_e_i': 0.3  # 19% connectivity Hauesler and Maass 2007
 }
 
 # w_i_l6_i_l6 = 0.5/100000  # PSP = 1.2 mV Haeusler and Maass 2007 (heuristic from L5)
@@ -111,7 +115,11 @@ l6_params = {
     'w_i_l6_i_l6': exponential_connect(w_i_l6_i_l6, n_i_l6, n_i_l6, False),
     'w_e_l6_e_l6': exponential_connect(w_e_l6_e_l6, n_e_l6, n_e_l6, False),
     'w_e_l6_i_l6': exponential_connect(w_e_l6_i_l6, n_e_l6, n_i_l6),
-    'w_i_l6_e_l6': exponential_connect(w_i_l6_e_l6, n_i_l6, n_e_l6)
+    'w_i_l6_e_l6': exponential_connect(w_i_l6_e_l6, n_i_l6, n_e_l6),
+    'p_i_i': 0.7,  # 60% connectivity Hauesler and Maass 2007 (heuristic from L5)
+    'p_e_e': 0.3,  # 9% connectivity Hauesler and Maass 2007 (heuristic from L5)
+    'p_i_e': 0.7,  # 12% connectivity Hauesler and Maass 2007 (heuristic from L5)
+    'p_e_i': 0.3   # 10% connectivity Hauesler and Maass 2007 (heuristic from L5)
 }
 
 W_TRN_TRN = exponential_connect(14/1000000., n_trn, n_trn, False)  # assuming linearity of psp with weights  // testing effect of connection weight

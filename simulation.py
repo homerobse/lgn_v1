@@ -43,10 +43,10 @@ def simulate(n_runs, total_time, with_v1_l4, with_v1_l6, with_trn, input, con_in
         if with_v1_l4:
             #create connections in network 2  (V1 superficial)
             # using values different from Hauesler and Maass yet, in order to be able to generate gamma
-            e_l4_e_l4_sin = e_net_connect(e_l4, e_l4, 0, 1, l4_params['w_e_l4_e_l4'], 0.3)  # 17% connectivity Hauesler and Maass 2007
-            i_l4_i_l4_sin = i_net_connect(i_l4, i_l4, 0, 1, l4_params['w_i_l4_i_l4'], 0.7)  # 50% connectivity Hauesler and Maass 2007
-            e_l4_i_l4_sin = e_net_connect(e_l4, i_l4, 0, 1, l4_params['w_e_l4_i_l4'], 0.3)  # 19% connectivity Hauesler and Maass 2007
-            i_l4_e_l4_sin = i_net_connect(i_l4, e_l4, 0, 1, l4_params['w_i_l4_e_l4'], 0.7)  # 10% connectivity Hauesler and Maass 2007
+            e_l4_e_l4_sin = e_net_connect(e_l4, e_l4, 0, 1, l4_params['w_e_l4_e_l4'], l4_params['p_e_e'])
+            i_l4_i_l4_sin = i_net_connect(i_l4, i_l4, 0, 1, l4_params['w_i_l4_i_l4'], l4_params['p_i_i'])
+            e_l4_i_l4_sin = e_net_connect(e_l4, i_l4, 0, 1, l4_params['w_e_l4_i_l4'], l4_params['p_e_i'])
+            i_l4_e_l4_sin = i_net_connect(i_l4, e_l4, 0, 1, l4_params['w_i_l4_e_l4'], l4_params['p_i_e'])
 
             # Population 1) 15 LGN E cells connect to 15 V1 L4 E cells
             # Population 2) 5 LGN E cells connect to 5 V1 L4 I cells
@@ -127,10 +127,10 @@ def simulate(n_runs, total_time, with_v1_l4, with_v1_l6, with_trn, input, con_in
         if with_v1_l6:
             # create connections in network 2  (V1 L6)
             # using values different from Hauesler and Maass yet, in order to be able to generate gamma
-            e_l6_e_l6_sin = e_net_connect(e_l6, e_l6, 0, 1, l6_params['w_e_l6_e_l6'], 0.3)  # 9% connectivity Hauesler and Maass 2007 (heuristic from L5)
-            i_l6_i_l6_sin = i_net_connect(i_l6, i_l6, 0, 1, l6_params['w_i_l6_i_l6'], 0.7)  # 60% connectivity Hauesler and Maass 2007 (heuristic from L5)
-            e_l6_i_l6_syn = e_net_connect(e_l6, i_l6, 0, 1, l6_params['w_e_l6_i_l6'], 0.3)  # 10% connectivity Hauesler and Maass 2007 (heuristic from L5)
-            i_l6_e_l6_syn = i_net_connect(i_l6, e_l6, 0, 1, l6_params['w_i_l6_e_l6'], 0.7)  # 12% connectivity Hauesler and Maass 2007 (heuristic from L5)
+            e_l6_e_l6_sin = e_net_connect(e_l6, e_l6, 0, 1, l6_params['w_e_l6_e_l6'], l6_params['p_e_e'])
+            i_l6_i_l6_sin = i_net_connect(i_l6, i_l6, 0, 1, l6_params['w_i_l6_i_l6'], l6_params['p_i_i'])
+            e_l6_i_l6_syn = e_net_connect(e_l6, i_l6, 0, 1, l6_params['w_e_l6_i_l6'], l6_params['p_e_i'])
+            i_l6_e_l6_syn = i_net_connect(i_l6, e_l6, 0, 1, l6_params['w_i_l6_e_l6'], l6_params['p_i_e'])
 
             # connections from V1 input (L4) layer to L6
             if connect_e_l4_e_l6:
