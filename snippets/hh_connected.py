@@ -17,7 +17,7 @@ syn = h.ExpSyn(0.5, sec=soma2)
 # syn.tau1 = 1
 # syn.tau2 = 3
 
-net_con = h.NetCon(soma(0.5)._ref_v, syn, 30, 0, 1)
+net_con = h.NetCon(soma(0.5)._ref_v, syn, 40, 5, 1.1)
 
 stim = h.IClamp(soma(0.5))
 stim.delay = 1

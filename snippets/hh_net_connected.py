@@ -21,19 +21,19 @@ syn4 = h.ExpSyn(0.5, sec=soma4)
 # syn.tau2 = 3
 
 
-def f(a, b, c, d):
+def connect(v1, syn2, v3, syn4):
     l = list()
     print h.cas().name()
-    l.append(h.NetCon(a, b, 0, 0, 1))
+    l.append(h.NetCon(v1, syn2, 0, 0, 0.5))
     soma3.push()
     print h.cas().name()
-    l.append(h.NetCon(c, d, 0, 0, 1))
+    l.append(h.NetCon(v3, syn4, 0, 0, 1))
     h.pop_section()
     print h.cas().name()
     return l
 
 # net_con = h.NetCon(soma(0.5)._ref_v, syn, 30, 0, 1)
-f(soma(0.5)._ref_v, syn2, soma3(0.5)._ref_v, syn4)
+l = connect(soma(0.5)._ref_v, syn2, soma3(0.5)._ref_v, syn4)
 
 stim = h.IClamp(soma(0.5))
 stim.delay = 1
