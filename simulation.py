@@ -17,7 +17,7 @@ h.load_file("nrngui.hoc")  # load standard run system
 def simulate(n_runs, total_time, with_v1_l4, with_v1_l6, with_trn, input, con_input_lgn,
              n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_i_l4, n_trn,
              delay_distbtn_e_l6_lgn, delay_e_l4_e_lgn, delay_e_lgn_i_l4, delay_e_lgn_e_l4, delay_e_lgn_e_l6,
-             delay_e_lgn_trn, delay_e_l4_trn, delay_distbtn_e_l6_trn, delay_e_lgn_i_lgn, delay_i_lgn_e_lgn, delay_e_lgn_i_l6,
+             delay_e_lgn_trn, delay_e_l4_trn, delay_distbtn_e_l6_trn, delay_e_lgn_i_l6,
              lgn_params, l4_params, l6_params, w_trn_trn, w_e_lgn_trn, w_trn_e_lgn, w_e_l6_trn, w_e_l4_e_l6,
              w_e_lgn_e_l4, w_e_l4_e_lgn, w_e_l6_e_lgn, w_e_lgn_e_l6, w_e_lgn_i_l6, w_e_lgn_i_l4, w_e_l4_trn,
              connect_e_lgn_e_l4, connect_e_lgn_i_l4, connect_e_l4_e_lgn, connect_e_lgn_i_l6, connect_e_lgn_e_l6, connect_e_l6_e_lgn, connect_e_l4_trn, connect_e_l6_trn,
@@ -35,8 +35,8 @@ def simulate(n_runs, total_time, with_v1_l4, with_v1_l6, with_trn, input, con_in
         #create connections in network 1 (LGN)
         e_lgn_e_lgn_syn = e_net_connect(e_lgn, e_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'], 1)
         i_lgn_i_lgn_syn = i_net_connect(i_lgn, i_lgn, 0, 1, lgn_params['w_i_lgn_i_lgn'], 1)
-        i_lgn_e_lgn_syn = i_net_connect(i_lgn, e_lgn, 0, delay_i_lgn_e_lgn, lgn_params['w_i_lgn_e_lgn'], 1)
-        e_lgn_i_lgn_syn = e_net_connect(e_lgn, i_lgn, 0, delay_e_lgn_i_lgn, lgn_params['w_e_lgn_i_lgn'], 1)  # weight should be set to zero
+        i_lgn_e_lgn_syn = i_net_connect(i_lgn, e_lgn, 0, lgn_params['delay_i_e'], lgn_params['w_i_lgn_e_lgn'], 1)
+        e_lgn_i_lgn_syn = e_net_connect(e_lgn, i_lgn, 0, lgn_params['delay_e_i'], lgn_params['w_e_lgn_i_lgn'], 1)  # weight should be set to zero
 
         e_l4, e_l4_rec = createNetwork(n_e_l4)
         i_l4, i_l4_rec = createNetwork(n_i_l4)

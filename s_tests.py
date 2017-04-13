@@ -39,8 +39,6 @@ n_i_l4 = 12
 n_trn = 20
 
 # delays of connection
-delay_E_LGN_I_LGN = 1
-delay_I_LGN_E_LGN = 1
 delay_E_LGN_TRN = 1
 delay_E_LGN_E_L4 = 3
 delay_E_LGN_I_L4 = 8  ## check this
@@ -75,7 +73,9 @@ lgn_params = {
     'w_e_lgn_e_lgn': constant_connect(0., n_e_lgn, n_e_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
     'w_i_lgn_i_lgn': constant_connect(0., n_i_lgn, n_i_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
     'w_i_lgn_e_lgn': exponential_connect(1.75/100000, n_i_lgn, n_e_lgn),  # PSP 5 mV  (Wang & Hirsch 2010)
-    'w_e_lgn_i_lgn': constant_connect(0., n_e_lgn, n_i_lgn)
+    'w_e_lgn_i_lgn': constant_connect(0., n_e_lgn, n_i_lgn),
+    'delay_e_i': 1,
+    'delay_i_e': 1
 }
 
 # w_i_l4_i_l4 = 0.5/100000.  # PSP = 1.55 mV Haeusler and Maass 2006
@@ -166,7 +166,7 @@ W_E_L4_TRN = W_E_L6_TRN  # only if net include V1 L4 but not V1 L6
 simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_input_lgn,
          n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_i_l4, n_trn,
          delay_distbtn_E_L6_LGN, delay_E_L4_E_LGN, delay_E_LGN_I_L4, delay_E_LGN_E_L4, delay_E_LGN_E_L6,
-         delay_E_LGN_TRN, delay_E_L4_TRN, delay_distbtn_E_L6_TRN, delay_E_LGN_I_LGN, delay_I_LGN_E_LGN, delay_E_LGN_I_L6,
+         delay_E_LGN_TRN, delay_E_L4_TRN, delay_distbtn_E_L6_TRN, delay_E_LGN_I_L6,
          lgn_params, l4_params, l6_params, W_TRN_TRN, W_E_LGN_TRN, W_TRN_E_LGN, W_E_L6_TRN, W_E_L4_E_L6,
          W_E_LGN_E_L4, W_E_L4_E_LGN, W_E_L6_E_LGN, W_E_LGN_E_L6, W_E_LGN_I_L6, W_E_LGN_I_L4, W_E_L4_TRN,
          connect_E_LGN_E_L4, connect_E_LGN_I_L4, connect_E_L4_E_LGN, connect_E_LGN_I_L6, connect_E_LGN_E_L6, connect_E_L6_E_LGN, connect_E_L4_TRN, connect_E_L6_TRN,
