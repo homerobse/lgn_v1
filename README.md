@@ -19,22 +19,4 @@ synI.tau2 = 2
 ```
 
 ## Hodgkin & Huxley parameters
-Look at hhvitor2.mod
-
-# Draft of written work
-
-## Introduction
-Explain gamma mechanisms and give orverview about Cortico-thalamic circuits
-
-## Important things to be discussed in the paper:
-* Show that if LGN has E-I and I-I connection it entrains in gamma
-* Show that if we give oscillatory input it entrains LGN and cortex
-* Show that for weak drive from the retina, fast time constants and strong feedback LGN entrains gamma
-* Show that LGN and TRN oscillate if they have fast delays
-
-## Conclusion:
-1. Mechanistic explanation for the generation of gamma in the cortex and its absence in LGN
-    1. Lack of E to I and I to I recurrence in the LGN
-2. Cortical gamma does not entrain geniculate
-    1. Corticogeniculate feedback synapses have a prolonged time constant
-    2. Feedback is weak relative to feedforward drive from the retina
+Look at hh_original.mod
