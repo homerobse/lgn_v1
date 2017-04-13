@@ -5,7 +5,7 @@ h.load_file("nrngui.hoc")  # load standard run system
 
 soma = h.Section()
 
-soma.insert('hh')
+soma.insert('hh_original')
 
 stim = h.IClamp(soma(0.5))
 

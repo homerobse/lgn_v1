@@ -13,15 +13,15 @@ class Pyrcell:
         self.soma.Ra = 100
         self.soma.cm = 1
 
-        #self.soma.insert("hh")
-        self.soma.insert("hhvitor2")
+        #self.soma.insert("hhvitor2")
+        self.soma.insert("hh_original")
 
-        self.soma.gna_hhvitor2 = 0.039
-        self.soma.gkd_hhvitor2 = 0.006
-        self.soma.gl_hhvitor2 = 0
-        self.soma.gm_hhvitor2 = 0
-        self.soma.gt_hhvitor2 = 0
-        self.soma.gleak_hhvitor2 = 0.0000273
+        # self.soma.gna_hhvitor2 = 0.039
+        # self.soma.gkd_hhvitor2 = 0.006
+        # self.soma.gl_hhvitor2 = 0
+        # self.soma.gm_hhvitor2 = 0
+        # self.soma.gt_hhvitor2 = 0
+        # self.soma.gleak_hhvitor2 = 0.0000273
 
         self.synE = h.Exp2Syn(0.5, sec=self.soma)
         self.synE.tau1 = 1
@@ -56,8 +56,8 @@ class Pyrcell:
 #         self.soma.Ra = 100
 #         self.soma.cm = 1
 #
-#         #self.soma.insert("hh")
-#         self.soma.insert("hhvitor2")
+#         #self.soma.insert("hhvitor2")
+#         self.soma.insert("hh_original")
 #
 #         self.soma.gna_hhvitor2 = 0.039
 #         self.soma.gkd_hhvitor2 = 0.006

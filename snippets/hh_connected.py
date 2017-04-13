@@ -9,15 +9,29 @@ print h.cas().name(), soma.name()
 soma2 = h.Section(name='soma2')
 print h.cas().name(), soma2.name()
 
-soma.insert('hh')
-soma2.insert('hh')
+# soma.insert('hhvitor2')
+# soma.gna_hhvitor2 = 0.039
+# soma.gkd_hhvitor2 = 0.006
+# soma.gl_hhvitor2 = 0
+# soma.gm_hhvitor2 = 0
+# soma.gt_hhvitor2 = 0
+# soma.gleak_hhvitor2 = 0.0000273
+# soma2.insert('hhvitor2')
+# soma2.gna_hhvitor2 = 0.039
+# soma2.gkd_hhvitor2 = 0.006
+# soma2.gl_hhvitor2 = 0
+# soma2.gm_hhvitor2 = 0
+# soma2.gt_hhvitor2 = 0
+# soma2.gleak_hhvitor2 = 0.0000273
+soma.insert('hh_original')
+soma2.insert('hh_original')
 
 syn = h.ExpSyn(0.5, sec=soma2)
 # syn.e = 0
 # syn.tau1 = 1
 # syn.tau2 = 3
 
-net_con = h.NetCon(soma(0.5)._ref_v, syn, 40, 5, 1.1)
+net_con = h.NetCon(soma(0.5)._ref_v, syn, 40, 5, 1)
 
 stim = h.IClamp(soma(0.5))
 stim.delay = 1
