@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from utils import exponential_connect, constant_connect
 
+temperature = 6.3  # temperature of Hodgkin & Huxley original experiments
+
 with_V1_L4 = True
 with_V1_L6 = True
 with_TRN = True
@@ -163,7 +165,7 @@ W_E_L4_E_L6 = exponential_connect(4/100000., n_e_l4, n_e_l6)
 W_E_L6_TRN = exponential_connect(4/1000000., n_e_l6, n_trn)
 W_E_L4_TRN = W_E_L6_TRN  # only if net include V1 L4 but not V1 L6
 
-simulate(nruns, total_time, with_V1_L4, with_V1_L6, with_TRN, input, con_input_lgn,
+simulate(nruns, total_time, temperature, with_V1_L4, with_V1_L6, with_TRN, input, con_input_lgn,
          n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_i_l4, n_trn,
          delay_distbtn_E_L6_LGN, delay_E_L4_E_LGN, delay_E_LGN_I_L4, delay_E_LGN_E_L4, delay_E_LGN_E_L6,
          delay_E_LGN_TRN, delay_E_L4_TRN, delay_distbtn_E_L6_TRN, delay_E_LGN_I_L6,

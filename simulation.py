@@ -5,7 +5,7 @@ from plotting import plot_all
 from utils import e_net_connect, i_net_connect, e_ct_net_connect, e_net_connect_delay_dist, e_ct_net_connect_delay_dist
 from utils import createNetwork, createNetworkL6
 
-h.load_file("nrngui.hoc")  # load standard run system
+# h.load_file("nrngui.hoc")  # load standard run system
 # h.dt = 1
 # global dt
 # dt = h.dt
@@ -14,7 +14,7 @@ h.load_file("nrngui.hoc")  # load standard run system
 # h.v_init = -67
 
 
-def simulate(n_runs, total_time, with_v1_l4, with_v1_l6, with_trn, input, con_input_lgn,
+def simulate(n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, input, con_input_lgn,
              n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_i_l4, n_trn,
              delay_distbtn_e_l6_lgn, delay_e_l4_e_lgn, delay_e_lgn_i_l4, delay_e_lgn_e_l4, delay_e_lgn_e_l6,
              delay_e_lgn_trn, delay_e_l4_trn, delay_distbtn_e_l6_trn, delay_e_lgn_i_l6,
@@ -22,7 +22,7 @@ def simulate(n_runs, total_time, with_v1_l4, with_v1_l6, with_trn, input, con_in
              w_e_lgn_e_l4, w_e_l4_e_lgn, w_e_l6_e_lgn, w_e_lgn_e_l6, w_e_lgn_i_l6, w_e_lgn_i_l4, w_e_l4_trn,
              connect_e_lgn_e_l4, connect_e_lgn_i_l4, connect_e_l4_e_lgn, connect_e_lgn_i_l6, connect_e_lgn_e_l6, connect_e_l6_e_lgn, connect_e_l4_trn, connect_e_l6_trn,
              connect_e_lgn_trn, connect_trn_e_lgn, connect_e_l4_e_l6):
-
+    h.celsius = temperature
     print "* * * Simulating %d runs * * *" % n_runs
     h.tstop = total_time
     for n_sim in range(n_runs):
