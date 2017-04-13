@@ -21,7 +21,7 @@ UNITS {
  
 ? interface
 NEURON {
-        SUFFIX hhhomero
+        SUFFIX hh_original
         USEION na READ ena WRITE ina
         USEION k READ ek WRITE ik
         NONSPECIFIC_CURRENT il
