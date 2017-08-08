@@ -134,7 +134,7 @@ def simulate(n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, 
 
             # connections from V1 input (L4) layer to L6
             if connect_e_l4_e_l6:
-                e_l4_e_l6_sin = e_net_connect(e_l4, e_l6, 0, 1, w_e_l4_e_l6,1)
+                e_l4_e_l6_sin = e_net_connect(e_l4, e_l6, 0, 1, w_e_l4_e_l6, 1)
 
 #ALL-to-ALL connections of feedback
             if connect_e_l6_e_lgn:
@@ -166,7 +166,7 @@ def simulate(n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, 
 
             #connections from Glutamatergic neurons of network V1 L4 to trn
             if with_v1_l4 and connect_e_l4_trn:
-                e_l4_trn_syn = e_net_connect(e_l4, trn, 0, delay_e_l4_trn, w_e_l4_trn,1)
+                e_l4_trn_syn = e_net_connect(e_l4, trn, 0, delay_e_l4_trn, w_e_l4_trn, 1)
 
             if with_v1_l6 and connect_e_l6_trn:
                 e_l6_trn_syn = e_net_connect_delay_dist(e_l6, trn, 0, delay_distbtn_e_l6_trn, w_e_l6_trn, 1)
