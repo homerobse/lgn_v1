@@ -16,7 +16,7 @@ from neuron import h
 import numpy as np
 import matplotlib.pyplot as plt
 
-h.load_file("nrngui.hoc") # load standard run system
+h.load_file("nrngui.hoc")  # load standard run system
 
 h.dt = 1
 global dt
