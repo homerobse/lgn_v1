@@ -2,7 +2,7 @@ from neuron import h
 import numpy as np
 
 from plotting import plot_all
-from utils import e_net_connect, i_net_connect, e_ct_net_connect, e_net_connect_delay_dist, e_ct_net_connect_delay_dist
+from utils import e_net_connect, partial_e_net_connect, i_net_connect, e_ct_net_connect, e_net_connect_delay_dist, e_ct_net_connect_delay_dist
 from utils import createNetwork, createNetworkL6
 
 # h.load_file("nrngui.hoc")  # load standard run system
@@ -59,17 +59,9 @@ def simulate(n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, 
             #ALL-to-ALL connectivity
             if connect_e_lgn_e_l4:
                 #connections from Glutamatergic neurons of network LGN to network V1 L4
-                # e_lgn_e_l4_sin = e_net_connect(e_lgn, e_l4, 0, delay_e_lgn_e_l4, w_e_lgn_e_l4)
-                sin_e_lgn_e_l4 = list()
-                len_lgn = len(e_lgn)
-                for neuron_i in range(len(e_lgn)*1/4, len(e_lgn)):
-                    e_lgn[neuron_i].soma.push()
-                    for neuron_j in range(len(e_l4)*1/4, len(e_l4)):
-                        sin_e_lgn_e_l4.append(h.NetCon(e_lgn[neuron_i].soma(0.5)._ref_v, e_l4[neuron_j].synE,
-                                                       0, delay_e_lgn_e_l4, w_e_lgn_e_l4[neuron_i, neuron_j]))
-                    h.pop_section()
+                partial_e_net_connect(e_lgn, e_l4, 1./4, 1, 1./4, 1, 0, delay_e_lgn_e_l4, w_e_lgn_e_l4)
 
-
+                    #TODO: extract topographic connectivity as a function
                     #topographic connectivity. Each cell connect to only one other cell (just one for loop)
                     # if connect_e_lgn_e_l4:
                     #     #extrinsic connections
@@ -86,13 +78,7 @@ def simulate(n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, 
             if connect_e_l4_e_lgn:
                 #TODO: feedback connections are only of 3/4 of neurons?
                 #connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
-                Glutnt2nt1_sin = list()
-                for neuron_i in range(len(e_l4)*1/4, len(e_l4)):
-                    e_l4[neuron_i].soma.push()
-                    for neuron_j in range(len(e_lgn)*1/4, len(e_lgn)):
-                        Glutnt2nt1_sin.append(h.NetCon(e_l4[neuron_i].soma(0.5)._ref_v, e_lgn[neuron_j].synE_CT,
-                                                       0, delay_e_l4_e_lgn, w_e_l4_e_lgn[neuron_i, neuron_j]))
-                    h.pop_section()
+                partial_e_net_connect(e_l4, e_lgn, 1./4, 1, 1./4, 1, 0, delay_e_l4_e_lgn, w_e_l4_e_lgn)
 
             # Population 1) 15 LGN E cells connect to 15 V1 L4 E cells
             # Population 2) 5 LGN E cells connect to 5 V1 L4 I cells
@@ -103,25 +89,18 @@ def simulate(n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, 
             #All-to-ALL connectivity
             if connect_e_lgn_i_l4:
                 # connections from Glutamatergic neurons of network (LGN) to network V1 L4
-                sin_e_lgn_i_l4 = list()
-                len_lgn = len(e_lgn)
-                for neuron_i in range(0, len_lgn*1/4):
-                    e_lgn[neuron_i].soma.push()
-                    for neuron_j in range(0, len(i_l4)*1/4):
-                        sin_e_lgn_i_l4.append(h.NetCon(e_lgn[neuron_i].soma(0.5)._ref_v, i_l4[neuron_j].synE,
-                                                       0, delay_e_lgn_i_l4, w_e_lgn_i_l4[neuron_i, neuron_j]))
-                    h.pop_section()
+                partial_e_net_connect(e_lgn, i_l4, 0, 1./4, 0, 1./4, 0, delay_e_lgn_i_l4, w_e_lgn_i_l4)
 
-                #            #topographic connectivity: Each cell connect to only one other cell (just one for loop)
-                #            if connect_e_lgn_i_l4:
-                #                # connections from Glutamatergic neurons of network (LGN) to network V1 L4
-                #                sin_e_lgn_i_l4 = list()
-                #                len_lgn = len(e_lgn)
-                #                for neuron_i in range(0, len_lgn*1/4):
-                #                    e_lgn[neuron_i].soma.push()
-                #                    sin_e_lgn_i_l4.append(h.NetCon(e_lgn[neuron_i].soma(0.5)._ref_v, i_l4[neuron_i].synE,
-                #                                                       0, delay_e_lgn_i_l4, w_e_lgn_i_l4[neuron_i, neuron_i]))
-                #                    h.pop_section()
+                # #topographic connectivity: Each cell connect to only one other cell (just one for loop)
+        #            if connect_e_lgn_i_l4:
+        #                # connections from Glutamatergic neurons of network (LGN) to network V1 L4
+        #                sin_e_lgn_i_l4 = list()
+        #                len_lgn = len(e_lgn)
+        #                for neuron_i in range(0, len_lgn*1/4):
+        #                    e_lgn[neuron_i].soma.push()
+        #                    sin_e_lgn_i_l4.append(h.NetCon(e_lgn[neuron_i].soma(0.5)._ref_v, i_l4[neuron_i].synE,
+        #                                                       0, delay_e_lgn_i_l4, w_e_lgn_i_l4[neuron_i, neuron_i]))
+        #                    h.pop_section()
 
         i_l6, i_l6_rec = createNetworkL6(n_i_l6)
         e_l6, e_l6_rec = createNetworkL6(n_e_l6)
