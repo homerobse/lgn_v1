@@ -124,8 +124,12 @@ l6_params = {
     'p_e_i': 0.3   # 10% connectivity Hauesler and Maass 2007 (heuristic from L5)
 }
 
-W_TRN_TRN = exponential_connect(14/1000000., n_trn, n_trn, False)  # assuming linearity of psp with weights  // testing effect of connection weight
-#W_TRN_TRN = exponential_connect(4/1000000., n_trn, n_trn, False)  # assuming linearity of psp with weights  // testing effect of connection weight
+trn_params = {
+    'w_trn_trn': exponential_connect(14/1000000., n_trn, n_trn, False),  # assuming linearity of psp with weights  // testing effect of connection weight
+    #'w_trn_trn: exponential_connect(4/1000000., n_trn, n_trn, False),  # assuming linearity of psp with weights  // testing effect of connection weight
+    'p_i_i': 1,
+    'delay_i_i': 1
+}
 
 #EXTRINSIC CONNECTIONS
 
@@ -169,7 +173,7 @@ simulate(nruns, total_time, temperature, with_V1_L4, with_V1_L6, with_TRN, input
          n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_i_l4, n_trn,
          delay_distbtn_E_L6_LGN, delay_E_L4_E_LGN, delay_E_LGN_I_L4, delay_E_LGN_E_L4, delay_E_LGN_E_L6,
          delay_E_LGN_TRN, delay_E_L4_TRN, delay_distbtn_E_L6_TRN, delay_E_LGN_I_L6,
-         lgn_params, l4_params, l6_params, W_TRN_TRN, W_E_LGN_TRN, W_TRN_E_LGN, W_E_L6_TRN, W_E_L4_E_L6,
+         lgn_params, l4_params, l6_params, trn_params, W_E_LGN_TRN, W_TRN_E_LGN, W_E_L6_TRN, W_E_L4_E_L6,
          W_E_LGN_E_L4, W_E_L4_E_LGN, W_E_L6_E_LGN, W_E_LGN_E_L6, W_E_LGN_I_L6, W_E_LGN_I_L4, W_E_L4_TRN,
          connect_E_LGN_E_L4, connect_E_LGN_I_L4, connect_E_L4_E_LGN, connect_E_LGN_I_L6, connect_E_LGN_E_L6, connect_E_L6_E_LGN, connect_E_L4_TRN, connect_E_L6_TRN,
          connect_E_LGN_TRN, connect_TRN_E_LGN, connect_E_L4_E_L6)
