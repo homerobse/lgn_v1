@@ -70,7 +70,7 @@ def simulate(n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, 
                     h.pop_section()
 
 
-                    #topographic connectivity
+                    #topographic connectivity. Each cell connect to only one other cell (just one for loop)
                     # if connect_e_lgn_e_l4:
                     #     #extrinsic connections
                     #     #connections from Glutamatergic neurons of network 1 (LGN) to network 2 (V1)
@@ -84,6 +84,7 @@ def simulate(n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, 
 
 
             if connect_e_l4_e_lgn:
+                #TODO: feedback connections are only of 3/4 of neurons?
                 #connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
                 Glutnt2nt1_sin = list()
                 for neuron_i in range(len(e_l4)*1/4, len(e_l4)):
@@ -111,7 +112,7 @@ def simulate(n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, 
                                                        0, delay_e_lgn_i_l4, w_e_lgn_i_l4[neuron_i, neuron_j]))
                     h.pop_section()
 
-                #            #topographic connectivity
+                #            #topographic connectivity: Each cell connect to only one other cell (just one for loop)
                 #            if connect_e_lgn_i_l4:
                 #                # connections from Glutamatergic neurons of network (LGN) to network V1 L4
                 #                sin_e_lgn_i_l4 = list()
@@ -139,17 +140,6 @@ def simulate(n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, 
 #ALL-to-ALL connections of feedback
             if connect_e_l6_e_lgn:
                 e_l6_e_lgn_sin = e_ct_net_connect_delay_dist(e_l6, e_lgn, 0, delay_distbtn_e_l6_lgn, w_e_l6_e_lgn)
-
-#            if connect_e_l6_e_lgn:
-#                #connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
-#                k = 0
-#                GlutL6nt1_sin = list()
-#                for neuron_i in range(len(e_l6)):
-#                    e_l6[neuron_i].soma.push()
-#                    GlutL6nt1_sin.append(h.NetCon(e_l6[neuron_i].soma(0.5)._ref_v, e_lgn[neuron_i].synE_CT,
-#                                        0, delay_distbtn_e_l6_lgn[k], w_e_l6_e_lgn[neuron_i, neuron_i]))
-#                    k += 1
-#                    h.pop_section()
 
             # TODO: Connectivity as Hirsch
             if connect_e_lgn_e_l6:
