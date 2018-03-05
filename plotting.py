@@ -147,7 +147,7 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN, Glutneurons_r
 
     # plot input
     plt.figure(5)
-    plt.plot(stim_rec, np.ones([stim_rec.size(), 1]), 'ob')
+    plt.plot(stim_rec, np.ones([int(stim_rec.size()), 1]), 'ob')
     plt.xlim([timeaxis[0], timeaxis[-1]])
     plt.ylim([0., 2.])
     plt.title('Poisson input #0 to LGN Cell #0')
