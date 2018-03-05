@@ -14,7 +14,8 @@ from utils import createNetwork, createNetworkL6
 # h.v_init = -67
 
 
-def simulate(n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, input, con_input_lgn,
+
+def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, input, con_input_lgn,
              n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_i_l4, n_trn,
              delay_distbtn_e_l6_lgn, delay_e_l4_e_lgn, delay_e_lgn_i_l4, delay_e_lgn_e_l4, delay_e_lgn_e_l6,
              delay_e_lgn_trn, delay_e_l4_trn, delay_distbtn_e_l6_trn, delay_e_lgn_i_l6,
@@ -189,7 +190,7 @@ def simulate(n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, 
                                                                i_l6_rec, i_lgn, i_l4, i_lgn_rec, i_l4_rec,
                                                                n_e_lgn, n_e_l6, n_e_l4, n_trn, n_i_l6)
 
-        ofname = "../data_files/" "sim" + str(n_sim+0) + ".txt"
+        ofname = OUTPUT_DIR + "/sim" + str(n_sim+0) + ".txt"
 
         n = len(timeaxis)
         indx = np.arange(1, n, 40)
