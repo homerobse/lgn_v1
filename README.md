@@ -20,3 +20,8 @@ synI.tau2 = 2
 
 ## Hodgkin & Huxley parameters
 Look at hh_original.mod
+
+# Building NEURON mechanisms and running the simulation
+Run `$nrnivmodl hh_original.mod netstim_pois.mod` to build these NEURON mechanisms.
+
+Afterwards, to run an example simulation, run `$nrngui -python s_tests.py`
