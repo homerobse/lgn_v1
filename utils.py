@@ -62,7 +62,7 @@ def constant_connect(weight, n1, n2, selfconnect=True):
 
 def partial_e_net_connect(net1, net2, net1_prop_b, net1_prop_e, net2_prop_b, net2_prop_e, threshold, delay, weights):
     """
-    Partially connect neurons in two networks with excitatory synapse
+    Partially connect neurons in two networks with excitatory synapse. Only connects the neurons in the proportions given
     :param net1: First network list (h.List()) of neurons
     :param net2: Second network list (h.List()) of neurons
     :param net1_prop_b: Proportion in network 1 by which we begin to connect neurons
@@ -84,6 +84,26 @@ def partial_e_net_connect(net1, net2, net1_prop_b, net1_prop_e, net2_prop_b, net
                                            threshold, delay, weights[neuron_i, neuron_j]))
         h.pop_section()
 
+
+def topographically_connect(net1, net2, net1_prop_b, net1_prop_e, threshold, delay, weights):
+    # NEVER TESTED!
+    """
+        Topographic connectivity. Each cell connect to only one other cell (just one for loop). WARNING: NEVER TESTED
+        :param net1: First network list (h.List()) of neurons
+        :param net2: Second network list (h.List()) of neurons
+        :param net1_prop_b: Proportion in network 1 by which we begin to connect neurons
+        :param net1_prop_e: Proportion in network 1 by which we end to connect neurons
+        :param threshold: voltage threshold that generates spike in neuron in net1
+        :param delay: time between spike in net1 and PSP in net2 (ms)
+        :param weights: matrix of connection weights (strength of connection)
+        :return:
+    """
+    net1_net2_syn = list()
+    for neuron_i in range(len(net1)*int(net1_prop_e)):
+        net1[neuron_i].soma.push()
+        net1_net2_syn.append(h.NetCon(net1[neuron_i].soma(0.5)._ref_v, e_l4[neuron_i].synE,
+                             threshold, delay_net1_net2, weights[neuron_i, neuron_i]))
+        h.pop_section()
 
 def e_net_connect(net1, net2, threshold, delay, weights, prob):
     """
