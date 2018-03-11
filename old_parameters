@@ -1,4 +1,4 @@
-Differences between simulations
+Differences between simulations in old simulations
 
 *only_LGN
 (PyrCell) self.synI.tau1 = 4
