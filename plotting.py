@@ -11,18 +11,6 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
 
     Fs = 1/2.5e-05
 
-    mean_v1_l4 = np.zeros(np.shape(np.mean(e_l4_rec, axis=0)))
-    if with_V1_L4:
-        # V1 L4 LFP
-        mean_v1_l4 = np.mean(e_l4_rec, axis=0)
-        mean_v1_l4 = mean_v1_l4 - np.mean(mean_v1_l4)
-
-        (Pxx, freqpsd) = psd(mean_v1_l4, 20000/2, Fs)  # args are signal, nfft, Fs
-        plt.figure(6)
-        plt.plot(freqpsd, Pxx)
-        plt.xlim([0, 150])
-        plt.title('PSD of V1 L4 LFP')
-
     # LGN LFP
     mean_lgn = np.mean(e_lgn_rec, axis=0)
     mean_lgn = mean_lgn - np.mean(mean_lgn)
@@ -62,6 +50,19 @@ def plot_all(timeaxis, stim_rec, with_V1_L4, with_V1_L6, with_TRN,
         plt.title('GABAergic TRN neurons')
 
         plt.xlim([0, h.tstop])
+
+    mean_v1_l4 = np.zeros(np.shape(np.mean(e_l4_rec, axis=0)))
+    if with_V1_L4:
+        # V1 L4 LFP
+        mean_v1_l4 = np.mean(e_l4_rec, axis=0)
+        mean_v1_l4 = mean_v1_l4 - np.mean(mean_v1_l4)
+        (Pxx, freqpsd) = psd(mean_v1_l4, 20000 / 2, Fs)  # args are signal, nfft, Fs
+        import pdb
+        pdb.set_trace()
+        plt.figure(6)
+        plt.plot(freqpsd, Pxx)
+        plt.xlim([0, 150])
+        plt.title('PSD of V1 L4 LFP')
 
     mean_v1_l6 = np.zeros(np.shape(np.mean(e_l6_rec, 0)))
     if with_V1_L6:
