@@ -4,7 +4,7 @@ from cells import Pyrcell
 from random import random
 
 
-def createNetwork(n_neurons=4):
+def create_network(n_neurons=4):
 
     network = h.List()
     network_rec = h.List()
@@ -18,7 +18,7 @@ def createNetwork(n_neurons=4):
     return network, network_rec
 
 
-def createNetworkL6(n_neurons=4):
+def create_network_L6(n_neurons=4):
 
     # network = h.List()
     # network_rec = h.List()
@@ -28,7 +28,7 @@ def createNetworkL6(n_neurons=4):
     #     network.append(p)
     #     network_rec.append(h.Vector())
     #     network_rec[i].record(network[i].soma(0.5)._ref_v)
-    return createNetwork(n_neurons)
+    return create_network(n_neurons)
 
 
 def exponential_connect(weight, n1, n2, selfconnect=True):

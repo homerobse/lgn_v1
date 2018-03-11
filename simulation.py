@@ -3,7 +3,7 @@ import numpy as np
 
 from plotting import plot_all
 from utils import e_net_connect, partial_e_net_connect, i_net_connect, e_ct_net_connect, e_net_connect_delay_dist, e_ct_net_connect_delay_dist
-from utils import createNetwork, createNetworkL6
+from utils import create_network, create_network_L6
 
 # h.load_file("nrngui.hoc")  # load standard run system
 # h.dt = 1
@@ -30,8 +30,8 @@ def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6
         print "#%d: Constructing circuits..." % (n_sim + 1)
 
         # creating LGN network
-        i_lgn, i_lgn_rec = createNetwork(n_i_lgn)
-        e_lgn, e_lgn_rec = createNetwork(n_e_lgn)
+        i_lgn, i_lgn_rec = create_network(n_i_lgn)
+        e_lgn, e_lgn_rec = create_network(n_e_lgn)
 
         #create connections in network 1 (LGN)
         e_lgn_e_lgn_syn = e_net_connect(e_lgn, e_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'], 1)
@@ -39,8 +39,8 @@ def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6
         i_lgn_e_lgn_syn = i_net_connect(i_lgn, e_lgn, 0, lgn_params['delay_i_e'], lgn_params['w_i_lgn_e_lgn'], 1)
         e_lgn_i_lgn_syn = e_net_connect(e_lgn, i_lgn, 0, lgn_params['delay_e_i'], lgn_params['w_e_lgn_i_lgn'], 1)  # weight should be set to zero
 
-        e_l4, e_l4_rec = createNetwork(n_e_l4)
-        i_l4, i_l4_rec = createNetwork(n_i_l4)
+        e_l4, e_l4_rec = create_network(n_e_l4)
+        i_l4, i_l4_rec = create_network(n_i_l4)
         if with_v1_l4:
             #create connections in network 2  (V1 superficial)
             # using values different from Hauesler and Maass yet, in order to be able to generate gamma
@@ -62,23 +62,23 @@ def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6
                 #connections from Glutamatergic neurons of network LGN to network V1 L4
                 partial_e_net_connect(e_lgn, e_l4, 1./4, 1, 1./4, 1, 0, delay_e_lgn_e_l4, w_e_lgn_e_l4)
 
-                    #TODO: extract topographic connectivity as a function
-                    #topographic connectivity. Each cell connect to only one other cell (just one for loop)
-                    # if connect_e_lgn_e_l4:
-                    #     #extrinsic connections
-                    #     #connections from Glutamatergic neurons of network 1 (LGN) to network 2 (V1)
-                    #
-                    #     Glutnt1nt2_sin = list()
-                    #     for neuron_i in range(len(e_lgn)):
-                    #         e_lgn[neuron_i].soma.push()
-                    #         Glutnt1nt2_sin.append(h.NetCon(e_lgn[neuron_i].soma(0.5)._ref_v, e_l4[neuron_i].synE,
-                    #                              0, delay_e_lgn_e_l4, w_e_lgn_e_l4[neuron_i, neuron_i]))
-                    #         h.pop_section()
+                # TODO: extract topographic connectivity as a function
+                # topographic connectivity. Each cell connect to only one other cell (just one for loop)
+                # if connect_e_lgn_e_l4:
+                #     #extrinsic connections
+                #     #connections from Glutamatergic neurons of network 1 (LGN) to network 2 (V1)
+                #
+                #     Glutnt1nt2_sin = list()
+                #     for neuron_i in range(len(e_lgn)):
+                #         e_lgn[neuron_i].soma.push()
+                #         Glutnt1nt2_sin.append(h.NetCon(e_lgn[neuron_i].soma(0.5)._ref_v, e_l4[neuron_i].synE,
+                #                              0, delay_e_lgn_e_l4, w_e_lgn_e_l4[neuron_i, neuron_i]))
+                #         h.pop_section()
 
 
             if connect_e_l4_e_lgn:
-                #TODO: feedback connections are only of 3/4 of neurons?
-                #connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
+                # TODO: feedback connections are only of 3/4 of neurons?
+                # connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
                 partial_e_net_connect(e_l4, e_lgn, 1./4, 1, 1./4, 1, 0, delay_e_l4_e_lgn, w_e_l4_e_lgn)
 
             # Population 1) 15 LGN E cells connect to 15 V1 L4 E cells
@@ -103,8 +103,8 @@ def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6
         #                                                       0, delay_e_lgn_i_l4, w_e_lgn_i_l4[neuron_i, neuron_i]))
         #                    h.pop_section()
 
-        i_l6, i_l6_rec = createNetworkL6(n_i_l6)
-        e_l6, e_l6_rec = createNetworkL6(n_e_l6)
+        i_l6, i_l6_rec = create_network_L6(n_i_l6)
+        e_l6, e_l6_rec = create_network_L6(n_e_l6)
         if with_v1_l6:
             # create connections in network 2  (V1 L6)
             # using values different from Hauesler and Maass yet, in order to be able to generate gamma
@@ -130,7 +130,7 @@ def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6
                 e_lgn_i_l6_syn = e_net_connect(e_lgn, i_l6, 0, delay_e_lgn_i_l6, w_e_lgn_i_l6, 1)
 
         #create trn neurons (inhibitory only)
-        trn, trn_rec = createNetwork(n_trn)
+        trn, trn_rec = create_network(n_trn)
         if with_trn:
             trn_trn_syn = i_net_connect(trn, trn, 0, trn_params['delay_i_i'], trn_params['w_trn_trn'],
                                         trn_params['p_i_i'])
@@ -185,20 +185,19 @@ def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6
         print "#%d: Running simulation..." % (n_sim + 1)
         h.run()
 
-        meanLGN, meanTRN, meanV1input, meanV1output = plot_all(timeaxis, stim_rec, with_v1_l4, with_v1_l6, with_trn,
-                                                               e_l4_rec, trn_rec, e_l6_rec, e_lgn_rec,
-                                                               i_l6_rec, i_lgn, i_l4, i_lgn_rec, i_l4_rec,
-                                                               n_e_lgn, n_e_l6, n_e_l4, n_trn, n_i_l6)
+        mean_lgn, mean_trn, mean_v1_l4, mean_v1_l6 = plot_all(timeaxis, stim_rec, with_v1_l4, with_v1_l6, with_trn,
+                                                               e_lgn_rec, i_lgn_rec, trn_rec, e_l4_rec, i_l4_rec, e_l6_rec, i_l6_rec,
+                                                               n_e_lgn, n_i_lgn, n_trn, n_e_l4, n_i_l4, n_e_l6, n_i_l6)
 
         ofname = OUTPUT_DIR + "/sim" + str(n_sim+0) + ".txt"
 
         n = len(timeaxis)
-        indx = np.arange(1, n, 40)
+        indx = np.arange(1, n, 40)  # store one in every 40 values
 
-        w = np.array(meanLGN)
-        u = np.array(meanTRN)
-        x = np.array(meanV1input)
-        y = np.array(meanV1output)
+        w = np.array(mean_lgn)
+        u = np.array(mean_trn)
+        x = np.array(mean_v1_l4)
+        y = np.array(mean_v1_l6)
         z = np.array(timeaxis)
         np.savetxt(ofname, (w[indx], u[indx], x[indx], y[indx], z[indx]))
 
