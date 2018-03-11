@@ -33,7 +33,7 @@ def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6
         i_lgn, i_lgn_rec = create_network(n_i_lgn)
         e_lgn, e_lgn_rec = create_network(n_e_lgn)
 
-        #create connections in network 1 (LGN)
+        # create connections in network 1 (LGN)
         e_lgn_e_lgn_syn = e_net_connect(e_lgn, e_lgn, 0, 1, lgn_params['w_e_lgn_e_lgn'], 1)
         i_lgn_i_lgn_syn = i_net_connect(i_lgn, i_lgn, 0, 1, lgn_params['w_i_lgn_i_lgn'], 1)
         i_lgn_e_lgn_syn = i_net_connect(i_lgn, e_lgn, 0, lgn_params['delay_i_e'], lgn_params['w_i_lgn_e_lgn'], 1)
@@ -42,7 +42,7 @@ def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6
         e_l4, e_l4_rec = create_network(n_e_l4)
         i_l4, i_l4_rec = create_network(n_i_l4)
         if with_v1_l4:
-            #create connections in network 2  (V1 superficial)
+            # create connections in network 2  (V1 superficial)
             # using values different from Hauesler and Maass yet, in order to be able to generate gamma
             e_l4_e_l4_sin = e_net_connect(e_l4, e_l4, 0, 1, l4_params['w_e_l4_e_l4'], l4_params['p_e_e'])
             i_l4_i_l4_sin = i_net_connect(i_l4, i_l4, 0, 1, l4_params['w_i_l4_i_l4'], l4_params['p_i_i'])
@@ -59,7 +59,7 @@ def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6
             #extrinsic connections
             #ALL-to-ALL connectivity
             if connect_e_lgn_e_l4:
-                #connections from Glutamatergic neurons of network LGN to network V1 L4
+                # connections from Glutamatergic neurons of network LGN to network V1 L4
                 partial_e_net_connect(e_lgn, e_l4, 1./4, 1, 1./4, 1, 0, delay_e_lgn_e_l4, w_e_lgn_e_l4)
 
                 # TODO: extract topographic connectivity as a function
@@ -87,7 +87,7 @@ def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6
             # Population 1 and population 2 are different
             #
             # Hirsch et al., 1998
-            #All-to-ALL connectivity
+            # All-to-ALL connectivity
             if connect_e_lgn_i_l4:
                 # connections from Glutamatergic neurons of network (LGN) to network V1 L4
                 partial_e_net_connect(e_lgn, i_l4, 0, 1./4, 0, 1./4, 0, delay_e_lgn_i_l4, w_e_lgn_i_l4)
@@ -117,7 +117,7 @@ def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6
             if connect_e_l4_e_l6:
                 e_l4_e_l6_sin = e_net_connect(e_l4, e_l6, 0, 1, w_e_l4_e_l6, 1)
 
-#ALL-to-ALL connections of feedback
+# ALL-to-ALL connections of feedback
             if connect_e_l6_e_lgn:
                 e_l6_e_lgn_sin = e_ct_net_connect_delay_dist(e_l6, e_lgn, 0, delay_distbtn_e_l6_lgn, w_e_l6_e_lgn)
 
@@ -129,25 +129,25 @@ def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6
             if connect_e_lgn_i_l6:
                 e_lgn_i_l6_syn = e_net_connect(e_lgn, i_l6, 0, delay_e_lgn_i_l6, w_e_lgn_i_l6, 1)
 
-        #create trn neurons (inhibitory only)
+        # create trn neurons (inhibitory only)
         trn, trn_rec = create_network(n_trn)
         if with_trn:
             trn_trn_syn = i_net_connect(trn, trn, 0, trn_params['delay_i_i'], trn_params['w_trn_trn'],
                                         trn_params['p_i_i'])
 
-            #connections from Glutamatergic neurons of network V1 L4 to trn
+            # connections from Glutamatergic neurons of network V1 L4 to trn
             if with_v1_l4 and connect_e_l4_trn:
                 e_l4_trn_syn = e_net_connect(e_l4, trn, 0, delay_e_l4_trn, w_e_l4_trn, 1)
 
             if with_v1_l6 and connect_e_l6_trn:
                 e_l6_trn_syn = e_net_connect_delay_dist(e_l6, trn, 0, delay_distbtn_e_l6_trn, w_e_l6_trn, 1)
 
-            #ALL-to-ALL
+            # ALL-to-ALL
             if connect_e_lgn_trn:
-                #connections from Glutamatergic neurons of network 1 (LGN) to trn
+                # connections from Glutamatergic neurons of network 1 (LGN) to trn
                 e_lgn_trn_syn = e_net_connect(e_lgn, trn, 0, delay_e_lgn_trn, w_e_lgn_trn, 1)
 
-            #topographic
+            # topographic
 #            if connect_e_lgn_trn:
 #                #connections from Glutamatergic neurons of LGN to trn
 #                GlutGABAtneurons_sin1 = list()
@@ -157,7 +157,7 @@ def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6
 #                    GlutGABAtneurons_sin1.append(h.NetCon(e_lgn[neuron_i].soma(0.5)._ref_v, trn[neuron_i].synE, 0, delayGlutGABAtneurons,
 #                                                              w_e_lgn_trn[neuron_i, neuron_i]))
 #                     h.pop_section()
-            #ALL-to-ALL
+            # ALL-to-ALL
             if connect_trn_e_lgn:
                 trn_e_lgn_sin = i_net_connect(trn, e_lgn, 0, 1, w_trn_e_lgn, 1)
 
