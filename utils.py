@@ -83,9 +83,10 @@ def partial_e_net_connect(net1, net2, net1_prop_b, net1_prop_e, net2_prop_b, net
             net1_net2_syn.append(h.NetCon(net1[neuron_i].soma(0.5)._ref_v, net2[neuron_j].synE,
                                            threshold, delay, weights[neuron_i, neuron_j]))
         h.pop_section()
+    return net1_net2_syn
 
 
-def topographically_connect(net1, net2, net1_prop_b, net1_prop_e, threshold, delay, weights):
+def topographically_e_connect(net1, net2, net1_prop_b, net1_prop_e, threshold, delay, weights):
     # NEVER TESTED!
     """
         Topographic connectivity. Each cell connect to only one other cell (just one for loop). WARNING: NEVER TESTED
@@ -104,6 +105,7 @@ def topographically_connect(net1, net2, net1_prop_b, net1_prop_e, threshold, del
         net1_net2_syn.append(h.NetCon(net1[neuron_i].soma(0.5)._ref_v, e_l4[neuron_i].synE,
                              threshold, delay_net1_net2, weights[neuron_i, neuron_i]))
         h.pop_section()
+    return net1_net2_syn
 
 def e_net_connect(net1, net2, threshold, delay, weights, prob):
     """

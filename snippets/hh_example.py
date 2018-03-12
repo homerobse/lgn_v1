@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 h.load_file("nrngui.hoc")  # load standard run system
 
 soma = h.Section()
-
 soma.insert('hh_original')
 
 stim = h.IClamp(soma(0.5))
@@ -25,7 +24,6 @@ timeaxis.record(h._ref_t)
 print soma(0.5).v
 
 h.tstop = 10
-
 h.run()
 
 print soma(0.5).v

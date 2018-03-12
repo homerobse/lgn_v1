@@ -58,18 +58,18 @@ def simulate(OUTPUT_DIR, n_runs, total_time, temperature, with_v1_l4, with_v1_l6
             # Hirsch et al., 1998
             if connect_e_lgn_e_l4:
                 # connections from Glutamatergic neurons of network LGN to network V1 L4
-                partial_e_net_connect(e_lgn, e_l4, 1./4, 1, 1./4, 1, 0, delay_e_lgn_e_l4, w_e_lgn_e_l4)
-                # topographically_connect(e_lgn, e_l4, 0, 1, 0, delay_e_lgn_e_l4, w_e_lgn_e_l4)
+                e_lgn_e_l4_syn = partial_e_net_connect(e_lgn, e_l4, 2./4, 1, 2./4, 1, 0, delay_e_lgn_e_l4, w_e_lgn_e_l4)
+                # e_lgn_e_l4_syn = topographically_connect(e_lgn, e_l4, 0, 1, 0, delay_e_lgn_e_l4, w_e_lgn_e_l4)
 
             if connect_e_l4_e_lgn:
                 # TODO: feedback connections are only of 3/4 of neurons?
                 # connections from Glutamatergic neurons of network 2 (V1) to network 1 (LGN)
-                partial_e_net_connect(e_l4, e_lgn, 1./4, 1, 1./4, 1, 0, delay_e_l4_e_lgn, w_e_l4_e_lgn)
+                e_l4_e_lgn_syn = partial_e_net_connect(e_l4, e_lgn, 1./4, 1, 1./4, 1, 0, delay_e_l4_e_lgn, w_e_l4_e_lgn)
 
             if connect_e_lgn_i_l4:
                 # connections from Glutamatergic neurons of network (LGN) to network V1 L4
-                partial_e_net_connect(e_lgn, i_l4, 0, 1./4, 0, 1./4, 0, delay_e_lgn_i_l4, w_e_lgn_i_l4)
-                # topographically_connect(e_lgn, i_l4, 0, 1./4, 0, delay_e_lgn_i_l4, w_e_lgn_i_l4)
+                e_lgn_i_l4_syn = partial_e_net_connect(e_lgn, i_l4, 0, 2./4, 0, 2./4, 0, delay_e_lgn_i_l4, w_e_lgn_i_l4)
+                # e_lgn_i_l4_syn = topographically_connect(e_lgn, i_l4, 0, 1./4, 0, delay_e_lgn_i_l4, w_e_lgn_i_l4)
 
         i_l6, i_l6_rec = create_network_L6(n_i_l6)
         e_l6, e_l6_rec = create_network_L6(n_e_l6)
