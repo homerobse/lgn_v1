@@ -24,10 +24,12 @@ class Pyrcell:
         # self.soma.gleak_hhvitor2 = 0.0000273
 
         self.synE = h.Exp2Syn(0.5, sec=self.soma)
+        self.synE.e = 0
         self.synE.tau1 = 1
         self.synE.tau2 = 3
 
         self.synE_CT = h.Exp2Syn(0.5, sec=self.soma)
+        self.synE_CT.e = 0
         self.synE_CT.tau1 = 5               # this was made to be slower than the synE - but artificial values were used because the synE time constants couldn't get smaller than 1
         self.synE_CT.tau2 = 15              # TODO check this with Li, Guido and Bickford 2003
 

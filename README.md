@@ -7,9 +7,11 @@ Size of the network, input, connectivity and simulation parameters included in s
 In cells.py there are these (and others)
 ```python
 synE = h.Exp2Syn(0.5, sec=self.soma)
+self.synE.e = 0
 synE.tau1 = 1
 synE.tau2 = 3
 synE_CT = h.Exp2Syn(0.5, sec=self.soma)
+self.synE_CT.e = 0
 synE_CT.tau1 = 5               #  this was made to be slower than the synE - but artificial values were used because the synE time constants couldn't get smaller than 1
 synE_CT.tau2 = 15              #  TODO check this with Li, Guido and Bickford 2003
 synI = h.Exp2Syn(0.5, sec=self.soma)
