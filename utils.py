@@ -100,10 +100,11 @@ def topographically_e_connect(net1, net2, net1_prop_b, net1_prop_e, threshold, d
         :return:
     """
     net1_net2_syn = list()
-    for neuron_i in range(len(net1)*int(net1_prop_e)):
+    len_net1 = len(net1)
+    for neuron_i in range(int(len_net1 * net1_prop_b), int(len_net1 * net1_prop_e)):
         net1[neuron_i].soma.push()
-        net1_net2_syn.append(h.NetCon(net1[neuron_i].soma(0.5)._ref_v, e_l4[neuron_i].synE,
-                             threshold, delay_net1_net2, weights[neuron_i, neuron_i]))
+        net1_net2_syn.append(h.NetCon(net1[neuron_i].soma(0.5)._ref_v, net2[neuron_i].synE,
+                             threshold, delay, weights[neuron_i, neuron_i]))
         h.pop_section()
     return net1_net2_syn
 
