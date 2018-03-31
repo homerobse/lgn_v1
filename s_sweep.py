@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 from simulation import simulate
 import matplotlib.pyplot as plt
@@ -31,7 +30,7 @@ connect_TRN_E_LGN = True
 connect_E_L4_E_LGN = False
 connect_E_L4_TRN = False
 
-nruns = 2
+nruns = 20
 total_time = 500
 
 # number of cells should be divisible by 4, otherwise python will truncate (search simulation for "*1/4")
@@ -76,16 +75,8 @@ con_input_lgn = {
     'gaba_weight': 5./100000  # PSP 5 ~ 20  (Wang & Hirsch 2010) - Using 15 mV
 }
 
-#### INTRINSIC CONNECTIONS
 
-# lgn_params = {
-#     'w_e_lgn_e_lgn': constant_connect(0., n_e_lgn, n_e_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
-#     'w_i_lgn_i_lgn': constant_connect(0., n_i_lgn, n_i_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
-#     'w_i_lgn_e_lgn': exponential_connect(1.75/100000, n_i_lgn, n_e_lgn),  # PSP 5 mV  (Wang & Hirsch 2010)
-#     'w_e_lgn_i_lgn': constant_connect(0., n_e_lgn, n_i_lgn),
-#     'delay_e_i': 1,
-#     'delay_i_e': 1
-# }
+#### INTRINSIC CONNECTIONS
 
 # w_i_l4_i_l4 = 0.5/100000.  # PSP = 1.55 mV Haeusler and Maass 2006
 # w_e_l4_e_l4 = 0.5/100000.  # PSP = 1.1 mV Haeusler and Maass 2006
@@ -176,28 +167,45 @@ W_E_L4_E_L6 = exponential_connect(4/100000., n_e_l4, n_e_l6)
 W_E_L6_TRN = exponential_connect(4/1000000., n_e_l6, n_trn)
 W_E_L4_TRN = W_E_L6_TRN  # only if net include V1 L4 but not V1 L6
 
-fname = os.path.join(OUTPUT_DIR, "sweep_" + str(datetime.now()) + ".txt")
+weight = 4./100000
+                    # E-E, I-I, I-E, E-I
+connectivity = [
+                    [weight, 0, 0, 0],                  # E-E
+                    [0, weight, 0, 0],                  #     I-I
+                    [0, 0, weight, 0],                  #         I-E
+                    [0, 0, 0, weight],                  #             E-I
+                    [weight, weight, 0, 0],             # E-E I-I
+                    [weight, 0, weight, 0],             # E-E     I-E
+                    [weight, 0, 0, weight],             # E-E         E-I
+                    [0, weight, weight, 0],             #     I-I I-E
+                    [0, weight, 0, weight],             #     I-I     E-I
+                    [0, 0, weight, weight],             #         I-E E-I
+                    [weight, weight, weight, 0],        # E-E I-I I-E
+                    [weight, weight, 0, weight],        # E-E I-I     E-I
+                    [weight, 0, weight, weight],        # E-E     I-E E-I
+                    [0, weight, weight, weight],        #     I-I I-E E-I
+                    [weight, weight, weight, weight]    # E-E I-I I-E E-I
+                ]
+fname = OUTPUT_DIR + "sweep_" + str(datetime.now()) + ".txt"
 open(fname, 'a').close()
-weight = 3./100000
-# E-E, I-I, I-E, E-I
-c = [weight, weight, weight, weight]
 
-lgn_params = {
-    'w_e_lgn_e_lgn': constant_connect(c[0], n_e_lgn, n_e_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
-    'w_i_lgn_i_lgn': constant_connect(c[1], n_i_lgn, n_i_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
-    'w_i_lgn_e_lgn': exponential_connect(c[2], n_i_lgn, n_e_lgn),  # PSP 5 mV  (Wang & Hirsch 2010)
-    'w_e_lgn_i_lgn': constant_connect(c[3], n_e_lgn, n_i_lgn),
-    'delay_e_i': 1,
-    'delay_i_e': 1
-}
+for c in connectivity:
 
-simulate(c, OUTPUT_DIR, fname, nruns, total_time, temperature, with_V1_L4, with_V1_L6, with_TRN, input, con_input_lgn,
-         n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_i_l4, n_trn,
-         threshold, delay, delay_distbtn_E_L6_LGN, delay_E_L4_E_LGN, delay_E_LGN_I_L4, delay_E_LGN_E_L4, delay_E_LGN_E_L6,
-         delay_E_LGN_TRN, delay_E_L4_TRN, delay_distbtn_E_L6_TRN, delay_E_LGN_I_L6,
-         lgn_params, l4_params, l6_params, trn_params, W_E_LGN_TRN, W_TRN_E_LGN, W_E_L6_TRN, W_E_L4_E_L6,
-         W_E_LGN_E_L4, W_E_L4_E_LGN, W_E_L6_E_LGN, W_E_LGN_E_L6, W_E_LGN_I_L6, W_E_LGN_I_L4, W_E_L4_TRN,
-         connect_E_LGN_E_L4, connect_E_LGN_I_L4, connect_E_L4_E_LGN, connect_E_LGN_I_L6, connect_E_LGN_E_L6, connect_E_L6_E_LGN, connect_E_L4_TRN, connect_E_L6_TRN,
-         connect_E_LGN_TRN, connect_TRN_E_LGN, connect_E_L4_E_L6)
+    lgn_params = {
+        'w_e_lgn_e_lgn': constant_connect(c[0], n_e_lgn, n_e_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
+        'w_i_lgn_i_lgn': constant_connect(c[1], n_i_lgn, n_i_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
+        'w_i_lgn_e_lgn': exponential_connect(c[2], n_i_lgn, n_e_lgn),  # PSP 5 mV  (Wang & Hirsch 2010)
+        'w_e_lgn_i_lgn': constant_connect(c[3], n_e_lgn, n_i_lgn),
+        'delay_e_i': 1,
+        'delay_i_e': 1
+    }
+    print c
 
-plt.show()
+    simulate(c, OUTPUT_DIR, fname, nruns, total_time, temperature, with_V1_L4, with_V1_L6, with_TRN, input, con_input_lgn,
+             n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_i_l4, n_trn,
+             threshold, delay, delay_distbtn_E_L6_LGN, delay_E_L4_E_LGN, delay_E_LGN_I_L4, delay_E_LGN_E_L4, delay_E_LGN_E_L6,
+             delay_E_LGN_TRN, delay_E_L4_TRN, delay_distbtn_E_L6_TRN, delay_E_LGN_I_L6,
+             lgn_params, l4_params, l6_params, trn_params, W_E_LGN_TRN, W_TRN_E_LGN, W_E_L6_TRN, W_E_L4_E_L6,
+             W_E_LGN_E_L4, W_E_L4_E_LGN, W_E_L6_E_LGN, W_E_LGN_E_L6, W_E_LGN_I_L6, W_E_LGN_I_L4, W_E_L4_TRN,
+             connect_E_LGN_E_L4, connect_E_LGN_I_L4, connect_E_L4_E_LGN, connect_E_LGN_I_L6, connect_E_LGN_E_L6, connect_E_L6_E_LGN, connect_E_L4_TRN, connect_E_L6_TRN,
+             connect_E_LGN_TRN, connect_TRN_E_LGN, connect_E_L4_E_L6)

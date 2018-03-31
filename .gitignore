@@ -3,3 +3,4 @@ x86_64/
 i686/
 .idea/
 *.py[cod]
+.ipynb_checkpoints
