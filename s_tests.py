@@ -31,7 +31,7 @@ connect_TRN_E_LGN = True
 connect_E_L4_E_LGN = False
 connect_E_L4_TRN = False
 
-nruns = 2
+nruns = 3
 total_time = 500
 
 # number of cells should be divisible by 4, otherwise python will truncate (search simulation for "*1/4")
@@ -64,7 +64,7 @@ input = {          # TODO: find reference saying that the input goes both to exc
     #Backup
     'stimrate': 6,  # number of milliseconds of interval between stimuli
     'position': 0.5,  # position parameter, in case the input would be located in a NEURON section, which is not the case here. This parameter is irrelevant
-    'nstims': 4  # number of stimuli
+    'nstims': 20  # number of stimuli
 }
 
 con_input_lgn = {
@@ -176,11 +176,12 @@ W_E_L4_E_L6 = exponential_connect(4/100000., n_e_l4, n_e_l6)
 W_E_L6_TRN = exponential_connect(4/1000000., n_e_l6, n_trn)
 W_E_L4_TRN = W_E_L6_TRN  # only if net include V1 L4 but not V1 L6
 
-fname = os.path.join(OUTPUT_DIR, "sweep_" + str(datetime.now()) + ".txt")
-open(fname, 'a').close()
+fname_peaks = os.path.join(OUTPUT_DIR, "sweep_" + str(datetime.now()) + ".txt")
+open(fname_peaks, 'a').close()
 weight = 3./100000
 # E-E, I-I, I-E, E-I
-c = [weight, weight, weight, weight]
+c = [0, weight, weight, weight]
+fname_lfps_prefix = os.path.join(OUTPUT_DIR, str(datetime.now()) + "_" + str(c) + "_sim-")
 
 lgn_params = {
     'w_e_lgn_e_lgn': constant_connect(c[0], n_e_lgn, n_e_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
@@ -191,7 +192,7 @@ lgn_params = {
     'delay_i_e': 1
 }
 
-simulate(c, OUTPUT_DIR, fname, nruns, total_time, temperature, with_V1_L4, with_V1_L6, with_TRN, input, con_input_lgn,
+simulate(c, OUTPUT_DIR, fname_peaks, fname_lfps_prefix, nruns, total_time, temperature, with_V1_L4, with_V1_L6, with_TRN, input, con_input_lgn,
          n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_i_l4, n_trn,
          threshold, delay, delay_distbtn_E_L6_LGN, delay_E_L4_E_LGN, delay_E_LGN_I_L4, delay_E_LGN_E_L4, delay_E_LGN_E_L6,
          delay_E_LGN_TRN, delay_E_L4_TRN, delay_distbtn_E_L6_TRN, delay_E_LGN_I_L6,

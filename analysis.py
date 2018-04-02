@@ -10,7 +10,7 @@ n_sweeps = 15
 
 with open(fname, 'r') as f:
     all = []
-    for l in f.readlines():
+    for l in f.readlines():  # example line: [[32.958984375, 2.432236678226565], 19, [4e-05, 0, 0, 0]]
         all.append(eval(l))
 
 i_sweep = 0

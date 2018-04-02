@@ -18,7 +18,7 @@ from utils import create_network, create_network_L6
 # h.v_init = -67
 
 
-def simulate(c, output_dir, fname, n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, input, con_input_lgn,
+def simulate(c, output_dir, fname_peaks, fname_lfps_prefix, n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, input, con_input_lgn,
              n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_i_l4, n_trn,
              threshold, delay, delay_distbtn_e_l6_lgn, delay_e_l4_e_lgn, delay_e_lgn_i_l4, delay_e_lgn_e_l4, delay_e_lgn_e_l6,
              delay_e_lgn_trn, delay_e_l4_trn, delay_distbtn_e_l6_trn, delay_e_lgn_i_l6,
@@ -141,8 +141,9 @@ def simulate(c, output_dir, fname, n_runs, total_time, temperature, with_v1_l4, 
             if stim_i < n_i_lgn:
                 i_stims.append(h.NetCon(netStim[stim_i], i_lgn[stim_i].synE, con_input_lgn['gaba_threshold'],
                                         con_input_lgn['gaba_delay'], con_input_lgn['gaba_weight']))
-            e_stims.append(h.NetCon(netStim[stim_i], e_lgn[stim_i].synE, con_input_lgn['glut_threshold'],
-                                    con_input_lgn['glut_delay'], con_input_lgn['glut_weight']))
+            if stim_i < n_e_lgn:
+                e_stims.append(h.NetCon(netStim[stim_i], e_lgn[stim_i].synE, con_input_lgn['glut_threshold'],
+                                        con_input_lgn['glut_delay'], con_input_lgn['glut_weight']))
         e_stims[0].record(stim_rec)  # measure poisson input #0 to LGN Excitatory Cell #0
 
         timeaxis = h.Vector()
@@ -150,21 +151,21 @@ def simulate(c, output_dir, fname, n_runs, total_time, temperature, with_v1_l4, 
         print "#%d: Running simulation..." % (n_sim + 1)
         h.run()
         bf_plot = timer()
-        mean_lgn, mean_trn, mean_v1_l4, mean_v1_l6 = plot_all(c, output_dir, fname, n_sim, timeaxis, stim_rec, with_v1_l4, with_v1_l6, with_trn,
+        mean_lgn, mean_trn, mean_v1_l4, mean_v1_l6 = plot_all(c, output_dir, fname_peaks, n_sim, timeaxis, stim_rec, with_v1_l4, with_v1_l6, with_trn,
                                                               e_lgn_rec, i_lgn_rec, trn_rec, e_l4_rec, i_l4_rec, e_l6_rec, i_l6_rec,
                                                               n_e_lgn, n_i_lgn, n_trn, n_e_l4, n_i_l4, n_e_l6, n_i_l6)
         af_plot = timer()
-        ofname = os.path.join(output_dir, str(datetime.now()) + "_" + str(c) + "_sim-" + str(n_sim) + ".txt")
+        ofname = fname_lfps_prefix + str(n_sim) + ".txt"
 
         n = len(timeaxis)
         indx = np.arange(1, n, 40)  # store one in every 40 values
 
-        w = np.array(mean_lgn)
-        u = np.array(mean_trn)
-        x = np.array(mean_v1_l4)
-        y = np.array(mean_v1_l6)
-        z = np.array(timeaxis)
-        np.savetxt(ofname, (w[indx], u[indx], x[indx], y[indx], z[indx]))
+        lfp_lgn = np.array(mean_lgn)
+        lfp_trn = np.array(mean_trn)
+        lfp_l4 = np.array(mean_v1_l4)
+        lfp_l6 = np.array(mean_v1_l6)
+        time = np.array(timeaxis)
+        np.savetxt(ofname, (lfp_lgn[indx], lfp_trn[indx], lfp_l4[indx], lfp_l6[indx], time[indx]))
         end = timer()
         print_time_stats(start, bf_plot, af_plot, end)
 
@@ -190,7 +191,7 @@ def detect_spikes(voltagesignals):
 def print_time_stats(start, bf_plot, af_plot, end):
     print '# Timing statistics:'
     print 'start %f, bf_plot %f, af_plot %f, end %f' % (start, bf_plot, af_plot, end)
-    print 'Before plot: %f , %f%%' % (bf_plot - start, (bf_plot - start) / (end - start) * 100)
-    print 'Plotting: %f , %f%%' % (af_plot - bf_plot, (af_plot - bf_plot) / (end - start) * 100)
-    print 'Writing files: %f , %f%%' % (end - af_plot, (end - af_plot) / (end - start) * 100)
-    print 'Total: %f , %f%%' % (end - start, (end - start) / (end - start) * 100)
+    print 'Before plot: %f , %.1f%%' % (bf_plot - start, (bf_plot - start) / (end - start) * 100)
+    print 'Plotting: %f , %.1f%%' % (af_plot - bf_plot, (af_plot - bf_plot) / (end - start) * 100)
+    print 'Writing files: %f , %.1f%%' % (end - af_plot, (end - af_plot) / (end - start) * 100)
+    print 'Total: %f , %.1f%%' % (end - start, (end - start) / (end - start) * 100)

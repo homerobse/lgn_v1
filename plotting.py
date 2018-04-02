@@ -10,6 +10,7 @@ def plot_all(c, OUTPUT_DIR, fname, n_sim, timeaxis, stim_rec, with_V1_L4, with_V
              e_lgn_rec, i_lgn_rec, trn_rec, e_l4_rec, i_l4_rec, e_l6_rec, i_l6_rec,
              n_e_lgn, n_i_lgn, n_trn, n_e_l4, n_i_l4, n_e_l6, n_i_l6):
 
+    #  FFT resolution = Fs/nfft = 1.22 Hz, waveform frequency resolution = 1/500ms = 2 Hz
     Fs = 1/2.5e-05
     nfft = 2**15
 
