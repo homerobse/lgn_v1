@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from simulation import simulate
 import matplotlib.pyplot as plt
@@ -6,31 +7,32 @@ from utils import exponential_connect, constant_connect
 
 OUTPUT_DIR = "../data_files/"
 temperature = 6.3  # temperature of Hodgkin & Huxley original experiments
+dt = 0.025
 
 with_V1_L4 = False
 with_V1_L6 = False
 with_TRN = False
 
 #FF
-connect_E_LGN_E_L4 = True  # connected Hirsch connectivity
-connect_E_LGN_I_L4 = True  # connected Hirsch connectivity
-connect_E_LGN_E_L6 = True  # connected Hirsch connectivity
-connect_E_LGN_I_L6 = True  # connected Hirsch connectivity
-connect_E_L4_E_L6 = True
+connect_E_LGN_E_L4 = False  # connected Hirsch connectivity
+connect_E_LGN_I_L4 = False  # connected Hirsch connectivity
+connect_E_LGN_E_L6 = False  # connected Hirsch connectivity
+connect_E_LGN_I_L6 = False  # connected Hirsch connectivity
+connect_E_L4_E_L6 = False
 
 #FB
-connect_E_L6_E_LGN = True
-connect_E_L6_TRN = True
+connect_E_L6_E_LGN = False
+connect_E_L6_TRN = False
 
 #TRN loop
-connect_E_LGN_TRN = True
-connect_TRN_E_LGN = True
+connect_E_LGN_TRN = False
+connect_TRN_E_LGN = False
 
 # only set to true if include V1 L4 but not V1 L6
 connect_E_L4_E_LGN = False
 connect_E_L4_TRN = False
 
-nruns = 20
+nruns = 10
 total_time = 500
 
 # number of cells should be divisible by 4, otherwise python will truncate (search simulation for "*1/4")
@@ -63,7 +65,7 @@ input = {          # TODO: find reference saying that the input goes both to exc
     #Backup
     'stimrate': 6,  # number of milliseconds of interval between stimuli
     'position': 0.5,  # position parameter, in case the input would be located in a NEURON section, which is not the case here. This parameter is irrelevant
-    'nstims': 4  # number of stimuli
+    'nstims': 40  # number of stimuli
 }
 
 con_input_lgn = {
@@ -186,22 +188,24 @@ connectivity = [
                     [0, weight, weight, weight],        #     I-I I-E E-I
                     [weight, weight, weight, weight]    # E-E I-I I-E E-I
                 ]
-fname = OUTPUT_DIR + "sweep_" + str(datetime.now()) + ".txt"
-open(fname, 'a').close()
+time_sim_start = str(datetime.now())
+fname_peaks = os.path.join(OUTPUT_DIR, "sweep_" + time_sim_start + ".txt")
+open(fname_peaks, 'a').close()
 
-for c in connectivity:
+for conn in connectivity:
 
     lgn_params = {
-        'w_e_lgn_e_lgn': constant_connect(c[0], n_e_lgn, n_e_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
-        'w_i_lgn_i_lgn': constant_connect(c[1], n_i_lgn, n_i_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
-        'w_i_lgn_e_lgn': exponential_connect(c[2], n_i_lgn, n_e_lgn),  # PSP 5 mV  (Wang & Hirsch 2010)
-        'w_e_lgn_i_lgn': constant_connect(c[3], n_e_lgn, n_i_lgn),
+        'w_e_lgn_e_lgn': exponential_connect(conn[0], n_e_lgn, n_e_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
+        'w_i_lgn_i_lgn': exponential_connect(conn[1], n_i_lgn, n_i_lgn, False),  # TODO: reference for this -> LGN doesn't have intrinsic connections
+        'w_i_lgn_e_lgn': exponential_connect(conn[2], n_i_lgn, n_e_lgn),  # PSP 5 mV  (Wang & Hirsch 2010)
+        'w_e_lgn_i_lgn': exponential_connect(conn[3], n_e_lgn, n_i_lgn),
         'delay_e_i': 1,
         'delay_i_e': 1
     }
-    print c
+    fname_lfps_prefix = os.path.join(OUTPUT_DIR, time_sim_start + "_" + str(conn) + "_sim-")
+    print conn
 
-    simulate(c, OUTPUT_DIR, fname, nruns, total_time, temperature, with_V1_L4, with_V1_L6, with_TRN, input, con_input_lgn,
+    simulate(conn, OUTPUT_DIR, fname_peaks, fname_lfps_prefix, dt, nruns, total_time, temperature, with_V1_L4, with_V1_L6, with_TRN, input, con_input_lgn,
              n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_i_l4, n_trn,
              threshold, delay, delay_distbtn_E_L6_LGN, delay_E_L4_E_LGN, delay_E_LGN_I_L4, delay_E_LGN_E_L4, delay_E_LGN_E_L6,
              delay_E_LGN_TRN, delay_E_L4_TRN, delay_distbtn_E_L6_TRN, delay_E_LGN_I_L6,

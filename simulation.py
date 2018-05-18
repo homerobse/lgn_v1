@@ -5,6 +5,9 @@ import numpy as np
 
 from timeit import default_timer as timer
 from datetime import datetime
+
+from numpy.ma import mean
+
 from plotting import plot_all
 from utils import e_net_connect, partial_e_net_connect, i_net_connect, e_ct_net_connect, e_net_connect_delay_dist, e_ct_net_connect_delay_dist
 from utils import create_network, create_network_L6
@@ -18,7 +21,8 @@ from utils import create_network, create_network_L6
 # h.v_init = -67
 
 
-def simulate(c, output_dir, fname_peaks, fname_lfps_prefix, n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, input, con_input_lgn,
+
+def simulate(conn, output_dir, fname_peaks, fname_lfps_prefix, dt, n_runs, total_time, temperature, with_v1_l4, with_v1_l6, with_trn, input, con_input_lgn,
              n_e_lgn, n_i_lgn, n_e_l6, n_i_l6, n_e_l4, n_i_l4, n_trn,
              threshold, delay, delay_distbtn_e_l6_lgn, delay_e_l4_e_lgn, delay_e_lgn_i_l4, delay_e_lgn_e_l4, delay_e_lgn_e_l6,
              delay_e_lgn_trn, delay_e_l4_trn, delay_distbtn_e_l6_trn, delay_e_lgn_i_l6,
@@ -27,14 +31,17 @@ def simulate(c, output_dir, fname_peaks, fname_lfps_prefix, n_runs, total_time, 
              connect_e_lgn_e_l4, connect_e_lgn_i_l4, connect_e_l4_e_lgn, connect_e_lgn_i_l6, connect_e_lgn_e_l6, connect_e_l6_e_lgn, connect_e_l4_trn, connect_e_l6_trn,
              connect_e_lgn_trn, connect_trn_e_lgn, connect_e_l4_e_l6):
 
+    start = np.empty(shape=0)
+    bf_plot = np.empty(shape=0)
+    af_plot = np.empty(shape=0)
+    end = np.empty(shape=0)
+
     h.celsius = temperature
     print "* * * Simulating %d runs * * *" % n_runs
-    # h.dt = 1
-    print 'dt=%f' % h.dt
     h.tstop = total_time
     for n_sim in range(n_runs):
         print "#%d: Constructing circuits..." % (n_sim + 1)
-        start = timer()
+        start = np.append(start, timer())
         # creating LGN network
         i_lgn, i_lgn_rec = create_network(n_i_lgn)
         e_lgn, e_lgn_rec = create_network(n_e_lgn)
@@ -150,15 +157,15 @@ def simulate(c, output_dir, fname_peaks, fname_lfps_prefix, n_runs, total_time, 
         timeaxis.record(h._ref_t)
         print "#%d: Running simulation..." % (n_sim + 1)
         h.run()
-        bf_plot = timer()
-        mean_lgn, mean_trn, mean_v1_l4, mean_v1_l6 = plot_all(c, output_dir, fname_peaks, n_sim, timeaxis, stim_rec, with_v1_l4, with_v1_l6, with_trn,
+        bf_plot = np.append(bf_plot, timer())
+        mean_lgn, mean_trn, mean_v1_l4, mean_v1_l6 = plot_all(conn, output_dir, fname_peaks, n_sim, dt, timeaxis, stim_rec, with_v1_l4, with_v1_l6, with_trn,
                                                               e_lgn_rec, i_lgn_rec, trn_rec, e_l4_rec, i_l4_rec, e_l6_rec, i_l6_rec,
                                                               n_e_lgn, n_i_lgn, n_trn, n_e_l4, n_i_l4, n_e_l6, n_i_l6)
-        af_plot = timer()
+        af_plot = np.append(af_plot, timer())
         ofname = fname_lfps_prefix + str(n_sim) + ".txt"
 
         n = len(timeaxis)
-        indx = np.arange(1, n, 40)  # store one in every 40 values
+        indx = np.arange(0, n+1, 40)  # store one in every 40 values
 
         lfp_lgn = np.array(mean_lgn)
         lfp_trn = np.array(mean_trn)
@@ -166,10 +173,10 @@ def simulate(c, output_dir, fname_peaks, fname_lfps_prefix, n_runs, total_time, 
         lfp_l6 = np.array(mean_v1_l6)
         time = np.array(timeaxis)
         np.savetxt(ofname, (lfp_lgn[indx], lfp_trn[indx], lfp_l4[indx], lfp_l6[indx], time[indx]))
-        end = timer()
-        print_time_stats(start, bf_plot, af_plot, end)
+        end = np.append(end, timer())
 
         print "Progress: %d runs simulated %d runs missing" % (n_sim + 1, n_runs - n_sim - 1)
+    print_time_stats(start, bf_plot, af_plot, end)
 
 
 def detect_spikes(voltagesignals):
@@ -190,8 +197,8 @@ def detect_spikes(voltagesignals):
 
 def print_time_stats(start, bf_plot, af_plot, end):
     print '# Timing statistics:'
-    print 'start %f, bf_plot %f, af_plot %f, end %f' % (start, bf_plot, af_plot, end)
-    print 'Before plot: %f , %.1f%%' % (bf_plot - start, (bf_plot - start) / (end - start) * 100)
-    print 'Plotting: %f , %.1f%%' % (af_plot - bf_plot, (af_plot - bf_plot) / (end - start) * 100)
-    print 'Writing files: %f , %.1f%%' % (end - af_plot, (end - af_plot) / (end - start) * 100)
-    print 'Total: %f , %.1f%%' % (end - start, (end - start) / (end - start) * 100)
+    # print 'start %f, bf_plot %f, af_plot %f, end %f' % (start, bf_plot, af_plot, end)
+    print 'Before plot: %f , %.1f%%' % (mean(bf_plot - start), mean(bf_plot - start) / mean(end - start) * 100)
+    print 'Plotting: %f , %.1f%%' % (mean(af_plot - bf_plot), mean(af_plot - bf_plot) / mean(end - start) * 100)
+    print 'Writing files: %f , %.1f%%' % (mean(end - af_plot), mean(end - af_plot) / mean(end - start) * 100)
+    print 'Total: %f , %.1f%%' % (mean(end - start), mean(end - start) / mean(end - start) * 100)

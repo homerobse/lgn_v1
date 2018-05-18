@@ -25,19 +25,19 @@ class Pyrcell:
 
         self.synE = h.Exp2Syn(0.5, sec=self.soma)
         self.synE.e = 0
-        self.synE.tau1 = 1
-        self.synE.tau2 = 3
+        self.synE.tau1 = 0.1  #  Christoph Borgers, Nancy Kopell (2013) "Synchronization in Networks of Excitatory and Inhibitory Neurons with Sparse, Random Connectivity" pg 514
+        self.synE.tau2 = 2    #  Christoph Borgers, Nancy Kopell (2013) "Synchronization in Networks of Excitatory and Inhibitory Neurons with Sparse, Random Connectivity" pg 517
 
         self.synE_CT = h.Exp2Syn(0.5, sec=self.soma)
         self.synE_CT.e = 0
-        self.synE_CT.tau1 = 5               # this was made to be slower than the synE - but artificial values were used because the synE time constants couldn't get smaller than 1
-        self.synE_CT.tau2 = 15              # TODO check this with Li, Guido and Bickford 2003
+        self.synE_CT.tau1 = 5               # using time constants for NMDA synapses reported at Wulfram Gerstner's book http://neuronaldynamics.epfl.ch/online/Ch3.S1.html
+        self.synE_CT.tau2 = 40              # TODO check this comparing with Li, Guido and Bickford 2003
 
         self.synI = h.Exp2Syn(0.5, sec=self.soma)
         self.synI.e = -100
 
-        self.synI.tau1 = 4
-        self.synI.tau2 = 2
+        self.synI.tau1 = 0.1  #  Christoph Borgers, Nancy Kopell (2013) "Synchronization in Networks of Excitatory and Inhibitory Neurons with Sparse, Random Connectivity" pg 514
+        self.synI.tau2 = 10   #  Christoph Borgers, Nancy Kopell (2013) "Synchronization in Networks of Excitatory and Inhibitory Neurons with Sparse, Random Connectivity" pg 517
 
         self.stm = h.IClamp(0.5, sec=self.soma)
         self.stm.amp = 0
